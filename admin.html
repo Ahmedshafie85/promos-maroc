@@ -1,1 +1,786 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#C1272D">
+<title>Admin · Promos Maroc</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root { --primary:#C1272D; --primary-dark:#8B1A1F; --primary-soft:#FDEEEF; --secondary:#D4A017; --accent:#1B5E7A; --bg:#F5F5F7; --surface:#FFFFFF; --text:#1A1A1A; --text-2:#666; --text-3:#999; --border:#E5E5EA; --success:#27AE60; --danger:#E74C3C; --warning:#F39C12; --shadow-sm:0 1px 3px rgba(0,0,0,.06); --shadow-md:0 4px 12px rgba(0,0,0,.08); --shadow-lg:0 8px 24px rgba(0,0,0,.12); }
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body { font-family:'Tajawal','Cairo',-apple-system,BlinkMacSystemFont,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; line-height:1.5; }
+button, input, select, textarea { font-family:inherit; }
 
+/* ===== LOGIN SCREEN ===== */
+.login-screen { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; background:linear-gradient(135deg,var(--primary),var(--primary-dark)); }
+.login-card { background:white; border-radius:20px; padding:40px 32px; width:100%; max-width:400px; box-shadow:var(--shadow-lg); }
+.login-logo { font-size:64px; text-align:center; margin-bottom:16px; }
+.login-title { font-size:24px; font-weight:800; text-align:center; margin-bottom:8px; }
+.login-subtitle { text-align:center; color:var(--text-2); margin-bottom:28px; font-size:14px; }
+.login-field { margin-bottom:16px; }
+.login-field label { display:block; font-size:13px; font-weight:700; color:var(--text-2); margin-bottom:6px; }
+.login-field input { width:100%; padding:12px 14px; border:1.5px solid var(--border); border-radius:10px; font-size:15px; outline:none; transition:border-color .2s; }
+.login-field input:focus { border-color:var(--primary); }
+.login-btn { width:100%; background:var(--primary); color:white; border:none; padding:14px; border-radius:10px; font-size:16px; font-weight:800; cursor:pointer; margin-top:8px; }
+.login-btn:hover { background:var(--primary-dark); }
+.login-btn:disabled { opacity:.6; cursor:wait; }
+.login-error { background:#FFE5E5; color:var(--danger); padding:10px 14px; border-radius:8px; font-size:13px; margin-bottom:16px; display:none; }
+.login-error.show { display:block; }
+.login-footer { text-align:center; margin-top:24px; font-size:12px; color:var(--text-3); }
+.login-footer a { color:var(--primary); text-decoration:none; font-weight:700; }
+
+/* ===== ADMIN APP ===== */
+.admin-app { display:none; }
+.admin-app.show { display:block; }
+.topbar { background:white; padding:14px 24px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:50; }
+.topbar-brand { font-size:18px; font-weight:800; display:flex; align-items:center; gap:8px; }
+.topbar-user { font-size:13px; color:var(--text-2); display:flex; align-items:center; gap:12px; }
+.logout-btn { background:none; border:1.5px solid var(--border); padding:6px 12px; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; color:var(--text); }
+.logout-btn:hover { background:var(--bg); }
+
+.tabs { background:white; padding:0 24px; border-bottom:1px solid var(--border); display:flex; gap:4px; overflow-x:auto; scrollbar-width:none; }
+.tabs::-webkit-scrollbar { display:none; }
+.tab { background:none; border:none; padding:14px 18px; font-size:14px; font-weight:700; color:var(--text-2); cursor:pointer; border-bottom:3px solid transparent; white-space:nowrap; transition:all .15s; }
+.tab.active { color:var(--primary); border-bottom-color:var(--primary); }
+.tab:hover { color:var(--text); }
+
+.content { padding:24px; max-width:1200px; margin:0 auto; }
+.section { display:none; }
+.section.active { display:block; }
+.section-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
+.section-head h2 { font-size:24px; font-weight:800; }
+.section-head .count { color:var(--text-2); font-size:14px; font-weight:500; margin-inline-start:8px; }
+.add-btn { background:var(--primary); color:white; border:none; padding:10px 18px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px; }
+.add-btn:hover { background:var(--primary-dark); }
+
+/* ===== LIST CARDS ===== */
+.cards-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; }
+.item-card { background:white; border-radius:12px; padding:14px; box-shadow:var(--shadow-sm); display:flex; gap:12px; }
+.item-thumb { width:64px; height:64px; border-radius:10px; background:var(--bg); display:flex; align-items:center; justify-content:center; font-size:32px; flex-shrink:0; overflow:hidden; }
+.item-thumb img { width:100%; height:100%; object-fit:cover; }
+.item-body { flex:1; min-width:0; }
+.item-title { font-size:14px; font-weight:700; margin-bottom:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.item-meta { font-size:12px; color:var(--text-2); display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px; }
+.item-actions { display:flex; gap:6px; }
+.btn-mini { background:var(--bg); border:1px solid var(--border); padding:5px 10px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; color:var(--text); }
+.btn-mini.edit { color:var(--accent); }
+.btn-mini.delete { color:var(--danger); }
+.btn-mini:hover { background:var(--border); }
+
+.badge { display:inline-block; padding:2px 8px; border-radius:4px; font-size:11px; font-weight:700; }
+.badge-featured { background:#FFF3E0; color:var(--warning); }
+.badge-discount { background:#FFE5E5; color:var(--danger); }
+.badge-active { background:#E8F8ED; color:var(--success); }
+.badge-expired { background:#F0F0F0; color:var(--text-3); }
+
+/* ===== EMPTY ===== */
+.empty { text-align:center; padding:60px 20px; color:var(--text-2); }
+.empty-icon { font-size:64px; margin-bottom:16px; }
+.empty-title { font-size:18px; font-weight:700; margin-bottom:8px; color:var(--text); }
+.empty-hint { font-size:14px; }
+
+/* ===== MODAL FORM ===== */
+.modal-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.6); z-index:200; display:none; align-items:center; justify-content:center; padding:20px; overflow-y:auto; }
+.modal-overlay.show { display:flex; }
+.modal { background:white; border-radius:16px; width:100%; max-width:560px; max-height:90vh; overflow-y:auto; padding:24px; }
+.modal-title { font-size:20px; font-weight:800; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; }
+.modal-close { background:none; border:none; font-size:24px; cursor:pointer; color:var(--text-3); }
+.field { margin-bottom:14px; }
+.field label { display:block; font-size:13px; font-weight:700; color:var(--text-2); margin-bottom:6px; }
+.field input, .field select, .field textarea { width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:8px; font-size:14px; outline:none; transition:border-color .2s; }
+.field input:focus, .field select:focus, .field textarea:focus { border-color:var(--primary); }
+.field textarea { resize:vertical; min-height:60px; }
+.field-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.field-checkbox { display:flex; align-items:center; gap:8px; cursor:pointer; }
+.field-checkbox input { width:auto; }
+.field-checkbox label { margin:0; cursor:pointer; }
+.field-hint { font-size:12px; color:var(--text-3); margin-top:4px; }
+.color-input { display:flex; gap:8px; align-items:center; }
+.color-input input[type="color"] { width:48px; padding:0; border:1.5px solid var(--border); border-radius:8px; cursor:pointer; height:40px; }
+.image-upload { border:2px dashed var(--border); border-radius:10px; padding:20px; text-align:center; cursor:pointer; transition:border-color .2s; }
+.image-upload:hover { border-color:var(--primary); }
+.image-upload input { display:none; }
+.image-upload-icon { font-size:36px; margin-bottom:8px; }
+.image-upload-text { font-size:13px; color:var(--text-2); }
+.image-preview { margin-top:12px; position:relative; display:none; }
+.image-preview.show { display:block; }
+.image-preview img { width:100%; max-height:200px; object-fit:cover; border-radius:8px; }
+.image-preview .remove-img { position:absolute; top:8px; right:8px; background:var(--danger); color:white; border:none; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:16px; font-weight:800; }
+.upload-progress { margin-top:8px; font-size:12px; color:var(--text-2); }
+.modal-actions { display:flex; gap:10px; margin-top:20px; padding-top:16px; border-top:1px solid var(--border); }
+.btn-cancel { flex:1; background:var(--bg); border:1.5px solid var(--border); color:var(--text); padding:12px; border-radius:8px; font-weight:700; cursor:pointer; }
+.btn-cancel:hover { background:var(--border); }
+.btn-save { flex:1; background:var(--primary); color:white; border:none; padding:12px; border-radius:8px; font-weight:800; cursor:pointer; }
+.btn-save:hover { background:var(--primary-dark); }
+.btn-save:disabled { opacity:.6; cursor:wait; }
+
+/* ===== TOAST ===== */
+.toast { position:fixed; top:24px; left:50%; transform:translateX(-50%); background:var(--text); color:white; padding:12px 20px; border-radius:10px; font-size:14px; font-weight:600; z-index:300; opacity:0; transition:opacity .3s; pointer-events:none; max-width:90%; }
+.toast.show { opacity:1; }
+.toast.error { background:var(--danger); }
+.toast.success { background:var(--success); }
+
+/* ===== STATS CARDS ===== */
+.stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin-bottom:24px; }
+.stat-card { background:white; border-radius:12px; padding:18px; box-shadow:var(--shadow-sm); }
+.stat-icon { font-size:28px; margin-bottom:6px; }
+.stat-value { font-size:28px; font-weight:800; line-height:1; }
+.stat-label { font-size:13px; color:var(--text-2); margin-top:4px; }
+
+/* ===== FIREBASE WARNING ===== */
+.fb-warning { background:#FFF3CD; border:1.5px solid #FFEEBA; padding:16px 20px; border-radius:10px; color:#856404; margin-bottom:20px; }
+.fb-warning strong { display:block; margin-bottom:6px; }
+.fb-warning code { background:rgba(0,0,0,.06); padding:2px 6px; border-radius:4px; font-size:13px; }
+</style>
+</head>
+<body>
+
+<!-- ============= LOGIN SCREEN ============= -->
+<div class="login-screen" id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">⚙️</div>
+    <div class="login-title">لوحة التحكم</div>
+    <div class="login-subtitle">Admin · Promos Maroc 🇲🇦</div>
+    <div class="login-error" id="login-error"></div>
+    <form id="login-form">
+      <div class="login-field">
+        <label>Email</label>
+        <input type="email" id="login-email" required autocomplete="email" placeholder="admin@example.com">
+      </div>
+      <div class="login-field">
+        <label>كلمة المرور · Password</label>
+        <input type="password" id="login-password" required autocomplete="current-password" placeholder="••••••••">
+      </div>
+      <button type="submit" class="login-btn" id="login-btn">دخول · Sign in</button>
+    </form>
+    <div class="login-footer">
+      <a href="index.html">← العودة إلى الموقع</a>
+    </div>
+  </div>
+</div>
+
+<!-- ============= ADMIN APP ============= -->
+<div class="admin-app" id="admin-app">
+  <div class="topbar">
+    <div class="topbar-brand">⚙️ Promos Maroc · Admin</div>
+    <div class="topbar-user">
+      <span id="user-email"></span>
+      <button class="logout-btn" onclick="doLogout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="dashboard" onclick="showTab('dashboard')">📊 Dashboard</button>
+    <button class="tab" data-tab="deals" onclick="showTab('deals')">🛍️ Deals</button>
+    <button class="tab" data-tab="stores" onclick="showTab('stores')">🏪 Stores</button>
+    <button class="tab" data-tab="categories" onclick="showTab('categories')">📂 Categories</button>
+    <button class="tab" data-tab="promos" onclick="showTab('promos')">🎟️ Promo codes</button>
+  </div>
+
+  <div class="content">
+    <div id="fb-warning-container"></div>
+
+    <!-- DASHBOARD -->
+    <div class="section active" id="section-dashboard">
+      <div class="section-head"><h2>📊 Dashboard</h2></div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon">🛍️</div><div class="stat-value" id="stat-deals">0</div><div class="stat-label">Active deals</div></div>
+        <div class="stat-card"><div class="stat-icon">🔥</div><div class="stat-value" id="stat-featured">0</div><div class="stat-label">Featured deals</div></div>
+        <div class="stat-card"><div class="stat-icon">🏪</div><div class="stat-value" id="stat-stores">0</div><div class="stat-label">Stores</div></div>
+        <div class="stat-card"><div class="stat-icon">📂</div><div class="stat-value" id="stat-categories">0</div><div class="stat-label">Categories</div></div>
+        <div class="stat-card"><div class="stat-icon">🎟️</div><div class="stat-value" id="stat-promos">0</div><div class="stat-label">Promo codes</div></div>
+        <div class="stat-card"><div class="stat-icon">⏰</div><div class="stat-value" id="stat-expiring">0</div><div class="stat-label">Expiring this week</div></div>
+      </div>
+      <div style="background:white;border-radius:12px;padding:20px;box-shadow:var(--shadow-sm);">
+        <h3 style="font-size:16px;font-weight:800;margin-bottom:12px;">🚀 Quick start</h3>
+        <p style="color:var(--text-2);font-size:14px;line-height:1.6;">
+          1. Add your stores first (Marjane, Carrefour, etc.) in the <strong>Stores</strong> tab.<br>
+          2. Add categories you want to use (food, electronics, etc.) in the <strong>Categories</strong> tab.<br>
+          3. Now you can add deals in the <strong>Deals</strong> tab — pick the store, category, upload a photo.<br>
+          4. Anything you add appears LIVE on the public site immediately.
+        </p>
+      </div>
+    </div>
+
+    <!-- DEALS -->
+    <div class="section" id="section-deals">
+      <div class="section-head">
+        <h2>🛍️ Deals <span class="count" id="count-deals">0</span></h2>
+        <button class="add-btn" onclick="openDealForm()">+ Add deal</button>
+      </div>
+      <div id="deals-list" class="cards-grid"></div>
+    </div>
+
+    <!-- STORES -->
+    <div class="section" id="section-stores">
+      <div class="section-head">
+        <h2>🏪 Stores <span class="count" id="count-stores">0</span></h2>
+        <button class="add-btn" onclick="openStoreForm()">+ Add store</button>
+      </div>
+      <div id="stores-list" class="cards-grid"></div>
+    </div>
+
+    <!-- CATEGORIES -->
+    <div class="section" id="section-categories">
+      <div class="section-head">
+        <h2>📂 Categories <span class="count" id="count-categories">0</span></h2>
+        <button class="add-btn" onclick="openCategoryForm()">+ Add category</button>
+      </div>
+      <div id="categories-list" class="cards-grid"></div>
+    </div>
+
+    <!-- PROMOS -->
+    <div class="section" id="section-promos">
+      <div class="section-head">
+        <h2>🎟️ Promo codes <span class="count" id="count-promos">0</span></h2>
+        <button class="add-btn" onclick="openPromoForm()">+ Add promo code</button>
+      </div>
+      <div id="promos-list" class="cards-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============= MODAL FORMS ============= -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal-content"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script>
+// =============================================================
+// FIREBASE INIT
+// =============================================================
+let db = null, auth = null, storage = null, firebaseReady = false;
+try {
+  if (typeof firebase !== 'undefined' && firebaseConfig.apiKey !== 'PASTE_YOUR_API_KEY_HERE') {
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+    auth = firebase.auth();
+    storage = firebase.storage();
+    firebaseReady = true;
+  }
+} catch (e) { console.error('Firebase init error:', e); }
+
+// =============================================================
+// STATE
+// =============================================================
+let DEALS = [], STORES = [], CATEGORIES = [], PROMOS = [];
+let currentUser = null;
+let currentEditId = null;
+let pendingImageFile = null;
+
+// =============================================================
+// HELPERS
+// =============================================================
+function showToast(msg, type) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show' + (type ? ' ' + type : '');
+  setTimeout(() => { el.className = 'toast'; }, 2500);
+}
+function $(id) { return document.getElementById(id); }
+function escapeHtml(s) { return (s || '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c])); }
+
+// =============================================================
+// LOGIN
+// =============================================================
+function showLogin() { $('login-screen').style.display = 'flex'; $('admin-app').classList.remove('show'); }
+function showAdmin() { $('login-screen').style.display = 'none'; $('admin-app').classList.add('show'); }
+
+if (!firebaseReady) {
+  $('login-error').textContent = '⚠️ Firebase not configured. Edit firebase-config.js with your keys first.';
+  $('login-error').classList.add('show');
+  $('login-btn').disabled = true;
+}
+
+$('login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = $('login-email').value.trim();
+  const password = $('login-password').value;
+  const btn = $('login-btn');
+  const err = $('login-error');
+  err.classList.remove('show');
+  btn.disabled = true;
+  btn.textContent = 'جاري الدخول...';
+  try {
+    await auth.signInWithEmailAndPassword(email, password);
+  } catch (e) {
+    let msg = 'Email or password incorrect';
+    if (e.code === 'auth/user-not-found') msg = 'Account not found';
+    else if (e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential') msg = 'Wrong email or password';
+    else if (e.code === 'auth/too-many-requests') msg = 'Too many attempts. Try again later.';
+    else if (e.message) msg = e.message;
+    err.textContent = msg;
+    err.classList.add('show');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'دخول · Sign in';
+  }
+});
+
+function doLogout() {
+  if (auth) auth.signOut();
+}
+
+if (firebaseReady) {
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      // Check email matches admin
+      if (user.email !== ADMIN_EMAIL) {
+        showToast('⛔ Not authorized', 'error');
+        auth.signOut();
+        return;
+      }
+      currentUser = user;
+      $('user-email').textContent = user.email;
+      showAdmin();
+      startDataListeners();
+    } else {
+      currentUser = null;
+      showLogin();
+    }
+  });
+}
+
+// =============================================================
+// TABS
+// =============================================================
+function showTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  document.querySelectorAll('.section').forEach(s => s.classList.toggle('active', s.id === 'section-' + name));
+}
+
+// =============================================================
+// DATA LISTENERS
+// =============================================================
+function startDataListeners() {
+  db.collection('deals').onSnapshot(snap => {
+    DEALS = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderDeals(); updateStats();
+  });
+  db.collection('stores').onSnapshot(snap => {
+    STORES = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderStores(); updateStats();
+  });
+  db.collection('categories').onSnapshot(snap => {
+    CATEGORIES = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderCategories(); updateStats();
+  });
+  db.collection('promos').onSnapshot(snap => {
+    PROMOS = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderPromos(); updateStats();
+  });
+}
+
+function updateStats() {
+  $('stat-deals').textContent = DEALS.length;
+  $('stat-featured').textContent = DEALS.filter(d => d.featured).length;
+  $('stat-stores').textContent = STORES.length;
+  $('stat-categories').textContent = CATEGORIES.length;
+  $('stat-promos').textContent = PROMOS.length;
+  const now = new Date(); const week = new Date(now.getTime() + 7 * 86400000);
+  $('stat-expiring').textContent = DEALS.filter(d => { const exp = new Date(d.expires); return exp >= now && exp <= week; }).length;
+}
+
+// =============================================================
+// RENDER LISTS
+// =============================================================
+function renderDeals() {
+  $('count-deals').textContent = DEALS.length;
+  const c = $('deals-list');
+  if (DEALS.length === 0) {
+    c.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="empty-icon">🛍️</div><div class="empty-title">No deals yet</div><div class="empty-hint">Click "+ Add deal" to create your first one.</div></div>';
+    return;
+  }
+  c.innerHTML = DEALS.map(d => {
+    const store = STORES.find(s => s.id === d.storeId);
+    const expired = d.expires && new Date(d.expires) < new Date();
+    const thumb = d.imageUrl ? '<img src="' + d.imageUrl + '">' : (d.emoji || '🛍️');
+    return '<div class="item-card"><div class="item-thumb">' + thumb + '</div><div class="item-body"><div class="item-title">' + escapeHtml(d.titleAr || d.title) + '</div><div class="item-meta">' + (store ? '<span>🏪 ' + escapeHtml(store.name) + '</span>' : '') + '<span>💰 ' + d.new + ' DH</span><span class="badge badge-discount">-' + d.disc + '%</span>' + (d.featured ? '<span class="badge badge-featured">⭐ Featured</span>' : '') + (expired ? '<span class="badge badge-expired">Expired</span>' : '<span class="badge badge-active">Active</span>') + '</div><div class="item-actions"><button class="btn-mini edit" onclick="openDealForm(\'' + d.id + '\')">Edit</button><button class="btn-mini delete" onclick="deleteItem(\'deals\', \'' + d.id + '\', \'' + escapeHtml(d.titleAr || d.title).replace(/'/g, "\\'") + '\')">Delete</button></div></div></div>';
+  }).join('');
+}
+
+function renderStores() {
+  $('count-stores').textContent = STORES.length;
+  const c = $('stores-list');
+  if (STORES.length === 0) {
+    c.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="empty-icon">🏪</div><div class="empty-title">No stores yet</div><div class="empty-hint">Add stores like Marjane, Carrefour, BIM...</div></div>';
+    return;
+  }
+  c.innerHTML = STORES.map(s => {
+    const dealCount = DEALS.filter(d => d.storeId === s.id).length;
+    return '<div class="item-card"><div class="item-thumb" style="background:' + s.color + ';color:white;font-weight:800;">' + escapeHtml(s.name.charAt(0)) + '</div><div class="item-body"><div class="item-title">' + escapeHtml(s.name) + '</div><div class="item-meta"><span>' + escapeHtml(s.typeFr || s.type || '—') + '</span><span>📦 ' + dealCount + ' deal(s)</span></div><div class="item-actions"><button class="btn-mini edit" onclick="openStoreForm(\'' + s.id + '\')">Edit</button><button class="btn-mini delete" onclick="deleteItem(\'stores\', \'' + s.id + '\', \'' + escapeHtml(s.name).replace(/'/g, "\\'") + '\')">Delete</button></div></div></div>';
+  }).join('');
+}
+
+function renderCategories() {
+  $('count-categories').textContent = CATEGORIES.length;
+  const c = $('categories-list');
+  if (CATEGORIES.length === 0) {
+    c.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="empty-icon">📂</div><div class="empty-title">No categories yet</div><div class="empty-hint">Add categories like Food, Electronics, Fashion...</div></div>';
+    return;
+  }
+  c.innerHTML = CATEGORIES.map(cat => {
+    const dealCount = DEALS.filter(d => d.cat === cat.id).length;
+    return '<div class="item-card"><div class="item-thumb">' + (cat.icon || '📂') + '</div><div class="item-body"><div class="item-title">' + escapeHtml(cat.fr || cat.ar || cat.id) + ' · ' + escapeHtml(cat.ar || '') + '</div><div class="item-meta"><span>ID: <code>' + escapeHtml(cat.id) + '</code></span><span>📦 ' + dealCount + ' deal(s)</span></div><div class="item-actions"><button class="btn-mini edit" onclick="openCategoryForm(\'' + cat.id + '\')">Edit</button><button class="btn-mini delete" onclick="deleteItem(\'categories\', \'' + cat.id + '\', \'' + escapeHtml(cat.fr || cat.id).replace(/'/g, "\\'") + '\')">Delete</button></div></div></div>';
+  }).join('');
+}
+
+function renderPromos() {
+  $('count-promos').textContent = PROMOS.length;
+  const c = $('promos-list');
+  if (PROMOS.length === 0) {
+    c.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="empty-icon">🎟️</div><div class="empty-title">No promo codes yet</div><div class="empty-hint">Add codes like PROMO10, SPRING20...</div></div>';
+    return;
+  }
+  c.innerHTML = PROMOS.map(p => {
+    const store = STORES.find(s => s.id === p.storeId);
+    return '<div class="item-card"><div class="item-thumb" style="background:' + (store ? store.color : '#999') + ';color:white;font-weight:800;">' + escapeHtml((p.store || (store ? store.name : '?')).charAt(0)) + '</div><div class="item-body"><div class="item-title">' + escapeHtml(p.code) + '</div><div class="item-meta"><span>🏪 ' + escapeHtml(p.store || (store ? store.name : '—')) + '</span><span>' + escapeHtml(p.discount || p.discountAr || '') + '</span></div><div class="item-actions"><button class="btn-mini edit" onclick="openPromoForm(\'' + p.id + '\')">Edit</button><button class="btn-mini delete" onclick="deleteItem(\'promos\', \'' + p.id + '\', \'' + escapeHtml(p.code).replace(/'/g, "\\'") + '\')">Delete</button></div></div></div>';
+  }).join('');
+}
+
+// =============================================================
+// MODAL FORMS
+// =============================================================
+function showModal(html) {
+  $('modal-content').innerHTML = html;
+  $('modal-overlay').classList.add('show');
+  pendingImageFile = null;
+}
+function closeModal() {
+  $('modal-overlay').classList.remove('show');
+  currentEditId = null;
+  pendingImageFile = null;
+}
+$('modal-overlay').addEventListener('click', (e) => { if (e.target === $('modal-overlay')) closeModal(); });
+
+// ----- DEAL FORM -----
+function openDealForm(id) {
+  currentEditId = id || null;
+  const d = id ? DEALS.find(x => x.id === id) : { title:'', titleAr:'', desc:'', storeId:'', cat:'', old:0, new:0, disc:0, featured:false, expires:'', emoji:'🛍️', link:'', imageUrl:'' };
+  if (id && !d) return;
+
+  const storeOpts = STORES.map(s => '<option value="' + s.id + '"' + (d.storeId === s.id ? ' selected' : '') + '>' + escapeHtml(s.name) + '</option>').join('');
+  const catOpts = CATEGORIES.map(c => '<option value="' + c.id + '"' + (d.cat === c.id ? ' selected' : '') + '>' + escapeHtml(c.fr || c.ar || c.id) + '</option>').join('');
+
+  showModal(`
+    <div class="modal-title">${id ? '✏️ Edit deal' : '+ Add new deal'}<button class="modal-close" onclick="closeModal()">×</button></div>
+    <form id="deal-form">
+      <div class="field-row">
+        <div class="field"><label>Title (French) *</label><input id="f-title" value="${escapeHtml(d.title)}" required placeholder="Huile Lesieur 5L"></div>
+        <div class="field"><label>العنوان (عربي) *</label><input id="f-titleAr" value="${escapeHtml(d.titleAr)}" required placeholder="زيت لسيور 5 لتر"></div>
+      </div>
+      <div class="field"><label>Description</label><textarea id="f-desc" placeholder="Short description">${escapeHtml(d.desc)}</textarea></div>
+      <div class="field-row">
+        <div class="field"><label>Store *</label><select id="f-storeId" required>${STORES.length === 0 ? '<option value="">⚠️ Add a store first</option>' : '<option value="">— Choose —</option>' + storeOpts}</select></div>
+        <div class="field"><label>Category *</label><select id="f-cat" required>${CATEGORIES.length === 0 ? '<option value="">⚠️ Add a category first</option>' : '<option value="">— Choose —</option>' + catOpts}</select></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Old price (DH) *</label><input type="number" id="f-old" value="${d.old}" required min="0" step="0.01"></div>
+        <div class="field"><label>New price (DH) *</label><input type="number" id="f-new" value="${d.new}" required min="0" step="0.01"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Discount % *</label><input type="number" id="f-disc" value="${d.disc}" required min="1" max="99"><div class="field-hint">e.g. 30 for 30% off</div></div>
+        <div class="field"><label>Expires *</label><input type="date" id="f-expires" value="${d.expires}" required></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Emoji (fallback)</label><input id="f-emoji" value="${escapeHtml(d.emoji || '🛍️')}" placeholder="🛍️" maxlength="4"></div>
+        <div class="field"><label>External link (optional)</label><input id="f-link" value="${escapeHtml(d.link || '')}" placeholder="https://..."></div>
+      </div>
+      <div class="field">
+        <label>Product image (optional)</label>
+        <label class="image-upload" for="f-image">
+          <div class="image-upload-icon">📷</div>
+          <div class="image-upload-text">Click to upload or drag a photo here</div>
+          <input type="file" id="f-image" accept="image/*" onchange="previewImage(this)">
+        </label>
+        <div class="image-preview ${d.imageUrl ? 'show' : ''}" id="image-preview">
+          <img id="image-preview-img" src="${escapeHtml(d.imageUrl || '')}" alt="">
+          <button type="button" class="remove-img" onclick="removeImage()">×</button>
+        </div>
+        <div class="upload-progress" id="upload-progress"></div>
+      </div>
+      <div class="field-checkbox"><input type="checkbox" id="f-featured" ${d.featured ? 'checked' : ''}><label for="f-featured">⭐ Featured (show in homepage banner)</label></div>
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+        <button type="submit" class="btn-save" id="save-btn">${id ? 'Save changes' : 'Create deal'}</button>
+      </div>
+    </form>
+  `);
+
+  // Track existing image url so we don't lose it on save
+  if (d.imageUrl) $('image-preview').dataset.existingUrl = d.imageUrl;
+
+  $('deal-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = $('save-btn');
+    btn.disabled = true; btn.textContent = 'Saving...';
+    try {
+      let imageUrl = $('image-preview').dataset.existingUrl || '';
+
+      // Upload new image if user chose one
+      if (pendingImageFile) {
+        $('upload-progress').textContent = 'Uploading image...';
+        const path = 'deals/' + Date.now() + '_' + pendingImageFile.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+        const ref = storage.ref().child(path);
+        const snap = await ref.put(pendingImageFile);
+        imageUrl = await snap.ref.getDownloadURL();
+        $('upload-progress').textContent = '✓ Uploaded';
+      }
+
+      // If preview was removed and no new file, clear imageUrl
+      if (!$('image-preview').classList.contains('show') && !pendingImageFile) {
+        imageUrl = '';
+      }
+
+      const data = {
+        title: $('f-title').value.trim(),
+        titleAr: $('f-titleAr').value.trim(),
+        desc: $('f-desc').value.trim(),
+        storeId: $('f-storeId').value,
+        cat: $('f-cat').value,
+        old: parseFloat($('f-old').value) || 0,
+        new: parseFloat($('f-new').value) || 0,
+        disc: parseInt($('f-disc').value) || 0,
+        featured: $('f-featured').checked,
+        expires: $('f-expires').value,
+        emoji: $('f-emoji').value.trim() || '🛍️',
+        link: $('f-link').value.trim(),
+        imageUrl: imageUrl,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+      if (currentEditId) {
+        await db.collection('deals').doc(currentEditId).update(data);
+        showToast('✓ Deal updated', 'success');
+      } else {
+        data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+        await db.collection('deals').add(data);
+        showToast('✓ Deal added', 'success');
+      }
+      closeModal();
+    } catch (err) {
+      console.error(err);
+      showToast('Error: ' + err.message, 'error');
+    } finally {
+      btn.disabled = false;
+    }
+  });
+}
+
+function previewImage(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { showToast('Image too large (max 5MB)', 'error'); input.value = ''; return; }
+  pendingImageFile = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    $('image-preview-img').src = e.target.result;
+    $('image-preview').classList.add('show');
+  };
+  reader.readAsDataURL(file);
+}
+function removeImage() {
+  pendingImageFile = null;
+  $('image-preview').classList.remove('show');
+  $('image-preview').dataset.existingUrl = '';
+  $('f-image').value = '';
+}
+
+// ----- STORE FORM -----
+function openStoreForm(id) {
+  currentEditId = id || null;
+  const s = id ? STORES.find(x => x.id === id) : { name:'', color:'#C1272D', type:'', typeFr:'' };
+  if (id && !s) return;
+
+  showModal(`
+    <div class="modal-title">${id ? '✏️ Edit store' : '+ Add new store'}<button class="modal-close" onclick="closeModal()">×</button></div>
+    <form id="store-form">
+      <div class="field"><label>Store name *</label><input id="f-name" value="${escapeHtml(s.name)}" required placeholder="Marjane"></div>
+      <div class="field-row">
+        <div class="field"><label>Type (French)</label><input id="f-typeFr" value="${escapeHtml(s.typeFr)}" placeholder="Supermarché"></div>
+        <div class="field"><label>النوع (عربي)</label><input id="f-type" value="${escapeHtml(s.type)}" placeholder="سوبر ماركت"></div>
+      </div>
+      <div class="field">
+        <label>Brand color *</label>
+        <div class="color-input">
+          <input type="color" id="f-color" value="${s.color}">
+          <input type="text" id="f-color-text" value="${s.color}" placeholder="#C1272D" style="flex:1;">
+        </div>
+        <div class="field-hint">Used for store badge and accent color on cards</div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+        <button type="submit" class="btn-save" id="save-btn">${id ? 'Save changes' : 'Create store'}</button>
+      </div>
+    </form>
+  `);
+
+  $('f-color').addEventListener('input', e => $('f-color-text').value = e.target.value);
+  $('f-color-text').addEventListener('input', e => { if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) $('f-color').value = e.target.value; });
+
+  $('store-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = $('save-btn');
+    btn.disabled = true; btn.textContent = 'Saving...';
+    try {
+      const data = {
+        name: $('f-name').value.trim(),
+        type: $('f-type').value.trim(),
+        typeFr: $('f-typeFr').value.trim(),
+        color: $('f-color-text').value.trim() || '#C1272D'
+      };
+      if (currentEditId) {
+        await db.collection('stores').doc(currentEditId).update(data);
+        showToast('✓ Store updated', 'success');
+      } else {
+        await db.collection('stores').add(data);
+        showToast('✓ Store added', 'success');
+      }
+      closeModal();
+    } catch (err) {
+      showToast('Error: ' + err.message, 'error');
+    } finally { btn.disabled = false; }
+  });
+}
+
+// ----- CATEGORY FORM -----
+function openCategoryForm(id) {
+  currentEditId = id || null;
+  const c = id ? CATEGORIES.find(x => x.id === id) : { id:'', icon:'📂', ar:'', fr:'' };
+  if (id && !c) return;
+
+  showModal(`
+    <div class="modal-title">${id ? '✏️ Edit category' : '+ Add new category'}<button class="modal-close" onclick="closeModal()">×</button></div>
+    <form id="cat-form">
+      <div class="field-row">
+        <div class="field"><label>ID (no spaces) *</label><input id="f-id" value="${escapeHtml(c.id)}" required placeholder="food" ${id ? 'disabled' : ''}><div class="field-hint">${id ? 'Cannot be changed' : 'e.g. food, electronics, fashion'}</div></div>
+        <div class="field"><label>Icon (emoji)</label><input id="f-icon" value="${escapeHtml(c.icon)}" placeholder="🛒" maxlength="4"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Name (French) *</label><input id="f-fr" value="${escapeHtml(c.fr)}" required placeholder="Alimentation"></div>
+        <div class="field"><label>الاسم (عربي) *</label><input id="f-ar" value="${escapeHtml(c.ar)}" required placeholder="المواد الغذائية"></div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+        <button type="submit" class="btn-save" id="save-btn">${id ? 'Save changes' : 'Create category'}</button>
+      </div>
+    </form>
+  `);
+
+  $('cat-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = $('save-btn');
+    btn.disabled = true; btn.textContent = 'Saving...';
+    try {
+      const docId = currentEditId || $('f-id').value.trim().toLowerCase().replace(/\s+/g, '_');
+      if (!docId) throw new Error('ID required');
+      const data = {
+        id: docId,
+        icon: $('f-icon').value.trim() || '📂',
+        ar: $('f-ar').value.trim(),
+        fr: $('f-fr').value.trim()
+      };
+      await db.collection('categories').doc(docId).set(data);
+      showToast(currentEditId ? '✓ Category updated' : '✓ Category added', 'success');
+      closeModal();
+    } catch (err) {
+      showToast('Error: ' + err.message, 'error');
+    } finally { btn.disabled = false; }
+  });
+}
+
+// ----- PROMO FORM -----
+function openPromoForm(id) {
+  currentEditId = id || null;
+  const p = id ? PROMOS.find(x => x.id === id) : { code:'', store:'', storeId:'', discount:'', discountAr:'', desc:'', descAr:'', link:'' };
+  if (id && !p) return;
+
+  const storeOpts = STORES.map(s => '<option value="' + s.id + '"' + (p.storeId === s.id ? ' selected' : '') + '>' + escapeHtml(s.name) + '</option>').join('');
+
+  showModal(`
+    <div class="modal-title">${id ? '✏️ Edit promo code' : '+ Add new promo code'}<button class="modal-close" onclick="closeModal()">×</button></div>
+    <form id="promo-form">
+      <div class="field-row">
+        <div class="field"><label>Promo code *</label><input id="f-code" value="${escapeHtml(p.code)}" required placeholder="PROMO10" style="text-transform:uppercase;"></div>
+        <div class="field"><label>Store *</label><select id="f-storeId" required onchange="document.getElementById('f-store').value = this.options[this.selectedIndex].text;">${STORES.length === 0 ? '<option value="">⚠️ Add a store first</option>' : '<option value="">— Choose —</option>' + storeOpts}</select></div>
+      </div>
+      <input type="hidden" id="f-store" value="${escapeHtml(p.store)}">
+      <div class="field-row">
+        <div class="field"><label>Discount text (French) *</label><input id="f-discount" value="${escapeHtml(p.discount)}" required placeholder="10% de réduction"></div>
+        <div class="field"><label>نص الخصم (عربي) *</label><input id="f-discountAr" value="${escapeHtml(p.discountAr)}" required placeholder="خصم 10%"></div>
+      </div>
+      <div class="field"><label>Description (French)</label><input id="f-desc" value="${escapeHtml(p.desc)}" placeholder="Sur votre première commande"></div>
+      <div class="field"><label>الوصف (عربي)</label><input id="f-descAr" value="${escapeHtml(p.descAr)}" placeholder="على طلبك الأول"></div>
+      <div class="field"><label>Link (optional)</label><input id="f-link" value="${escapeHtml(p.link)}" placeholder="https://..."></div>
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+        <button type="submit" class="btn-save" id="save-btn">${id ? 'Save changes' : 'Create promo code'}</button>
+      </div>
+    </form>
+  `);
+
+  $('promo-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = $('save-btn');
+    btn.disabled = true; btn.textContent = 'Saving...';
+    try {
+      const storeSelect = $('f-storeId');
+      const storeName = storeSelect.options[storeSelect.selectedIndex] ? storeSelect.options[storeSelect.selectedIndex].text : '';
+      const data = {
+        code: $('f-code').value.trim().toUpperCase(),
+        storeId: $('f-storeId').value,
+        store: storeName === '— Choose —' ? '' : storeName,
+        discount: $('f-discount').value.trim(),
+        discountAr: $('f-discountAr').value.trim(),
+        desc: $('f-desc').value.trim(),
+        descAr: $('f-descAr').value.trim(),
+        link: $('f-link').value.trim()
+      };
+      if (currentEditId) {
+        await db.collection('promos').doc(currentEditId).update(data);
+        showToast('✓ Promo updated', 'success');
+      } else {
+        await db.collection('promos').add(data);
+        showToast('✓ Promo added', 'success');
+      }
+      closeModal();
+    } catch (err) {
+      showToast('Error: ' + err.message, 'error');
+    } finally { btn.disabled = false; }
+  });
+}
+
+// ----- DELETE -----
+async function deleteItem(collection, id, name) {
+  if (!confirm('Delete "' + name + '"?\n\nThis cannot be undone.')) return;
+  try {
+    // If deleting a deal with an image, also delete the image from Storage
+    if (collection === 'deals') {
+      const deal = DEALS.find(d => d.id === id);
+      if (deal && deal.imageUrl && deal.imageUrl.includes('firebasestorage.googleapis.com')) {
+        try {
+          const ref = storage.refFromURL(deal.imageUrl);
+          await ref.delete();
+        } catch (e) { console.warn('Image delete failed:', e); }
+      }
+    }
+    await db.collection(collection).doc(id).delete();
+    showToast('✓ Deleted', 'success');
+  } catch (err) {
+    showToast('Error: ' + err.message, 'error');
+  }
+}
+</script>
+</body>
+</html>
