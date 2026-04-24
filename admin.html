@@ -137,6 +137,28 @@ button, input, select, textarea { font-family:inherit; }
 .tips-card { background:white; border-radius:12px; padding:20px; box-shadow:var(--shadow-sm); }
 .tips-card h3 { font-size:16px; font-weight:800; margin-bottom:12px; }
 .tips-card p { color:var(--text-2); font-size:14px; line-height:1.6; }
+
+/* Smart paste */
+.smart-paste { background:linear-gradient(135deg,#FFF8E1,#FFF3CD); border:2px solid var(--secondary); border-radius:12px; padding:16px; margin-bottom:18px; }
+.smart-paste-label { font-size:13px; font-weight:800; color:#7A5A00; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+.smart-paste-row { display:flex; gap:8px; }
+.smart-paste-row input { flex:1; padding:10px 12px; border:1.5px solid var(--border); border-radius:8px; font-size:13px; outline:none; }
+.smart-paste-row input:focus { border-color:var(--secondary); }
+.smart-paste-row button { background:var(--secondary); color:white; border:none; padding:10px 18px; border-radius:8px; font-weight:800; cursor:pointer; white-space:nowrap; font-size:13px; }
+.smart-paste-row button:hover { background:#B8890C; }
+.smart-paste-row button:disabled { opacity:.6; cursor:wait; }
+.smart-paste-hint { font-size:11px; color:#7A5A00; margin-top:6px; }
+.smart-paste-status { font-size:12px; margin-top:8px; padding:8px 10px; border-radius:6px; display:none; }
+.smart-paste-status.show { display:block; }
+.smart-paste-status.success { background:#D4F4DD; color:#1B5E2E; }
+.smart-paste-status.error { background:#FFE5E5; color:var(--danger); }
+
+/* Store logo upload preview */
+.logo-preview { display:flex; align-items:center; gap:12px; padding:10px; background:var(--bg); border-radius:8px; margin-top:8px; }
+.logo-preview-img { width:48px; height:48px; border-radius:8px; object-fit:cover; background:white; }
+
+/* Visit store link button */
+.btn-mini.visit { color:var(--accent); }
 </style>
 </head>
 <body>
@@ -286,6 +308,7 @@ let DEALS = [], STORES = [], CATEGORIES = [], PROMOS = [];
 let currentUser = null;
 let currentEditId = null;
 let pendingImageFile = null;
+let pendingLogoFile = null;
 
 // ============ SEED DATA ============
 const SEED_STORES = [
@@ -509,7 +532,9 @@ function renderStores() {
   }
   c.innerHTML = STORES.map(s => {
     const dealCount = DEALS.filter(d => d.storeId === s.id).length;
-    return '<div class="item-card"><div class="item-thumb" style="background:' + s.color + ';color:white;font-weight:800;">' + escapeHtml(s.name.charAt(0)) + '</div><div class="item-body"><div class="item-title">' + escapeHtml(s.name) + '</div><div class="item-meta"><span>' + escapeHtml(s.typeFr || s.type || '—') + '</span><span>📦 ' + dealCount + ' deal(s)</span></div><div class="item-actions"><button class="btn-mini edit" onclick="openStoreForm(\'' + s.id + '\')">Edit</button><button class="btn-mini delete" onclick="deleteItem(\'stores\', \'' + s.id + '\', \'' + escapeHtml(s.name).replace(/\'/g, "\\\'") + '\')">Delete</button></div></div></div>';
+    const thumb = s.logoUrl ? '<img src="' + escapeHtml(s.logoUrl) + '">' : escapeHtml(s.name.charAt(0));
+    const thumbStyle = s.logoUrl ? '' : 'background:' + s.color + ';color:white;font-weight:800;';
+    return '<div class="item-card"><div class="item-thumb" style="' + thumbStyle + '">' + thumb + '</div><div class="item-body"><div class="item-title">' + escapeHtml(s.name) + '</div><div class="item-meta"><span>' + escapeHtml(s.typeFr || s.type || '—') + '</span><span>📦 ' + dealCount + ' deal(s)</span>' + (s.url ? '<span>🔗</span>' : '') + '</div><div class="item-actions"><button class="btn-mini edit" onclick="openStoreForm(\'' + s.id + '\')">Edit</button>' + (s.url ? '<button class="btn-mini visit" onclick="window.open(\'' + s.url + '\',\'_blank\')">Visit</button>' : '') + '<button class="btn-mini delete" onclick="deleteItem(\'stores\', \'' + s.id + '\', \'' + escapeHtml(s.name).replace(/\'/g, "\\\'") + '\')">Delete</button></div></div></div>';
   }).join('');
 }
 
@@ -539,8 +564,8 @@ function renderPromos() {
   }).join('');
 }
 
-function showModal(html) { $('modal-content').innerHTML = html; $('modal-overlay').classList.add('show'); pendingImageFile = null; }
-function closeModal() { $('modal-overlay').classList.remove('show'); currentEditId = null; pendingImageFile = null; }
+function showModal(html) { $('modal-content').innerHTML = html; $('modal-overlay').classList.add('show'); pendingImageFile = null; pendingLogoFile = null; }
+function closeModal() { $('modal-overlay').classList.remove('show'); currentEditId = null; pendingImageFile = null; pendingLogoFile = null; }
 $('modal-overlay').addEventListener('click', (e) => { if (e.target === $('modal-overlay')) closeModal(); });
 
 function openDealForm(id) {
@@ -552,6 +577,16 @@ function openDealForm(id) {
 
   showModal(`
     <div class="modal-title">${id ? '✏️ Edit deal' : '+ Add new deal'}<button class="modal-close" onclick="closeModal()">×</button></div>
+    ${(typeof SMART_PASTE_WORKER_URL !== 'undefined' && SMART_PASTE_WORKER_URL) ? `
+    <div class="smart-paste">
+      <div class="smart-paste-label">🪄 Smart Paste · Auto-fill from store URL</div>
+      <div class="smart-paste-row">
+        <input type="url" id="sp-url" placeholder="https://www.jumia.ma/product-link...">
+        <button type="button" onclick="smartPaste()" id="sp-btn">Fetch</button>
+      </div>
+      <div class="smart-paste-hint">Paste a Jumia, Marjane, Carrefour... product URL and click Fetch. Form will auto-fill.</div>
+      <div class="smart-paste-status" id="sp-status"></div>
+    </div>` : ''}
     <form id="deal-form">
       <div class="field-row">
         <div class="field"><label>Title (French) *</label><input id="f-title" value="${escapeHtml(d.title)}" required placeholder="Huile Lesieur 5L"></div>
@@ -572,7 +607,7 @@ function openDealForm(id) {
       </div>
       <div class="field-row">
         <div class="field"><label>Emoji (fallback)</label><input id="f-emoji" value="${escapeHtml(d.emoji || '🛍️')}" placeholder="🛍️" maxlength="4"></div>
-        <div class="field"><label>External link (optional)</label><input id="f-link" value="${escapeHtml(d.link || '')}" placeholder="https://..."></div>
+        <div class="field"><label>Direct deal link (optional)</label><input id="f-link" value="${escapeHtml(d.link || '')}" placeholder="https://..."></div>
       </div>
       <div class="field">
         <label>Product image (optional)</label>
@@ -668,6 +703,19 @@ function openStoreForm(id) {
       </div>
       <div class="field"><label>Website URL (optional)</label><input id="f-url" value="${escapeHtml(s.url || '')}" placeholder="https://www.marjane.ma"></div>
       <div class="field">
+        <label>Official logo (optional)</label>
+        <label class="image-upload" for="f-logo">
+          <div class="image-upload-icon">🖼️</div>
+          <div class="image-upload-text">Click to upload official store logo (square recommended)</div>
+          <input type="file" id="f-logo" accept="image/*" onchange="previewLogo(this)">
+        </label>
+        <div class="image-preview ${s.logoUrl ? 'show' : ''}" id="logo-preview">
+          <img id="logo-preview-img" src="${escapeHtml(s.logoUrl || '')}" alt="">
+          <button type="button" class="remove-img" onclick="removeLogo()">×</button>
+        </div>
+        <div class="upload-progress" id="logo-upload-progress"></div>
+      </div>
+      <div class="field">
         <label>Brand color *</label>
         <div class="color-input">
           <input type="color" id="f-color" value="${s.color}">
@@ -682,17 +730,29 @@ function openStoreForm(id) {
   `);
   $('f-color').addEventListener('input', e => $('f-color-text').value = e.target.value);
   $('f-color-text').addEventListener('input', e => { if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) $('f-color').value = e.target.value; });
+  if (s.logoUrl) $('logo-preview').dataset.existingUrl = s.logoUrl;
   $('store-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = $('save-btn');
     btn.disabled = true; btn.textContent = 'Saving...';
     try {
+      let logoUrl = $('logo-preview').dataset.existingUrl || '';
+      if (pendingLogoFile) {
+        $('logo-upload-progress').textContent = 'Uploading logo...';
+        const path = 'logos/' + Date.now() + '_' + pendingLogoFile.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+        const ref = storage.ref().child(path);
+        const snap = await ref.put(pendingLogoFile);
+        logoUrl = await snap.ref.getDownloadURL();
+      }
+      if (!$('logo-preview').classList.contains('show') && !pendingLogoFile) logoUrl = '';
+
       const data = {
         name: $('f-name').value.trim(),
         type: $('f-type').value.trim(),
         typeFr: $('f-typeFr').value.trim(),
         url: $('f-url').value.trim(),
-        color: $('f-color-text').value.trim() || '#C1272D'
+        color: $('f-color-text').value.trim() || '#C1272D',
+        logoUrl: logoUrl
       };
       if (currentEditId) await db.collection('stores').doc(currentEditId).update(data);
       else await db.collection('stores').add(data);
@@ -700,6 +760,114 @@ function openStoreForm(id) {
       closeModal();
     } catch (err) { showToast('Error: ' + err.message, 'error'); } finally { btn.disabled = false; }
   });
+}
+
+function previewLogo(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 2 * 1024 * 1024) { showToast('Logo too large (max 2MB)', 'error'); input.value = ''; return; }
+  pendingLogoFile = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    $('logo-preview-img').src = e.target.result;
+    $('logo-preview').classList.add('show');
+  };
+  reader.readAsDataURL(file);
+}
+function removeLogo() {
+  pendingLogoFile = null;
+  $('logo-preview').classList.remove('show');
+  $('logo-preview').dataset.existingUrl = '';
+  $('f-logo').value = '';
+}
+
+// ============ SMART PASTE ============
+async function smartPaste() {
+  if (typeof SMART_PASTE_WORKER_URL === 'undefined' || !SMART_PASTE_WORKER_URL) {
+    showSmartPasteStatus('Worker URL not configured. See SMART_PASTE_SETUP.md', 'error');
+    return;
+  }
+  const url = $('sp-url').value.trim();
+  if (!url) { showSmartPasteStatus('Paste a URL first', 'error'); return; }
+  if (!url.startsWith('http')) { showSmartPasteStatus('URL must start with http:// or https://', 'error'); return; }
+
+  const btn = $('sp-btn');
+  btn.disabled = true; btn.textContent = '⏳';
+  showSmartPasteStatus('Fetching page...', 'success');
+
+  try {
+    const workerUrl = SMART_PASTE_WORKER_URL.replace(/\/$/, '') + '/?url=' + encodeURIComponent(url);
+    const res = await fetch(workerUrl);
+    const data = await res.json();
+
+    if (data.error) {
+      showSmartPasteStatus('❌ ' + data.error, 'error');
+      btn.disabled = false; btn.textContent = 'Fetch';
+      return;
+    }
+
+    let filledCount = 0;
+    if (data.title) {
+      $('f-title').value = data.title;
+      // If looks Arabic (heuristic), put in Ar field too
+      if (/[\u0600-\u06FF]/.test(data.title)) $('f-titleAr').value = data.title;
+      filledCount++;
+    }
+    if (data.description) {
+      $('f-desc').value = data.description.substring(0, 200);
+      filledCount++;
+    }
+    if (data.price) {
+      $('f-new').value = data.price;
+      filledCount++;
+    }
+    if (data.oldPrice) {
+      $('f-old').value = data.oldPrice;
+      filledCount++;
+      if (data.price && data.oldPrice > data.price) {
+        const discount = Math.round(((data.oldPrice - data.price) / data.oldPrice) * 100);
+        $('f-disc').value = discount;
+      }
+    }
+    $('f-link').value = url;
+
+    // Auto-detect store from URL
+    try {
+      const host = new URL(url).hostname.toLowerCase();
+      const matchStore = STORES.find(s => {
+        if (s.url) return host.includes(new URL(s.url).hostname.replace('www.', ''));
+        return host.includes(s.id);
+      });
+      if (matchStore) $('f-storeId').value = matchStore.id;
+    } catch (e) {}
+
+    // Set image preview from URL
+    if (data.image) {
+      try {
+        // We'll display it but admin must save - we'll fetch and re-upload to Firebase Storage on save
+        const imgRes = await fetch(data.image);
+        const blob = await imgRes.blob();
+        if (blob.size > 0 && blob.size < 5 * 1024 * 1024) {
+          pendingImageFile = new File([blob], 'fetched-' + Date.now() + '.jpg', { type: blob.type || 'image/jpeg' });
+          $('image-preview-img').src = data.image;
+          $('image-preview').classList.add('show');
+          filledCount++;
+        }
+      } catch (e) { console.warn('Image fetch failed:', e); }
+    }
+
+    showSmartPasteStatus('✅ Filled ' + filledCount + ' fields. Review and save.', 'success');
+  } catch (err) {
+    showSmartPasteStatus('❌ ' + err.message, 'error');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Fetch';
+  }
+}
+
+function showSmartPasteStatus(msg, type) {
+  const el = $('sp-status');
+  el.textContent = msg;
+  el.className = 'smart-paste-status show ' + (type || '');
 }
 
 function openCategoryForm(id) {
