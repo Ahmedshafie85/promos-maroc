@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#C1272D">
 <title>Admin · Promos Maroc</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23C1272D'/><text x='50' y='68' font-size='50' font-weight='900' text-anchor='middle' fill='white' font-family='system-ui'>⚙</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -15,7 +15,6 @@
 body { font-family:'Tajawal','Cairo',-apple-system,BlinkMacSystemFont,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; line-height:1.5; }
 button, input, select, textarea { font-family:inherit; }
 
-/* ===== LOGIN SCREEN ===== */
 .login-screen { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; background:linear-gradient(135deg,var(--primary),var(--primary-dark)); }
 .login-card { background:white; border-radius:20px; padding:40px 32px; width:100%; max-width:400px; box-shadow:var(--shadow-lg); }
 .login-logo { font-size:64px; text-align:center; margin-bottom:16px; }
@@ -33,7 +32,6 @@ button, input, select, textarea { font-family:inherit; }
 .login-footer { text-align:center; margin-top:24px; font-size:12px; color:var(--text-3); }
 .login-footer a { color:var(--primary); text-decoration:none; font-weight:700; }
 
-/* ===== ADMIN APP ===== */
 .admin-app { display:none; }
 .admin-app.show { display:block; }
 .topbar { background:white; padding:14px 24px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:50; }
@@ -41,6 +39,7 @@ button, input, select, textarea { font-family:inherit; }
 .topbar-user { font-size:13px; color:var(--text-2); display:flex; align-items:center; gap:12px; }
 .logout-btn { background:none; border:1.5px solid var(--border); padding:6px 12px; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; color:var(--text); }
 .logout-btn:hover { background:var(--bg); }
+.view-site-btn { background:var(--accent); color:white; border:none; padding:6px 12px; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; text-decoration:none; }
 
 .tabs { background:white; padding:0 24px; border-bottom:1px solid var(--border); display:flex; gap:4px; overflow-x:auto; scrollbar-width:none; }
 .tabs::-webkit-scrollbar { display:none; }
@@ -57,7 +56,6 @@ button, input, select, textarea { font-family:inherit; }
 .add-btn { background:var(--primary); color:white; border:none; padding:10px 18px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px; }
 .add-btn:hover { background:var(--primary-dark); }
 
-/* ===== LIST CARDS ===== */
 .cards-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; }
 .item-card { background:white; border-radius:12px; padding:14px; box-shadow:var(--shadow-sm); display:flex; gap:12px; }
 .item-thumb { width:64px; height:64px; border-radius:10px; background:var(--bg); display:flex; align-items:center; justify-content:center; font-size:32px; flex-shrink:0; overflow:hidden; }
@@ -77,13 +75,11 @@ button, input, select, textarea { font-family:inherit; }
 .badge-active { background:#E8F8ED; color:var(--success); }
 .badge-expired { background:#F0F0F0; color:var(--text-3); }
 
-/* ===== EMPTY ===== */
 .empty { text-align:center; padding:60px 20px; color:var(--text-2); }
 .empty-icon { font-size:64px; margin-bottom:16px; }
 .empty-title { font-size:18px; font-weight:700; margin-bottom:8px; color:var(--text); }
 .empty-hint { font-size:14px; }
 
-/* ===== MODAL FORM ===== */
 .modal-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.6); z-index:200; display:none; align-items:center; justify-content:center; padding:20px; overflow-y:auto; }
 .modal-overlay.show { display:flex; }
 .modal { background:white; border-radius:16px; width:100%; max-width:560px; max-height:90vh; overflow-y:auto; padding:24px; }
@@ -101,7 +97,7 @@ button, input, select, textarea { font-family:inherit; }
 .field-hint { font-size:12px; color:var(--text-3); margin-top:4px; }
 .color-input { display:flex; gap:8px; align-items:center; }
 .color-input input[type="color"] { width:48px; padding:0; border:1.5px solid var(--border); border-radius:8px; cursor:pointer; height:40px; }
-.image-upload { border:2px dashed var(--border); border-radius:10px; padding:20px; text-align:center; cursor:pointer; transition:border-color .2s; }
+.image-upload { border:2px dashed var(--border); border-radius:10px; padding:20px; text-align:center; cursor:pointer; transition:border-color .2s; display:block; }
 .image-upload:hover { border-color:var(--primary); }
 .image-upload input { display:none; }
 .image-upload-icon { font-size:36px; margin-bottom:8px; }
@@ -118,28 +114,34 @@ button, input, select, textarea { font-family:inherit; }
 .btn-save:hover { background:var(--primary-dark); }
 .btn-save:disabled { opacity:.6; cursor:wait; }
 
-/* ===== TOAST ===== */
 .toast { position:fixed; top:24px; left:50%; transform:translateX(-50%); background:var(--text); color:white; padding:12px 20px; border-radius:10px; font-size:14px; font-weight:600; z-index:300; opacity:0; transition:opacity .3s; pointer-events:none; max-width:90%; }
 .toast.show { opacity:1; }
 .toast.error { background:var(--danger); }
 .toast.success { background:var(--success); }
 
-/* ===== STATS CARDS ===== */
 .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin-bottom:24px; }
 .stat-card { background:white; border-radius:12px; padding:18px; box-shadow:var(--shadow-sm); }
 .stat-icon { font-size:28px; margin-bottom:6px; }
 .stat-value { font-size:28px; font-weight:800; line-height:1; }
 .stat-label { font-size:13px; color:var(--text-2); margin-top:4px; }
 
-/* ===== FIREBASE WARNING ===== */
-.fb-warning { background:#FFF3CD; border:1.5px solid #FFEEBA; padding:16px 20px; border-radius:10px; color:#856404; margin-bottom:20px; }
-.fb-warning strong { display:block; margin-bottom:6px; }
-.fb-warning code { background:rgba(0,0,0,.06); padding:2px 6px; border-radius:4px; font-size:13px; }
+.seed-card { background:linear-gradient(135deg, #FDEEEF, #FFF5F6); border:2px solid var(--primary); border-radius:16px; padding:24px; margin-bottom:24px; position:relative; overflow:hidden; }
+.seed-card::before { content:'🌱'; position:absolute; top:-20px; inset-inline-end:-20px; font-size:140px; opacity:.1; }
+.seed-title { font-size:18px; font-weight:900; color:var(--primary); margin-bottom:6px; }
+.seed-desc { font-size:14px; color:var(--text-2); line-height:1.6; margin-bottom:16px; max-width:600px; }
+.seed-btn { background:var(--primary); color:white; border:none; padding:14px 28px; border-radius:10px; font-size:15px; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:8px; box-shadow:0 4px 12px rgba(193,39,45,.25); }
+.seed-btn:hover { background:var(--primary-dark); transform:translateY(-1px); }
+.seed-btn:disabled { opacity:.6; cursor:wait; }
+.seed-note { font-size:12px; color:var(--text-3); margin-top:12px; }
+
+.tips-card { background:white; border-radius:12px; padding:20px; box-shadow:var(--shadow-sm); }
+.tips-card h3 { font-size:16px; font-weight:800; margin-bottom:12px; }
+.tips-card p { color:var(--text-2); font-size:14px; line-height:1.6; }
 </style>
 </head>
 <body>
 
-<!-- ============= LOGIN SCREEN ============= -->
+<!-- LOGIN -->
 <div class="login-screen" id="login-screen">
   <div class="login-card">
     <div class="login-logo">⚙️</div>
@@ -163,12 +165,13 @@ button, input, select, textarea { font-family:inherit; }
   </div>
 </div>
 
-<!-- ============= ADMIN APP ============= -->
+<!-- ADMIN APP -->
 <div class="admin-app" id="admin-app">
   <div class="topbar">
     <div class="topbar-brand">⚙️ Promos Maroc · Admin</div>
     <div class="topbar-user">
       <span id="user-email"></span>
+      <a class="view-site-btn" href="index.html" target="_blank">🌐 View site</a>
       <button class="logout-btn" onclick="doLogout()">Logout</button>
     </div>
   </div>
@@ -182,26 +185,36 @@ button, input, select, textarea { font-family:inherit; }
   </div>
 
   <div class="content">
-    <div id="fb-warning-container"></div>
-
     <!-- DASHBOARD -->
     <div class="section active" id="section-dashboard">
       <div class="section-head"><h2>📊 Dashboard</h2></div>
+
+      <div class="seed-card" id="seed-card">
+        <div class="seed-title">🌱 Start with sample data</div>
+        <p class="seed-desc">Populate your app with <strong>12 stores</strong>, <strong>8 categories</strong>, <strong>30 realistic deals</strong>, and <strong>5 promo codes</strong> — covers Marjane, Carrefour, BIM, Jumia, H&M and more. Your public site will look full and real immediately. You can edit or delete anything afterwards.</p>
+        <button class="seed-btn" id="seed-btn" onclick="seedData()">
+          <span>🚀</span> Seed sample data now
+        </button>
+        <div class="seed-note" id="seed-note">⚠️ Only use once — it adds data on top of what's there. Running twice will duplicate.</div>
+      </div>
+
       <div class="stats-grid">
-        <div class="stat-card"><div class="stat-icon">🛍️</div><div class="stat-value" id="stat-deals">0</div><div class="stat-label">Active deals</div></div>
-        <div class="stat-card"><div class="stat-icon">🔥</div><div class="stat-value" id="stat-featured">0</div><div class="stat-label">Featured deals</div></div>
+        <div class="stat-card"><div class="stat-icon">🛍️</div><div class="stat-value" id="stat-deals">0</div><div class="stat-label">Total deals</div></div>
+        <div class="stat-card"><div class="stat-icon">🔥</div><div class="stat-value" id="stat-featured">0</div><div class="stat-label">Featured</div></div>
         <div class="stat-card"><div class="stat-icon">🏪</div><div class="stat-value" id="stat-stores">0</div><div class="stat-label">Stores</div></div>
         <div class="stat-card"><div class="stat-icon">📂</div><div class="stat-value" id="stat-categories">0</div><div class="stat-label">Categories</div></div>
         <div class="stat-card"><div class="stat-icon">🎟️</div><div class="stat-value" id="stat-promos">0</div><div class="stat-label">Promo codes</div></div>
         <div class="stat-card"><div class="stat-icon">⏰</div><div class="stat-value" id="stat-expiring">0</div><div class="stat-label">Expiring this week</div></div>
       </div>
-      <div style="background:white;border-radius:12px;padding:20px;box-shadow:var(--shadow-sm);">
-        <h3 style="font-size:16px;font-weight:800;margin-bottom:12px;">🚀 Quick start</h3>
-        <p style="color:var(--text-2);font-size:14px;line-height:1.6;">
-          1. Add your stores first (Marjane, Carrefour, etc.) in the <strong>Stores</strong> tab.<br>
-          2. Add categories you want to use (food, electronics, etc.) in the <strong>Categories</strong> tab.<br>
-          3. Now you can add deals in the <strong>Deals</strong> tab — pick the store, category, upload a photo.<br>
-          4. Anything you add appears LIVE on the public site immediately.
+
+      <div class="tips-card">
+        <h3>🚀 Quick tips</h3>
+        <p>
+          • The <strong>Seed</strong> button above fills your database with realistic Moroccan retail data in 5 seconds.<br>
+          • Everything you add appears LIVE on the public site at <strong>index.html</strong>.<br>
+          • Images auto-upload to Firebase Storage (5MB max per image).<br>
+          • Expired deals are automatically hidden from the public site.<br>
+          • Use the "Featured" checkbox to highlight deals on the homepage banner.
         </p>
       </div>
     </div>
@@ -244,23 +257,19 @@ button, input, select, textarea { font-family:inherit; }
   </div>
 </div>
 
-<!-- ============= MODAL FORMS ============= -->
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal" id="modal-content"></div>
 </div>
 
 <div class="toast" id="toast"></div>
 
-<!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
 <script src="firebase-config.js"></script>
 <script>
-// =============================================================
-// FIREBASE INIT
-// =============================================================
+// ============ FIREBASE INIT ============
 let db = null, auth = null, storage = null, firebaseReady = false;
 try {
   if (typeof firebase !== 'undefined' && firebaseConfig.apiKey !== 'PASTE_YOUR_API_KEY_HERE') {
@@ -270,19 +279,120 @@ try {
     storage = firebase.storage();
     firebaseReady = true;
   }
-} catch (e) { console.error('Firebase init error:', e); }
+} catch (e) { console.error(e); }
 
-// =============================================================
-// STATE
-// =============================================================
+// ============ STATE ============
 let DEALS = [], STORES = [], CATEGORIES = [], PROMOS = [];
 let currentUser = null;
 let currentEditId = null;
 let pendingImageFile = null;
 
-// =============================================================
-// HELPERS
-// =============================================================
+// ============ SEED DATA ============
+const SEED_STORES = [
+  { id:'marjane', name:'Marjane', color:'#E30613', type:'سوبر ماركت', typeFr:'Supermarché', url:'https://www.marjane.ma' },
+  { id:'carrefour', name:'Carrefour', color:'#004E9F', type:'سوبر ماركت', typeFr:'Supermarché', url:'https://www.carrefour.ma' },
+  { id:'bim', name:'BIM', color:'#E30613', type:'سوبر ماركت', typeFr:'Supermarché', url:'https://www.bim.ma' },
+  { id:'aswak', name:'Aswak Assalam', color:'#00A651', type:'سوبر ماركت', typeFr:'Supermarché', url:'https://www.aswakassalam.com' },
+  { id:'atacadao', name:'Atacadão', color:'#FFD100', type:'سوبر ماركت', typeFr:'Supermarché', url:'https://www.atacadao.ma' },
+  { id:'labelvie', name:"Label'Vie", color:'#00A651', type:'سوبر ماركت', typeFr:'Supermarché', url:'https://www.labelvie.ma' },
+  { id:'acima', name:'Acima', color:'#1A8FE3', type:'سوبر ماركت', typeFr:'Supermarché', url:'https://www.acima.ma' },
+  { id:'electroplanet', name:'Electroplanet', color:'#0062A3', type:'إلكترونيات', typeFr:'Électronique', url:'https://www.electroplanet.ma' },
+  { id:'biougnach', name:'Biougnach', color:'#E30613', type:'إلكترونيات', typeFr:'Électronique', url:'https://www.biougnach.ma' },
+  { id:'decathlon', name:'Decathlon', color:'#0082C3', type:'رياضة', typeFr:'Sport', url:'https://www.decathlon.ma' },
+  { id:'hm', name:'H&M', color:'#E50010', type:'أزياء', typeFr:'Mode', url:'https://www2.hm.com/fr_ma/' },
+  { id:'jumia', name:'Jumia', color:'#F68B1E', type:'متجر إلكتروني', typeFr:'E-commerce', url:'https://www.jumia.ma' }
+];
+
+const SEED_CATEGORIES = [
+  { id:'food', icon:'🛒', ar:'المواد الغذائية', fr:'Alimentation' },
+  { id:'electronics', icon:'📱', ar:'إلكترونيات', fr:'Électronique' },
+  { id:'fashion', icon:'👕', ar:'الأزياء', fr:'Mode' },
+  { id:'beauty', icon:'💄', ar:'الجمال', fr:'Beauté' },
+  { id:'home', icon:'🏠', ar:'المنزل', fr:'Maison' },
+  { id:'kids', icon:'🧸', ar:'الأطفال', fr:'Enfants' },
+  { id:'sports', icon:'⚽', ar:'رياضة', fr:'Sport' },
+  { id:'appliances', icon:'🔌', ar:'الأجهزة المنزلية', fr:'Électroménager' }
+];
+
+function inDays(n) {
+  const d = new Date(); d.setDate(d.getDate() + n);
+  return d.toISOString().split('T')[0];
+}
+
+const SEED_DEALS = [
+  { title:'Huile Lesieur 5L', titleAr:'زيت لسيور 5 لتر', desc:'Huile de table 5 litres', storeId:'marjane', cat:'food', old:145, new:99, disc:32, featured:true, expires:inDays(14), emoji:'🫒' },
+  { title:'Samsung Galaxy A25 128GB', titleAr:'سامسونج جالاكسي A25', desc:'Smartphone 128GB, écran 6.5"', storeId:'electroplanet', cat:'electronics', old:2799, new:1999, disc:29, featured:true, expires:inDays(18), emoji:'📱' },
+  { title:'Lait Centrale Pack 6x1L', titleAr:'حليب سنطرال 6 لتر', desc:'Pack 6x1L lait UHT demi-écrémé', storeId:'carrefour', cat:'food', old:48, new:39, disc:19, featured:false, expires:inDays(7), emoji:'🥛' },
+  { title:'Ballon Adidas Tiro taille 5', titleAr:'كرة أديداس تيرو', desc:'Ballon football officiel', storeId:'decathlon', cat:'sports', old:299, new:199, disc:33, featured:false, expires:inDays(22), emoji:'⚽' },
+  { title:'Climatiseur LG 12000 BTU', titleAr:'مكيف LG 12000 BTU', desc:'LG Dual Inverter A++, installation gratuite', storeId:'biougnach', cat:'appliances', old:5499, new:4199, disc:24, featured:true, expires:inDays(25), emoji:'❄️' },
+  { title:'Riz Basmati 5kg', titleAr:'أرز بسمتي 5 كلغ', desc:'Riz long grain premium', storeId:'bim', cat:'food', old:89, new:69, disc:22, featured:false, expires:inDays(9), emoji:'🍚' },
+  { title:'T-shirts H&M Lot de 3', titleAr:'قمصان H&M x3', desc:'Lot de 3 t-shirts coton bio', storeId:'hm', cat:'fashion', old:199, new:129, disc:35, featured:false, expires:inDays(15), emoji:'👕' },
+  { title:'Pampers Baby-Dry T4 Mega', titleAr:'حفاضات بامبرز T4', desc:'Méga pack 120 couches', storeId:'aswak', cat:'kids', old:289, new:219, disc:24, featured:false, expires:inDays(17), emoji:'👶' },
+  { title:'Yaourt Jibal Nature x16', titleAr:'ياغورت جبال x16', desc:'Pack 16 yaourts natures', storeId:'atacadao', cat:'food', old:42, new:29, disc:31, featured:false, expires:inDays(5), emoji:'🥤' },
+  { title:'Smart TV TCL 43" 4K UHD', titleAr:'تلفاز TCL 43 بوصة 4K', desc:'Smart TV Android 4K avec HDR', storeId:'jumia', cat:'electronics', old:4599, new:2999, disc:35, featured:true, expires:inDays(13), emoji:'📺', link:'https://www.jumia.ma' },
+  { title:'Shampoing Dove 400ml Duo', titleAr:'شامبو دوف 400 مل', desc:'Dove nutrition pack de 2', storeId:'marjane', cat:'beauty', old:79, new:55, disc:30, featured:false, expires:inDays(16), emoji:'🧴' },
+  { title:'Machine à laver Beko 8kg A+', titleAr:'غسالة بيكو 8 كلغ', desc:'Beko classe A+, 1200 tours/min', storeId:'electroplanet', cat:'appliances', old:4299, new:3199, disc:26, featured:false, expires:inDays(21), emoji:'🧺' },
+  { title:'Farine Tria 5kg T55', titleAr:'طحين تريا 5 كلغ', desc:'Farine de blé T55 panifiable', storeId:'marjane', cat:'food', old:65, new:49, disc:25, featured:false, expires:inDays(8), emoji:'🌾' },
+  { title:'Thé Sultan Gunpowder 200g', titleAr:'أتاي السلطان 200غ', desc:'Thé vert gunpowder marocain', storeId:'aswak', cat:'food', old:45, new:35, disc:22, featured:false, expires:inDays(12), emoji:'🍵' },
+  { title:'Dattes Medjool 1kg Premium', titleAr:'تمر مجدول 1 كلغ', desc:'Dattes Medjool origine Maroc', storeId:'carrefour', cat:'food', old:159, new:119, disc:25, featured:true, expires:inDays(14), emoji:'🌴' },
+  { title:'JBL Tune 510BT Wireless', titleAr:'سماعات JBL 510BT', desc:'Casque Bluetooth 40h autonomie', storeId:'biougnach', cat:'electronics', old:699, new:449, disc:36, featured:false, expires:inDays(19), emoji:'🎧' },
+  { title:'Robe H&M été collection', titleAr:'فستان H&M صيفي', desc:'Robe collection printemps/été', storeId:'hm', cat:'fashion', old:299, new:179, disc:40, featured:true, expires:inDays(15), emoji:'👗' },
+  { title:'Kalenji Run Active femme', titleAr:'أحذية كالينجي للجري', desc:'Chaussures running respirantes', storeId:'decathlon', cat:'sports', old:399, new:249, disc:38, featured:true, expires:inDays(22), emoji:'👟' },
+  { title:'Tajine terre cuite 30cm', titleAr:'طاجين فخار 30 سم', desc:'Tajine traditionnel marocain artisanal', storeId:'carrefour', cat:'home', old:189, new:129, disc:32, featured:true, expires:inDays(17), emoji:'🫕' },
+  { title:'Crème Nivea 300ml visage', titleAr:'كريم نيفيا 300 مل', desc:'Crème hydratante visage & corps', storeId:'acima', cat:'beauty', old:59, new:39, disc:34, featured:false, expires:inDays(12), emoji:'🧴' },
+  { title:'Café Maroc Campina 500g', titleAr:'قهوة كامبينا 500غ', desc:'Café moulu, torréfaction naturelle', storeId:'marjane', cat:'food', old:75, new:55, disc:27, featured:false, expires:inDays(10), emoji:'☕' },
+  { title:'Ventilateur sur pied 45W', titleAr:'مروحة 45 واط', desc:'3 vitesses, oscillant, silencieux', storeId:'electroplanet', cat:'appliances', old:399, new:249, disc:38, featured:false, expires:inDays(20), emoji:'💨' },
+  { title:'Valise cabine 55cm 4 roues', titleAr:'حقيبة سفر 55 سم', desc:'Valise rigide ABS 4 roues', storeId:'jumia', cat:'home', old:799, new:499, disc:38, featured:true, expires:inDays(16), emoji:'🧳', link:'https://www.jumia.ma' },
+  { title:'Mixeur Moulinex 500W', titleAr:'خلاط مولينكس 500 واط', desc:'Blender 1.5L, lames inox', storeId:'biougnach', cat:'appliances', old:459, new:329, disc:28, featured:false, expires:inDays(18), emoji:'🍹' },
+  { title:'Parfum Nabeel Arabic 100ml', titleAr:'عطر نبيل 100 مل', desc:'Eau de parfum oriental unisexe', storeId:'acima', cat:'beauty', old:399, new:249, disc:38, featured:true, expires:inDays(23), emoji:'🌸' },
+  { title:'Jeans Levi\'s 501 original', titleAr:'جينز ليفايز 501', desc:'Jean droit classique', storeId:'hm', cat:'fashion', old:599, new:399, disc:33, featured:false, expires:inDays(14), emoji:'👖' },
+  { title:'Pâtes Panzani 500g x5', titleAr:'باستا بانزاني 500غ x5', desc:'Pack 5 paquets pâtes', storeId:'atacadao', cat:'food', old:55, new:39, disc:29, featured:false, expires:inDays(6), emoji:'🍝' },
+  { title:'Peluche XXL Ours 80cm', titleAr:'دمية دب كبيرة 80 سم', desc:'Ours en peluche géant doux', storeId:'aswak', cat:'kids', old:299, new:179, disc:40, featured:true, expires:inDays(19), emoji:'🧸' },
+  { title:'Huile d\'argan Bio 100ml', titleAr:'زيت الأركان العضوي', desc:'Huile cosmétique certifiée bio', storeId:'marjane', cat:'beauty', old:189, new:139, disc:26, featured:false, expires:inDays(15), emoji:'✨' },
+  { title:'Vélo Btwin enfant 20 pouces', titleAr:'دراجة أطفال 20 بوصة', desc:'Vélo enfant 6-9 ans, roues 20"', storeId:'decathlon', cat:'kids', old:1299, new:899, disc:31, featured:true, expires:inDays(25), emoji:'🚲' }
+];
+
+const SEED_PROMOS = [
+  { store:'Jumia', storeId:'jumia', code:'PROMO10', discount:'10% de réduction', discountAr:'خصم 10%', desc:'Sur votre première commande, min. 300 DH', descAr:'على طلبك الأول، بحد أدنى 300 درهم', link:'https://www.jumia.ma' },
+  { store:'H&M', storeId:'hm', code:'SPRING20', discount:'20% de réduction', discountAr:'خصم 20%', desc:'Collection printemps', descAr:'مجموعة الربيع', link:'https://www2.hm.com/fr_ma/' },
+  { store:'Decathlon', storeId:'decathlon', code:'SPORT15', discount:'15% sur les vêtements', discountAr:'15% على الملابس', desc:"Min. 500 DH d'achat", descAr:'بحد أدنى 500 درهم', link:'https://www.decathlon.ma' },
+  { store:'Marjane', storeId:'marjane', code:'MARJANE50', discount:'50 DH offerts', discountAr:'50 درهم مجانية', desc:"Dès 500 DH d'achat", descAr:'على شراء 500 درهم أو أكثر', link:'https://www.marjane.ma' },
+  { store:'Jumia', storeId:'jumia', code:'TECH25', discount:"25% sur l'électronique", discountAr:'25% على الإلكترونيات', desc:'Smartphones, tablettes, min. 1000 DH', descAr:'الهواتف الذكية واللوحيات', link:'https://www.jumia.ma' }
+];
+
+async function seedData() {
+  if (!confirm('This will add 12 stores, 8 categories, 30 deals, and 5 promo codes to your database. Continue?')) return;
+  const btn = document.getElementById('seed-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span>⏳</span> Seeding...';
+  try {
+    // Stores (use doc IDs)
+    for (const s of SEED_STORES) {
+      await db.collection('stores').doc(s.id).set(s);
+    }
+    // Categories (use doc IDs)
+    for (const c of SEED_CATEGORIES) {
+      await db.collection('categories').doc(c.id).set(c);
+    }
+    // Deals (auto IDs)
+    for (const d of SEED_DEALS) {
+      await db.collection('deals').add({ ...d, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+    }
+    // Promos (auto IDs)
+    for (const p of SEED_PROMOS) {
+      await db.collection('promos').add(p);
+    }
+    showToast('🎉 Seed complete! Check your site.', 'success');
+    document.getElementById('seed-card').style.display = 'none';
+  } catch (err) {
+    console.error(err);
+    showToast('Error: ' + err.message, 'error');
+    btn.disabled = false;
+    btn.innerHTML = '<span>🚀</span> Seed sample data now';
+  }
+}
+
+// ============ HELPERS ============
 function showToast(msg, type) {
   const el = document.getElementById('toast');
   el.textContent = msg;
@@ -292,9 +402,7 @@ function showToast(msg, type) {
 function $(id) { return document.getElementById(id); }
 function escapeHtml(s) { return (s || '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c])); }
 
-// =============================================================
-// LOGIN
-// =============================================================
+// ============ LOGIN ============
 function showLogin() { $('login-screen').style.display = 'flex'; $('admin-app').classList.remove('show'); }
 function showAdmin() { $('login-screen').style.display = 'none'; $('admin-app').classList.add('show'); }
 
@@ -329,14 +437,11 @@ $('login-form').addEventListener('submit', async (e) => {
   }
 });
 
-function doLogout() {
-  if (auth) auth.signOut();
-}
+function doLogout() { if (auth) auth.signOut(); }
 
 if (firebaseReady) {
   auth.onAuthStateChanged(user => {
     if (user) {
-      // Check email matches admin
       if (user.email !== ADMIN_EMAIL) {
         showToast('⛔ Not authorized', 'error');
         auth.signOut();
@@ -353,34 +458,16 @@ if (firebaseReady) {
   });
 }
 
-// =============================================================
-// TABS
-// =============================================================
 function showTab(name) {
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
   document.querySelectorAll('.section').forEach(s => s.classList.toggle('active', s.id === 'section-' + name));
 }
 
-// =============================================================
-// DATA LISTENERS
-// =============================================================
 function startDataListeners() {
-  db.collection('deals').onSnapshot(snap => {
-    DEALS = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    renderDeals(); updateStats();
-  });
-  db.collection('stores').onSnapshot(snap => {
-    STORES = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    renderStores(); updateStats();
-  });
-  db.collection('categories').onSnapshot(snap => {
-    CATEGORIES = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    renderCategories(); updateStats();
-  });
-  db.collection('promos').onSnapshot(snap => {
-    PROMOS = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    renderPromos(); updateStats();
-  });
+  db.collection('deals').onSnapshot(snap => { DEALS = snap.docs.map(d => ({ id: d.id, ...d.data() })); renderDeals(); updateStats(); });
+  db.collection('stores').onSnapshot(snap => { STORES = snap.docs.map(d => ({ id: d.id, ...d.data() })); renderStores(); updateStats(); });
+  db.collection('categories').onSnapshot(snap => { CATEGORIES = snap.docs.map(d => ({ id: d.id, ...d.data() })); renderCategories(); updateStats(); });
+  db.collection('promos').onSnapshot(snap => { PROMOS = snap.docs.map(d => ({ id: d.id, ...d.data() })); renderPromos(); updateStats(); });
 }
 
 function updateStats() {
@@ -390,24 +477,26 @@ function updateStats() {
   $('stat-categories').textContent = CATEGORIES.length;
   $('stat-promos').textContent = PROMOS.length;
   const now = new Date(); const week = new Date(now.getTime() + 7 * 86400000);
-  $('stat-expiring').textContent = DEALS.filter(d => { const exp = new Date(d.expires); return exp >= now && exp <= week; }).length;
+  $('stat-expiring').textContent = DEALS.filter(d => { if(!d.expires)return false; const exp = new Date(d.expires); return exp >= now && exp <= week; }).length;
+  // Hide seed card if data already exists
+  if (STORES.length > 0 || DEALS.length > 0) {
+    const sc = document.getElementById('seed-card');
+    if (sc) sc.style.display = 'none';
+  }
 }
 
-// =============================================================
-// RENDER LISTS
-// =============================================================
 function renderDeals() {
   $('count-deals').textContent = DEALS.length;
   const c = $('deals-list');
   if (DEALS.length === 0) {
-    c.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="empty-icon">🛍️</div><div class="empty-title">No deals yet</div><div class="empty-hint">Click "+ Add deal" to create your first one.</div></div>';
+    c.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="empty-icon">🛍️</div><div class="empty-title">No deals yet</div><div class="empty-hint">Click "+ Add deal" or use the seed button on the dashboard.</div></div>';
     return;
   }
   c.innerHTML = DEALS.map(d => {
     const store = STORES.find(s => s.id === d.storeId);
     const expired = d.expires && new Date(d.expires) < new Date();
     const thumb = d.imageUrl ? '<img src="' + d.imageUrl + '">' : (d.emoji || '🛍️');
-    return '<div class="item-card"><div class="item-thumb">' + thumb + '</div><div class="item-body"><div class="item-title">' + escapeHtml(d.titleAr || d.title) + '</div><div class="item-meta">' + (store ? '<span>🏪 ' + escapeHtml(store.name) + '</span>' : '') + '<span>💰 ' + d.new + ' DH</span><span class="badge badge-discount">-' + d.disc + '%</span>' + (d.featured ? '<span class="badge badge-featured">⭐ Featured</span>' : '') + (expired ? '<span class="badge badge-expired">Expired</span>' : '<span class="badge badge-active">Active</span>') + '</div><div class="item-actions"><button class="btn-mini edit" onclick="openDealForm(\'' + d.id + '\')">Edit</button><button class="btn-mini delete" onclick="deleteItem(\'deals\', \'' + d.id + '\', \'' + escapeHtml(d.titleAr || d.title).replace(/'/g, "\\'") + '\')">Delete</button></div></div></div>';
+    return '<div class="item-card"><div class="item-thumb">' + thumb + '</div><div class="item-body"><div class="item-title">' + escapeHtml(d.titleAr || d.title) + '</div><div class="item-meta">' + (store ? '<span>🏪 ' + escapeHtml(store.name) + '</span>' : '') + '<span>💰 ' + d.new + ' DH</span><span class="badge badge-discount">-' + d.disc + '%</span>' + (d.featured ? '<span class="badge badge-featured">⭐ Featured</span>' : '') + (expired ? '<span class="badge badge-expired">Expired</span>' : '<span class="badge badge-active">Active</span>') + '</div><div class="item-actions"><button class="btn-mini edit" onclick="openDealForm(\'' + d.id + '\')">Edit</button><button class="btn-mini delete" onclick="deleteItem(\'deals\', \'' + d.id + '\', \'' + escapeHtml(d.titleAr || d.title).replace(/\'/g, "\\\'") + '\')">Delete</button></div></div></div>';
   }).join('');
 }
 
@@ -415,12 +504,12 @@ function renderStores() {
   $('count-stores').textContent = STORES.length;
   const c = $('stores-list');
   if (STORES.length === 0) {
-    c.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="empty-icon">🏪</div><div class="empty-title">No stores yet</div><div class="empty-hint">Add stores like Marjane, Carrefour, BIM...</div></div>';
+    c.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="empty-icon">🏪</div><div class="empty-title">No stores yet</div><div class="empty-hint">Click "+ Add store" or use the seed button on the dashboard.</div></div>';
     return;
   }
   c.innerHTML = STORES.map(s => {
     const dealCount = DEALS.filter(d => d.storeId === s.id).length;
-    return '<div class="item-card"><div class="item-thumb" style="background:' + s.color + ';color:white;font-weight:800;">' + escapeHtml(s.name.charAt(0)) + '</div><div class="item-body"><div class="item-title">' + escapeHtml(s.name) + '</div><div class="item-meta"><span>' + escapeHtml(s.typeFr || s.type || '—') + '</span><span>📦 ' + dealCount + ' deal(s)</span></div><div class="item-actions"><button class="btn-mini edit" onclick="openStoreForm(\'' + s.id + '\')">Edit</button><button class="btn-mini delete" onclick="deleteItem(\'stores\', \'' + s.id + '\', \'' + escapeHtml(s.name).replace(/'/g, "\\'") + '\')">Delete</button></div></div></div>';
+    return '<div class="item-card"><div class="item-thumb" style="background:' + s.color + ';color:white;font-weight:800;">' + escapeHtml(s.name.charAt(0)) + '</div><div class="item-body"><div class="item-title">' + escapeHtml(s.name) + '</div><div class="item-meta"><span>' + escapeHtml(s.typeFr || s.type || '—') + '</span><span>📦 ' + dealCount + ' deal(s)</span></div><div class="item-actions"><button class="btn-mini edit" onclick="openStoreForm(\'' + s.id + '\')">Edit</button><button class="btn-mini delete" onclick="deleteItem(\'stores\', \'' + s.id + '\', \'' + escapeHtml(s.name).replace(/\'/g, "\\\'") + '\')">Delete</button></div></div></div>';
   }).join('');
 }
 
@@ -428,12 +517,12 @@ function renderCategories() {
   $('count-categories').textContent = CATEGORIES.length;
   const c = $('categories-list');
   if (CATEGORIES.length === 0) {
-    c.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="empty-icon">📂</div><div class="empty-title">No categories yet</div><div class="empty-hint">Add categories like Food, Electronics, Fashion...</div></div>';
+    c.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="empty-icon">📂</div><div class="empty-title">No categories yet</div></div>';
     return;
   }
   c.innerHTML = CATEGORIES.map(cat => {
     const dealCount = DEALS.filter(d => d.cat === cat.id).length;
-    return '<div class="item-card"><div class="item-thumb">' + (cat.icon || '📂') + '</div><div class="item-body"><div class="item-title">' + escapeHtml(cat.fr || cat.ar || cat.id) + ' · ' + escapeHtml(cat.ar || '') + '</div><div class="item-meta"><span>ID: <code>' + escapeHtml(cat.id) + '</code></span><span>📦 ' + dealCount + ' deal(s)</span></div><div class="item-actions"><button class="btn-mini edit" onclick="openCategoryForm(\'' + cat.id + '\')">Edit</button><button class="btn-mini delete" onclick="deleteItem(\'categories\', \'' + cat.id + '\', \'' + escapeHtml(cat.fr || cat.id).replace(/'/g, "\\'") + '\')">Delete</button></div></div></div>';
+    return '<div class="item-card"><div class="item-thumb">' + (cat.icon || '📂') + '</div><div class="item-body"><div class="item-title">' + escapeHtml(cat.fr || cat.ar || cat.id) + ' · ' + escapeHtml(cat.ar || '') + '</div><div class="item-meta"><span>ID: <code>' + escapeHtml(cat.id) + '</code></span><span>📦 ' + dealCount + ' deal(s)</span></div><div class="item-actions"><button class="btn-mini edit" onclick="openCategoryForm(\'' + cat.id + '\')">Edit</button><button class="btn-mini delete" onclick="deleteItem(\'categories\', \'' + cat.id + '\', \'' + escapeHtml(cat.fr || cat.id).replace(/\'/g, "\\\'") + '\')">Delete</button></div></div></div>';
   }).join('');
 }
 
@@ -441,36 +530,23 @@ function renderPromos() {
   $('count-promos').textContent = PROMOS.length;
   const c = $('promos-list');
   if (PROMOS.length === 0) {
-    c.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="empty-icon">🎟️</div><div class="empty-title">No promo codes yet</div><div class="empty-hint">Add codes like PROMO10, SPRING20...</div></div>';
+    c.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="empty-icon">🎟️</div><div class="empty-title">No promo codes yet</div></div>';
     return;
   }
   c.innerHTML = PROMOS.map(p => {
     const store = STORES.find(s => s.id === p.storeId);
-    return '<div class="item-card"><div class="item-thumb" style="background:' + (store ? store.color : '#999') + ';color:white;font-weight:800;">' + escapeHtml((p.store || (store ? store.name : '?')).charAt(0)) + '</div><div class="item-body"><div class="item-title">' + escapeHtml(p.code) + '</div><div class="item-meta"><span>🏪 ' + escapeHtml(p.store || (store ? store.name : '—')) + '</span><span>' + escapeHtml(p.discount || p.discountAr || '') + '</span></div><div class="item-actions"><button class="btn-mini edit" onclick="openPromoForm(\'' + p.id + '\')">Edit</button><button class="btn-mini delete" onclick="deleteItem(\'promos\', \'' + p.id + '\', \'' + escapeHtml(p.code).replace(/'/g, "\\'") + '\')">Delete</button></div></div></div>';
+    return '<div class="item-card"><div class="item-thumb" style="background:' + (store ? store.color : '#999') + ';color:white;font-weight:800;">' + escapeHtml((p.store || (store ? store.name : '?')).charAt(0)) + '</div><div class="item-body"><div class="item-title">' + escapeHtml(p.code) + '</div><div class="item-meta"><span>🏪 ' + escapeHtml(p.store || (store ? store.name : '—')) + '</span><span>' + escapeHtml(p.discount || p.discountAr || '') + '</span></div><div class="item-actions"><button class="btn-mini edit" onclick="openPromoForm(\'' + p.id + '\')">Edit</button><button class="btn-mini delete" onclick="deleteItem(\'promos\', \'' + p.id + '\', \'' + escapeHtml(p.code).replace(/\'/g, "\\\'") + '\')">Delete</button></div></div></div>';
   }).join('');
 }
 
-// =============================================================
-// MODAL FORMS
-// =============================================================
-function showModal(html) {
-  $('modal-content').innerHTML = html;
-  $('modal-overlay').classList.add('show');
-  pendingImageFile = null;
-}
-function closeModal() {
-  $('modal-overlay').classList.remove('show');
-  currentEditId = null;
-  pendingImageFile = null;
-}
+function showModal(html) { $('modal-content').innerHTML = html; $('modal-overlay').classList.add('show'); pendingImageFile = null; }
+function closeModal() { $('modal-overlay').classList.remove('show'); currentEditId = null; pendingImageFile = null; }
 $('modal-overlay').addEventListener('click', (e) => { if (e.target === $('modal-overlay')) closeModal(); });
 
-// ----- DEAL FORM -----
 function openDealForm(id) {
   currentEditId = id || null;
   const d = id ? DEALS.find(x => x.id === id) : { title:'', titleAr:'', desc:'', storeId:'', cat:'', old:0, new:0, disc:0, featured:false, expires:'', emoji:'🛍️', link:'', imageUrl:'' };
   if (id && !d) return;
-
   const storeOpts = STORES.map(s => '<option value="' + s.id + '"' + (d.storeId === s.id ? ' selected' : '') + '>' + escapeHtml(s.name) + '</option>').join('');
   const catOpts = CATEGORIES.map(c => '<option value="' + c.id + '"' + (d.cat === c.id ? ' selected' : '') + '>' + escapeHtml(c.fr || c.ar || c.id) + '</option>').join('');
 
@@ -491,7 +567,7 @@ function openDealForm(id) {
         <div class="field"><label>New price (DH) *</label><input type="number" id="f-new" value="${d.new}" required min="0" step="0.01"></div>
       </div>
       <div class="field-row">
-        <div class="field"><label>Discount % *</label><input type="number" id="f-disc" value="${d.disc}" required min="1" max="99"><div class="field-hint">e.g. 30 for 30% off</div></div>
+        <div class="field"><label>Discount % *</label><input type="number" id="f-disc" value="${d.disc}" required min="1" max="99"></div>
         <div class="field"><label>Expires *</label><input type="date" id="f-expires" value="${d.expires}" required></div>
       </div>
       <div class="field-row">
@@ -502,7 +578,7 @@ function openDealForm(id) {
         <label>Product image (optional)</label>
         <label class="image-upload" for="f-image">
           <div class="image-upload-icon">📷</div>
-          <div class="image-upload-text">Click to upload or drag a photo here</div>
+          <div class="image-upload-text">Click to upload a photo</div>
           <input type="file" id="f-image" accept="image/*" onchange="previewImage(this)">
         </label>
         <div class="image-preview ${d.imageUrl ? 'show' : ''}" id="image-preview">
@@ -519,7 +595,6 @@ function openDealForm(id) {
     </form>
   `);
 
-  // Track existing image url so we don't lose it on save
   if (d.imageUrl) $('image-preview').dataset.existingUrl = d.imageUrl;
 
   $('deal-form').addEventListener('submit', async (e) => {
@@ -528,22 +603,14 @@ function openDealForm(id) {
     btn.disabled = true; btn.textContent = 'Saving...';
     try {
       let imageUrl = $('image-preview').dataset.existingUrl || '';
-
-      // Upload new image if user chose one
       if (pendingImageFile) {
-        $('upload-progress').textContent = 'Uploading image...';
+        $('upload-progress').textContent = 'Uploading...';
         const path = 'deals/' + Date.now() + '_' + pendingImageFile.name.replace(/[^a-zA-Z0-9._-]/g, '_');
         const ref = storage.ref().child(path);
         const snap = await ref.put(pendingImageFile);
         imageUrl = await snap.ref.getDownloadURL();
-        $('upload-progress').textContent = '✓ Uploaded';
       }
-
-      // If preview was removed and no new file, clear imageUrl
-      if (!$('image-preview').classList.contains('show') && !pendingImageFile) {
-        imageUrl = '';
-      }
-
+      if (!$('image-preview').classList.contains('show') && !pendingImageFile) imageUrl = '';
       const data = {
         title: $('f-title').value.trim(),
         titleAr: $('f-titleAr').value.trim(),
@@ -560,21 +627,11 @@ function openDealForm(id) {
         imageUrl: imageUrl,
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
       };
-      if (currentEditId) {
-        await db.collection('deals').doc(currentEditId).update(data);
-        showToast('✓ Deal updated', 'success');
-      } else {
-        data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-        await db.collection('deals').add(data);
-        showToast('✓ Deal added', 'success');
-      }
+      if (currentEditId) await db.collection('deals').doc(currentEditId).update(data);
+      else { data.createdAt = firebase.firestore.FieldValue.serverTimestamp(); await db.collection('deals').add(data); }
+      showToast(currentEditId ? '✓ Deal updated' : '✓ Deal added', 'success');
       closeModal();
-    } catch (err) {
-      console.error(err);
-      showToast('Error: ' + err.message, 'error');
-    } finally {
-      btn.disabled = false;
-    }
+    } catch (err) { showToast('Error: ' + err.message, 'error'); } finally { btn.disabled = false; }
   });
 }
 
@@ -597,12 +654,10 @@ function removeImage() {
   $('f-image').value = '';
 }
 
-// ----- STORE FORM -----
 function openStoreForm(id) {
   currentEditId = id || null;
-  const s = id ? STORES.find(x => x.id === id) : { name:'', color:'#C1272D', type:'', typeFr:'' };
+  const s = id ? STORES.find(x => x.id === id) : { name:'', color:'#C1272D', type:'', typeFr:'', url:'' };
   if (id && !s) return;
-
   showModal(`
     <div class="modal-title">${id ? '✏️ Edit store' : '+ Add new store'}<button class="modal-close" onclick="closeModal()">×</button></div>
     <form id="store-form">
@@ -611,13 +666,13 @@ function openStoreForm(id) {
         <div class="field"><label>Type (French)</label><input id="f-typeFr" value="${escapeHtml(s.typeFr)}" placeholder="Supermarché"></div>
         <div class="field"><label>النوع (عربي)</label><input id="f-type" value="${escapeHtml(s.type)}" placeholder="سوبر ماركت"></div>
       </div>
+      <div class="field"><label>Website URL (optional)</label><input id="f-url" value="${escapeHtml(s.url || '')}" placeholder="https://www.marjane.ma"></div>
       <div class="field">
         <label>Brand color *</label>
         <div class="color-input">
           <input type="color" id="f-color" value="${s.color}">
           <input type="text" id="f-color-text" value="${s.color}" placeholder="#C1272D" style="flex:1;">
         </div>
-        <div class="field-hint">Used for store badge and accent color on cards</div>
       </div>
       <div class="modal-actions">
         <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
@@ -625,10 +680,8 @@ function openStoreForm(id) {
       </div>
     </form>
   `);
-
   $('f-color').addEventListener('input', e => $('f-color-text').value = e.target.value);
   $('f-color-text').addEventListener('input', e => { if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) $('f-color').value = e.target.value; });
-
   $('store-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = $('save-btn');
@@ -638,33 +691,26 @@ function openStoreForm(id) {
         name: $('f-name').value.trim(),
         type: $('f-type').value.trim(),
         typeFr: $('f-typeFr').value.trim(),
+        url: $('f-url').value.trim(),
         color: $('f-color-text').value.trim() || '#C1272D'
       };
-      if (currentEditId) {
-        await db.collection('stores').doc(currentEditId).update(data);
-        showToast('✓ Store updated', 'success');
-      } else {
-        await db.collection('stores').add(data);
-        showToast('✓ Store added', 'success');
-      }
+      if (currentEditId) await db.collection('stores').doc(currentEditId).update(data);
+      else await db.collection('stores').add(data);
+      showToast(currentEditId ? '✓ Store updated' : '✓ Store added', 'success');
       closeModal();
-    } catch (err) {
-      showToast('Error: ' + err.message, 'error');
-    } finally { btn.disabled = false; }
+    } catch (err) { showToast('Error: ' + err.message, 'error'); } finally { btn.disabled = false; }
   });
 }
 
-// ----- CATEGORY FORM -----
 function openCategoryForm(id) {
   currentEditId = id || null;
   const c = id ? CATEGORIES.find(x => x.id === id) : { id:'', icon:'📂', ar:'', fr:'' };
   if (id && !c) return;
-
   showModal(`
     <div class="modal-title">${id ? '✏️ Edit category' : '+ Add new category'}<button class="modal-close" onclick="closeModal()">×</button></div>
     <form id="cat-form">
       <div class="field-row">
-        <div class="field"><label>ID (no spaces) *</label><input id="f-id" value="${escapeHtml(c.id)}" required placeholder="food" ${id ? 'disabled' : ''}><div class="field-hint">${id ? 'Cannot be changed' : 'e.g. food, electronics, fashion'}</div></div>
+        <div class="field"><label>ID (no spaces) *</label><input id="f-id" value="${escapeHtml(c.id)}" required placeholder="food" ${id ? 'disabled' : ''}></div>
         <div class="field"><label>Icon (emoji)</label><input id="f-icon" value="${escapeHtml(c.icon)}" placeholder="🛒" maxlength="4"></div>
       </div>
       <div class="field-row">
@@ -677,7 +723,6 @@ function openCategoryForm(id) {
       </div>
     </form>
   `);
-
   $('cat-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = $('save-btn');
@@ -685,37 +730,26 @@ function openCategoryForm(id) {
     try {
       const docId = currentEditId || $('f-id').value.trim().toLowerCase().replace(/\s+/g, '_');
       if (!docId) throw new Error('ID required');
-      const data = {
-        id: docId,
-        icon: $('f-icon').value.trim() || '📂',
-        ar: $('f-ar').value.trim(),
-        fr: $('f-fr').value.trim()
-      };
+      const data = { id: docId, icon: $('f-icon').value.trim() || '📂', ar: $('f-ar').value.trim(), fr: $('f-fr').value.trim() };
       await db.collection('categories').doc(docId).set(data);
-      showToast(currentEditId ? '✓ Category updated' : '✓ Category added', 'success');
+      showToast(currentEditId ? '✓ Updated' : '✓ Added', 'success');
       closeModal();
-    } catch (err) {
-      showToast('Error: ' + err.message, 'error');
-    } finally { btn.disabled = false; }
+    } catch (err) { showToast('Error: ' + err.message, 'error'); } finally { btn.disabled = false; }
   });
 }
 
-// ----- PROMO FORM -----
 function openPromoForm(id) {
   currentEditId = id || null;
   const p = id ? PROMOS.find(x => x.id === id) : { code:'', store:'', storeId:'', discount:'', discountAr:'', desc:'', descAr:'', link:'' };
   if (id && !p) return;
-
   const storeOpts = STORES.map(s => '<option value="' + s.id + '"' + (p.storeId === s.id ? ' selected' : '') + '>' + escapeHtml(s.name) + '</option>').join('');
-
   showModal(`
     <div class="modal-title">${id ? '✏️ Edit promo code' : '+ Add new promo code'}<button class="modal-close" onclick="closeModal()">×</button></div>
     <form id="promo-form">
       <div class="field-row">
         <div class="field"><label>Promo code *</label><input id="f-code" value="${escapeHtml(p.code)}" required placeholder="PROMO10" style="text-transform:uppercase;"></div>
-        <div class="field"><label>Store *</label><select id="f-storeId" required onchange="document.getElementById('f-store').value = this.options[this.selectedIndex].text;">${STORES.length === 0 ? '<option value="">⚠️ Add a store first</option>' : '<option value="">— Choose —</option>' + storeOpts}</select></div>
+        <div class="field"><label>Store *</label><select id="f-storeId" required>${STORES.length === 0 ? '<option value="">⚠️ Add a store first</option>' : '<option value="">— Choose —</option>' + storeOpts}</select></div>
       </div>
-      <input type="hidden" id="f-store" value="${escapeHtml(p.store)}">
       <div class="field-row">
         <div class="field"><label>Discount text (French) *</label><input id="f-discount" value="${escapeHtml(p.discount)}" required placeholder="10% de réduction"></div>
         <div class="field"><label>نص الخصم (عربي) *</label><input id="f-discountAr" value="${escapeHtml(p.discountAr)}" required placeholder="خصم 10%"></div>
@@ -729,7 +763,6 @@ function openPromoForm(id) {
       </div>
     </form>
   `);
-
   $('promo-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = $('save-btn');
@@ -747,39 +780,26 @@ function openPromoForm(id) {
         descAr: $('f-descAr').value.trim(),
         link: $('f-link').value.trim()
       };
-      if (currentEditId) {
-        await db.collection('promos').doc(currentEditId).update(data);
-        showToast('✓ Promo updated', 'success');
-      } else {
-        await db.collection('promos').add(data);
-        showToast('✓ Promo added', 'success');
-      }
+      if (currentEditId) await db.collection('promos').doc(currentEditId).update(data);
+      else await db.collection('promos').add(data);
+      showToast(currentEditId ? '✓ Updated' : '✓ Added', 'success');
       closeModal();
-    } catch (err) {
-      showToast('Error: ' + err.message, 'error');
-    } finally { btn.disabled = false; }
+    } catch (err) { showToast('Error: ' + err.message, 'error'); } finally { btn.disabled = false; }
   });
 }
 
-// ----- DELETE -----
 async function deleteItem(collection, id, name) {
   if (!confirm('Delete "' + name + '"?\n\nThis cannot be undone.')) return;
   try {
-    // If deleting a deal with an image, also delete the image from Storage
     if (collection === 'deals') {
       const deal = DEALS.find(d => d.id === id);
       if (deal && deal.imageUrl && deal.imageUrl.includes('firebasestorage.googleapis.com')) {
-        try {
-          const ref = storage.refFromURL(deal.imageUrl);
-          await ref.delete();
-        } catch (e) { console.warn('Image delete failed:', e); }
+        try { const ref = storage.refFromURL(deal.imageUrl); await ref.delete(); } catch (e) { console.warn('Image delete failed:', e); }
       }
     }
     await db.collection(collection).doc(id).delete();
     showToast('✓ Deleted', 'success');
-  } catch (err) {
-    showToast('Error: ' + err.message, 'error');
-  }
+  } catch (err) { showToast('Error: ' + err.message, 'error'); }
 }
 </script>
 </body>
