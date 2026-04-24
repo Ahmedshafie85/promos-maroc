@@ -2,192 +2,430 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="description" content="أفضل العروض والتخفيضات في المغرب">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="أفضل العروض والتخفيضات في المغرب - مرجان، كارفور، بيم، جوميا وأكثر">
 <meta name="theme-color" content="#C1272D">
 <title>Promos Maroc - أفضل العروض في المغرب 🇲🇦</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇲🇦</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23C1272D'/><text x='50' y='68' font-size='52' font-weight='900' text-anchor='middle' fill='white' font-family='system-ui'>PM</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root { --primary:#C1272D; --primary-dark:#8B1A1F; --primary-soft:#FDEEEF; --secondary:#D4A017; --accent:#1B5E7A; --bg:#FAF8F5; --surface:#FFFFFF; --surface-alt:#F5F0E8; --text:#1A1A1A; --text-2:#666; --text-3:#999; --border:#EAE6DF; --success:#27AE60; --shadow-sm:0 1px 3px rgba(139,26,31,.08); --shadow-md:0 4px 12px rgba(139,26,31,.1); --shadow-lg:0 8px 24px rgba(139,26,31,.15); }
+:root {
+  --primary:#C1272D; --primary-dark:#8B1A1F; --primary-light:#E84C52; --primary-soft:#FDEEEF;
+  --secondary:#D4A017; --secondary-light:#F2C94C;
+  --accent:#1B5E7A; --accent-light:#2E7D99;
+  --bg:#FAF8F5; --surface:#FFFFFF; --surface-alt:#F5F0E8;
+  --text:#1A1A1A; --text-2:#4A4A4A; --text-3:#858585;
+  --border:#EAE6DF; --border-light:#F0ECE5;
+  --success:#27AE60; --danger:#E74C3C; --warning:#F39C12;
+  --shadow-xs:0 1px 2px rgba(139,26,31,.04);
+  --shadow-sm:0 1px 3px rgba(139,26,31,.08), 0 1px 2px rgba(0,0,0,.03);
+  --shadow-md:0 4px 12px rgba(139,26,31,.1), 0 2px 6px rgba(0,0,0,.04);
+  --shadow-lg:0 12px 28px rgba(139,26,31,.14), 0 4px 12px rgba(0,0,0,.06);
+  --shadow-xl:0 20px 48px rgba(139,26,31,.18);
+  --radius-sm:8px; --radius-md:12px; --radius-lg:16px; --radius-xl:20px;
+}
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 html { scroll-behavior:smooth; }
 body { font-family:'Tajawal','Cairo',-apple-system,BlinkMacSystemFont,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; line-height:1.5; overflow-x:hidden; }
 body[dir="ltr"] { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
-.app { max-width:480px; margin:0 auto; background:var(--bg); min-height:100vh; position:relative; padding-bottom:80px; box-shadow:0 0 40px rgba(0,0,0,.05); }
-.header { background:linear-gradient(135deg,var(--primary),var(--primary-dark)); padding:20px 20px 28px; color:white; border-radius:0 0 24px 24px; position:relative; overflow:hidden; }
-.header::before, .header::after { content:'✦'; position:absolute; color:rgba(255,255,255,.08); font-size:120px; line-height:1; }
-.header::before { top:-20px; right:-20px; }
-.header::after { bottom:20px; left:-10px; font-size:60px; }
-.header-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; position:relative; z-index:1; }
-.greeting { font-size:14px; opacity:.9; }
-.location { font-size:17px; font-weight:700; margin-top:2px; }
-.lang-toggle { background:rgba(255,255,255,.2); border:none; color:white; padding:8px 14px; border-radius:20px; font-weight:700; cursor:pointer; font-size:14px; font-family:inherit; }
+a { color:inherit; text-decoration:none; }
+button { font-family:inherit; }
+
+/* ==================== LOGO ==================== */
+.pm-logo { display:inline-flex; align-items:center; gap:10px; }
+.pm-logo-mark { width:40px; height:40px; position:relative; flex-shrink:0; }
+.pm-logo-text { display:flex; flex-direction:column; line-height:1; }
+.pm-logo-text .brand { font-size:16px; font-weight:900; letter-spacing:.3px; }
+.pm-logo-text .tag { font-size:10px; opacity:.75; font-weight:600; margin-top:2px; }
+
+/* ==================== DESKTOP LAYOUT ==================== */
+.shell { display:flex; min-height:100vh; max-width:1400px; margin:0 auto; }
+
+/* Sidebar (desktop only) */
+.sidebar { display:none; width:240px; background:var(--surface); border-inline-end:1px solid var(--border); padding:20px 0; flex-direction:column; position:sticky; top:0; height:100vh; overflow-y:auto; flex-shrink:0; }
+.sidebar-logo { padding:0 20px 24px; border-bottom:1px solid var(--border-light); margin-bottom:12px; }
+.sidebar-nav { display:flex; flex-direction:column; gap:2px; padding:0 12px; }
+.sidebar-item { display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:10px; cursor:pointer; color:var(--text-2); font-weight:600; transition:all .15s; background:none; border:none; text-align:start; font-size:14px; width:100%; }
+.sidebar-item:hover { background:var(--surface-alt); color:var(--text); }
+.sidebar-item.active { background:var(--primary-soft); color:var(--primary); }
+.sidebar-item .si-icon { font-size:20px; }
+.sidebar-footer { margin-top:auto; padding:16px 20px; border-top:1px solid var(--border-light); font-size:12px; color:var(--text-3); text-align:center; }
+.sidebar-lang { background:var(--surface-alt); border:none; color:var(--text); padding:8px 14px; border-radius:20px; font-weight:700; cursor:pointer; font-size:13px; margin:12px 20px; }
+.sidebar-lang:hover { background:var(--border); }
+
+/* Main content */
+.main { flex:1; min-width:0; padding-bottom:80px; }
+.app { max-width:480px; margin:0 auto; background:var(--bg); min-height:100vh; position:relative; }
+
+/* ==================== HEADER ==================== */
+.header { background:linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); padding:20px 20px 28px; color:white; border-radius:0 0 24px 24px; position:relative; overflow:hidden; }
+.header::before { content:''; position:absolute; top:-40px; inset-inline-end:-40px; width:180px; height:180px; border-radius:50%; background:radial-gradient(circle, rgba(212,160,23,.15) 0%, transparent 70%); }
+.header::after { content:'✦'; position:absolute; bottom:-20px; inset-inline-start:-10px; color:rgba(255,255,255,.06); font-size:140px; line-height:1; }
+.header-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; position:relative; z-index:1; }
+.header-logo .pm-logo-text .brand { color:white; font-size:18px; }
+.header-logo .pm-logo-text .tag { color:rgba(255,255,255,.8); }
+.lang-toggle { background:rgba(255,255,255,.2); border:1px solid rgba(255,255,255,.15); color:white; padding:8px 14px; border-radius:20px; font-weight:700; cursor:pointer; font-size:13px; backdrop-filter:blur(10px); transition:background .15s; }
 .lang-toggle:hover { background:rgba(255,255,255,.3); }
-.tagline { font-size:26px; font-weight:900; margin-bottom:18px; line-height:1.25; position:relative; z-index:1; }
-.search-bar { background:white; border-radius:12px; padding:14px 16px; display:flex; align-items:center; gap:10px; box-shadow:var(--shadow-md); cursor:pointer; position:relative; z-index:1; }
-.search-bar input { flex:1; border:none; outline:none; font-size:15px; font-family:inherit; background:transparent; color:var(--text); }
+.greeting-section { position:relative; z-index:1; margin-bottom:18px; }
+.greeting { font-size:13px; opacity:.9; margin-bottom:2px; }
+.location { font-size:15px; font-weight:700; display:flex; align-items:center; gap:6px; }
+.tagline { font-size:24px; font-weight:900; margin-bottom:16px; line-height:1.25; position:relative; z-index:1; max-width:90%; }
+.search-bar { background:white; border-radius:14px; padding:14px 16px; display:flex; align-items:center; gap:10px; box-shadow:0 8px 24px rgba(139,26,31,.25); cursor:pointer; position:relative; z-index:1; transition:transform .15s; }
+.search-bar:hover { transform:translateY(-2px); }
+.search-bar input { flex:1; border:none; outline:none; font-size:14px; font-family:inherit; background:transparent; color:var(--text); }
 .search-bar input::placeholder { color:var(--text-3); }
-.quick-links { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; padding:20px 16px; }
-.quick-link { text-align:center; cursor:pointer; padding:8px 4px; border-radius:12px; transition:background .2s; }
-.quick-link:hover { background:rgba(193,39,45,.04); }
-.quick-link-icon { width:56px; height:56px; background:white; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 6px; font-size:24px; box-shadow:var(--shadow-sm); }
-.quick-link-label { font-size:11px; font-weight:700; color:var(--text); }
-.section-header { display:flex; justify-content:space-between; align-items:center; padding:20px 20px 12px; }
-.section-title { font-size:20px; font-weight:800; color:var(--text); }
-.section-subtitle { font-size:13px; color:var(--text-2); margin-top:2px; }
-.see-all { color:var(--primary); font-size:13px; font-weight:700; cursor:pointer; background:none; border:none; font-family:inherit; }
+.search-bar .search-icon { font-size:18px; }
+
+/* ==================== QUICK LINKS ==================== */
+.quick-links { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding:20px 16px 8px; }
+.quick-link { text-align:center; cursor:pointer; padding:10px 4px; border-radius:var(--radius-md); transition:background .15s; background:none; border:none; }
+.quick-link:hover { background:var(--primary-soft); }
+.quick-link-icon { width:54px; height:54px; background:white; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 6px; font-size:22px; box-shadow:var(--shadow-sm); transition:transform .15s; }
+.quick-link:hover .quick-link-icon { transform:scale(1.1) rotate(-3deg); }
+.quick-link-label { font-size:11px; font-weight:700; color:var(--text); line-height:1.2; }
+
+/* ==================== SECTIONS ==================== */
+.section-header { display:flex; justify-content:space-between; align-items:center; padding:22px 20px 12px; }
+.section-title { font-size:19px; font-weight:800; color:var(--text); display:flex; align-items:center; gap:6px; }
+.section-subtitle { font-size:12px; color:var(--text-2); margin-top:2px; }
+.see-all { color:var(--primary); font-size:13px; font-weight:700; cursor:pointer; background:none; border:none; padding:4px 0; }
+.see-all:hover { text-decoration:underline; }
+
+.filter-chip { display:inline-flex; align-items:center; gap:6px; background:var(--primary-soft); color:var(--primary); border:1.5px solid var(--primary); border-radius:20px; padding:6px 12px; font-size:13px; font-weight:700; cursor:pointer; margin:0 20px 10px; }
+.filter-chip:hover { background:var(--primary); color:white; }
+
+/* ==================== CATEGORIES ==================== */
 .categories-scroll { display:flex; gap:10px; overflow-x:auto; padding:0 20px 4px; scrollbar-width:none; }
 .categories-scroll::-webkit-scrollbar { display:none; }
-.category-chip { background:white; border-radius:12px; padding:12px 16px; min-width:88px; text-align:center; box-shadow:var(--shadow-sm); cursor:pointer; flex-shrink:0; transition:transform .15s; border:2px solid transparent; }
-.category-chip:hover { transform:translateY(-2px); }
-.category-chip.active { border-color:var(--primary); }
+.category-chip { background:white; border-radius:var(--radius-md); padding:12px 14px; min-width:86px; text-align:center; box-shadow:var(--shadow-sm); cursor:pointer; flex-shrink:0; transition:all .15s; border:2px solid transparent; }
+.category-chip:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+.category-chip.active { border-color:var(--primary); background:var(--primary-soft); }
 .category-emoji { font-size:26px; margin-bottom:4px; }
-.category-label { font-size:11px; font-weight:600; color:var(--text); }
+.category-label { font-size:11px; font-weight:700; color:var(--text); }
+
+/* ==================== DEALS ==================== */
 .deals-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:0 20px 20px; }
-.deals-scroll { display:flex; gap:12px; overflow-x:auto; padding:0 20px 8px; scrollbar-width:none; }
+.deals-scroll { display:flex; gap:12px; overflow-x:auto; padding:0 20px 12px; scrollbar-width:none; }
 .deals-scroll::-webkit-scrollbar { display:none; }
 .deals-scroll .deal-card { width:220px; flex-shrink:0; }
-.deal-card { background:white; border-radius:16px; overflow:hidden; box-shadow:var(--shadow-sm); cursor:pointer; transition:transform .2s,box-shadow .2s; position:relative; }
-.deal-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-md); }
-.deal-img { width:100%; aspect-ratio:1; background:var(--surface-alt); position:relative; display:flex; align-items:center; justify-content:center; font-size:64px; overflow:hidden; }
-.deal-img img { width:100%; height:100%; object-fit:cover; }
-.discount-badge { position:absolute; top:8px; background:#E74C3C; color:white; padding:4px 8px; border-radius:6px; font-weight:800; font-size:13px; z-index:2; }
-.store-badge { position:absolute; bottom:8px; color:white; padding:3px 10px; border-radius:6px; font-weight:700; font-size:11px; max-width:70%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; z-index:2; }
-[dir="rtl"] .discount-badge, [dir="rtl"] .store-badge { right:8px; }
-[dir="ltr"] .discount-badge, [dir="ltr"] .store-badge { left:8px; }
+
+.deal-card { background:white; border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow-sm); cursor:pointer; transition:all .2s; position:relative; }
+.deal-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-lg); }
+.deal-img { width:100%; aspect-ratio:1; position:relative; display:flex; align-items:center; justify-content:center; font-size:64px; overflow:hidden; background:var(--surface-alt); }
+.deal-img img { width:100%; height:100%; object-fit:cover; transition:transform .3s; }
+.deal-card:hover .deal-img img { transform:scale(1.05); }
+
+.discount-badge { position:absolute; top:10px; background:linear-gradient(135deg, var(--danger), #C0392B); color:white; padding:5px 10px; border-radius:8px; font-weight:900; font-size:13px; z-index:2; box-shadow:0 2px 8px rgba(231,76,60,.4); }
+.store-badge { position:absolute; bottom:10px; color:white; padding:4px 10px; border-radius:6px; font-weight:700; font-size:11px; max-width:75%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; z-index:2; box-shadow:0 2px 6px rgba(0,0,0,.2); }
+[dir="rtl"] .discount-badge, [dir="rtl"] .store-badge { right:10px; }
+[dir="ltr"] .discount-badge, [dir="ltr"] .store-badge { left:10px; }
+
+.fav-badge { position:absolute; top:10px; color:white; background:rgba(0,0,0,.35); border:none; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:15px; z-index:3; backdrop-filter:blur(4px); }
+[dir="rtl"] .fav-badge { left:10px; }
+[dir="ltr"] .fav-badge { right:10px; }
+.fav-badge.active { background:rgba(231,76,60,.9); }
+
 .deal-content { padding:12px; }
-.deal-title { font-size:14px; font-weight:600; color:var(--text); margin-bottom:8px; line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:38px; }
+.deal-title { font-size:13px; font-weight:700; color:var(--text); margin-bottom:8px; line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:36px; }
 .deal-prices { display:flex; align-items:baseline; gap:6px; flex-wrap:wrap; margin-bottom:4px; }
-.price-new { font-size:16px; font-weight:800; color:var(--primary); }
-.price-old { font-size:12px; color:var(--text-3); text-decoration:line-through; }
-.deal-expiry { font-size:11px; color:var(--text-2); margin-top:4px; }
-.stores-scroll { display:flex; gap:10px; overflow-x:auto; padding:0 20px 8px; scrollbar-width:none; }
+.price-new { font-size:16px; font-weight:900; color:var(--primary); }
+.price-old { font-size:11px; color:var(--text-3); text-decoration:line-through; }
+.deal-expiry { font-size:10px; color:var(--text-2); margin-top:4px; display:flex; align-items:center; gap:4px; }
+.deal-expiry.urgent { color:var(--danger); font-weight:700; }
+
+/* ==================== STORES ==================== */
+.stores-scroll { display:flex; gap:10px; overflow-x:auto; padding:0 20px 12px; scrollbar-width:none; }
 .stores-scroll::-webkit-scrollbar { display:none; }
-.store-chip { background:white; border-radius:12px; padding:10px 14px; display:flex; align-items:center; gap:10px; box-shadow:var(--shadow-sm); border:1.5px solid; cursor:pointer; flex-shrink:0; transition:transform .15s; }
-.store-chip:hover { transform:translateY(-2px); }
-.store-logo { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-weight:800; font-size:13px; }
+.store-chip { background:white; border-radius:var(--radius-md); padding:10px 14px; display:flex; align-items:center; gap:10px; box-shadow:var(--shadow-sm); border:1.5px solid; cursor:pointer; flex-shrink:0; transition:all .15s; }
+.store-chip:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+.store-logo { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-weight:800; font-size:13px; overflow:hidden; }
+.store-logo img { width:100%; height:100%; object-fit:cover; }
 .store-name { font-size:13px; font-weight:700; color:var(--text); white-space:nowrap; }
-.bottom-nav { position:fixed; bottom:0; left:0; right:0; max-width:480px; margin:0 auto; background:white; border-top:1px solid var(--border); display:flex; justify-content:space-around; padding:8px 0 12px; z-index:100; }
-.nav-item { display:flex; flex-direction:column; align-items:center; gap:2px; padding:6px 12px; cursor:pointer; color:var(--text-3); background:none; border:none; font-family:inherit; }
+
+.stores-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:0 20px 20px; }
+.store-card { background:white; border-radius:var(--radius-lg); padding:20px; text-align:center; box-shadow:var(--shadow-sm); cursor:pointer; transition:all .15s; position:relative; overflow:hidden; }
+.store-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-md); }
+.store-card::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:currentColor; }
+.store-card-logo { width:64px; height:64px; border-radius:50%; margin:0 auto 12px; display:flex; align-items:center; justify-content:center; color:white; font-size:28px; font-weight:900; box-shadow:var(--shadow-sm); overflow:hidden; }
+.store-card-logo img { width:100%; height:100%; object-fit:cover; }
+.store-card-name { font-size:15px; font-weight:800; color:var(--text); margin-bottom:2px; }
+.store-card-type { font-size:11px; color:var(--text-2); margin-bottom:10px; }
+.store-card-count { font-size:12px; font-weight:700; color:var(--primary); background:var(--primary-soft); padding:3px 10px; border-radius:12px; display:inline-block; }
+.store-card-link { font-size:11px; color:var(--accent); margin-top:8px; display:block; font-weight:600; }
+
+/* ==================== PROMOS ==================== */
+.promo-card { background:white; border-radius:var(--radius-lg); padding:18px; margin:0 20px 14px; box-shadow:var(--shadow-sm); position:relative; overflow:hidden; }
+.promo-card::before { content:''; position:absolute; top:0; inset-inline-start:0; width:6px; height:100%; background:var(--primary); }
+.promo-card-top { display:flex; align-items:center; gap:12px; margin-bottom:12px; padding-inline-start:4px; }
+.promo-logo { width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-weight:800; font-size:19px; box-shadow:var(--shadow-sm); overflow:hidden; }
+.promo-logo img { width:100%; height:100%; object-fit:cover; }
+.promo-store { font-size:15px; font-weight:800; }
+.promo-discount { font-size:16px; font-weight:800; color:var(--primary); margin-top:2px; }
+.promo-desc { font-size:13px; color:var(--text-2); margin-bottom:12px; line-height:1.5; }
+.promo-code-box { display:flex; align-items:center; gap:10px; background:var(--bg); border:2px dashed var(--primary); border-radius:var(--radius-sm); padding:12px; margin-bottom:10px; }
+.promo-code { flex:1; font-size:18px; font-weight:900; color:var(--primary); letter-spacing:2px; font-family:'Courier New',monospace; }
+.copy-btn { background:var(--primary); color:white; border:none; padding:8px 16px; border-radius:6px; font-weight:700; cursor:pointer; font-family:inherit; font-size:13px; transition:background .15s; }
+.copy-btn:hover { background:var(--primary-dark); }
+.copy-btn.copied { background:var(--success); }
+.promo-store-link { display:block; text-align:center; padding:10px; background:var(--surface-alt); border-radius:var(--radius-sm); font-weight:700; color:var(--accent); font-size:13px; cursor:pointer; border:none; width:100%; }
+.promo-store-link:hover { background:var(--accent); color:white; }
+
+/* ==================== BOTTOM NAV ==================== */
+.bottom-nav { position:fixed; bottom:0; left:0; right:0; max-width:480px; margin:0 auto; background:white; border-top:1px solid var(--border); display:flex; justify-content:space-around; padding:8px 0 12px; z-index:100; box-shadow:0 -4px 20px rgba(0,0,0,.06); }
+.nav-item { display:flex; flex-direction:column; align-items:center; gap:3px; padding:6px 10px; cursor:pointer; color:var(--text-3); background:none; border:none; transition:color .15s; position:relative; }
 .nav-item.active { color:var(--primary); }
+.nav-item.active::before { content:''; position:absolute; top:-8px; left:50%; transform:translateX(-50%); width:6px; height:6px; border-radius:50%; background:var(--primary); }
 .nav-icon { font-size:22px; }
 .nav-label { font-size:10px; font-weight:700; }
-.modal-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.5); z-index:1000; display:none; align-items:flex-end; justify-content:center; animation:fadeIn .2s; }
-.modal-overlay.active { display:flex; }
-@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-.modal { background:white; width:100%; max-width:480px; max-height:90vh; border-radius:24px 24px 0 0; overflow:hidden; display:flex; flex-direction:column; animation:slideUp .3s; }
-@keyframes slideUp { from { transform:translateY(100%); } to { transform:translateY(0); } }
-.modal-handle { width:40px; height:4px; background:var(--border); border-radius:2px; margin:12px auto; }
-.modal-img { width:100%; aspect-ratio:1; background:var(--surface-alt); position:relative; overflow:hidden; }
-.modal-img img { width:100%; height:100%; object-fit:cover; }
-.modal-content { padding:16px 20px; overflow-y:auto; flex:1; }
-.modal-title { font-size:22px; font-weight:800; margin-bottom:6px; }
-.modal-desc { color:var(--text-2); font-size:14px; margin-bottom:16px; }
-.price-section { background:var(--surface-alt); border-radius:14px; padding:16px; margin-bottom:16px; }
-.modal-price-new { font-size:32px; font-weight:900; color:var(--primary); }
-.modal-price-old { font-size:16px; color:var(--text-3); text-decoration:line-through; margin-top:4px; }
-.savings { display:inline-block; background:#E8F8ED; color:var(--success); padding:6px 12px; border-radius:6px; font-weight:700; font-size:13px; margin-top:8px; }
-.modal-actions { display:flex; gap:10px; padding:12px 20px; border-top:1px solid var(--border); }
-.icon-btn { width:48px; height:48px; border-radius:10px; background:var(--bg); border:none; font-size:22px; cursor:pointer; }
-.primary-btn { flex:1; background:var(--primary); color:white; border:none; padding:14px; border-radius:10px; font-size:15px; font-weight:800; cursor:pointer; font-family:inherit; }
-.primary-btn:hover { background:var(--primary-dark); }
+
+/* ==================== PAGES & BACK BUTTON ==================== */
 .page { display:none; }
 .page.active { display:block; }
-.page-header { padding:20px; }
-.page-title { font-size:28px; font-weight:800; }
-.page-subtitle { font-size:14px; color:var(--text-2); margin-top:4px; }
+.page-header { padding:20px; display:flex; align-items:center; gap:12px; }
+.back-btn { background:var(--surface); border:1px solid var(--border); width:40px; height:40px; border-radius:50%; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:var(--shadow-xs); transition:all .15s; }
+.back-btn:hover { background:var(--surface-alt); transform:translateX(-2px); }
+[dir="rtl"] .back-btn:hover { transform:translateX(2px); }
+.page-header-content { flex:1; }
+.page-title { font-size:26px; font-weight:900; color:var(--text); }
+.page-subtitle { font-size:13px; color:var(--text-2); margin-top:2px; }
+
+/* ==================== MODAL ==================== */
+.modal-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.6); z-index:1000; display:none; align-items:flex-end; justify-content:center; animation:fadeIn .2s; backdrop-filter:blur(4px); }
+.modal-overlay.active { display:flex; }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+.modal { background:white; width:100%; max-width:480px; max-height:90vh; border-radius:24px 24px 0 0; overflow:hidden; display:flex; flex-direction:column; animation:slideUp .3s cubic-bezier(.16,1,.3,1); position:relative; }
+@keyframes slideUp { from { transform:translateY(100%); } to { transform:translateY(0); } }
+.modal-close { position:absolute; top:16px; inset-inline-end:16px; width:36px; height:36px; border-radius:50%; background:rgba(0,0,0,.5); color:white; border:none; cursor:pointer; font-size:18px; z-index:10; backdrop-filter:blur(10px); }
+.modal-close:hover { background:rgba(0,0,0,.7); }
+.modal-handle { width:40px; height:4px; background:rgba(255,255,255,.6); border-radius:2px; margin:12px auto; position:absolute; top:0; left:50%; transform:translateX(-50%); z-index:10; }
+.modal-img { width:100%; aspect-ratio:1; background:var(--surface-alt); position:relative; overflow:hidden; }
+.modal-img img { width:100%; height:100%; object-fit:cover; }
+.modal-content { padding:20px; overflow-y:auto; flex:1; }
+.modal-store-tag { display:inline-flex; align-items:center; gap:8px; padding:5px 12px; border-radius:20px; color:white; font-weight:700; font-size:12px; margin-bottom:10px; }
+.modal-title { font-size:22px; font-weight:900; margin-bottom:8px; line-height:1.3; }
+.modal-desc { color:var(--text-2); font-size:14px; margin-bottom:18px; line-height:1.5; }
+.price-section { background:linear-gradient(135deg, var(--primary-soft) 0%, #FFF5F6 100%); border-radius:var(--radius-lg); padding:18px; margin-bottom:16px; }
+.modal-price-new { font-size:34px; font-weight:900; color:var(--primary); line-height:1; }
+.modal-price-old { font-size:15px; color:var(--text-3); text-decoration:line-through; margin-top:6px; }
+.savings { display:inline-flex; align-items:center; gap:4px; background:var(--success); color:white; padding:5px 12px; border-radius:6px; font-weight:700; font-size:13px; margin-top:10px; }
+.expiry-row { display:flex; align-items:center; gap:8px; padding:10px 14px; background:var(--surface-alt); border-radius:var(--radius-sm); font-size:13px; color:var(--text-2); margin-bottom:12px; }
+.expiry-row.urgent { background:#FFE5E5; color:var(--danger); font-weight:700; }
+.modal-actions { display:flex; gap:10px; padding:14px 20px 18px; border-top:1px solid var(--border); background:white; }
+.icon-btn { width:52px; height:52px; border-radius:12px; background:var(--bg); border:1px solid var(--border); font-size:22px; cursor:pointer; transition:all .15s; display:flex; align-items:center; justify-content:center; }
+.icon-btn:hover { background:var(--surface-alt); transform:translateY(-1px); }
+.primary-btn { flex:1; background:linear-gradient(135deg, var(--primary), var(--primary-dark)); color:white; border:none; padding:14px 18px; border-radius:12px; font-size:14px; font-weight:800; cursor:pointer; transition:all .15s; box-shadow:0 4px 12px rgba(193,39,45,.3); }
+.primary-btn:hover { transform:translateY(-1px); box-shadow:0 6px 16px rgba(193,39,45,.4); }
+
+/* ==================== EMPTY & LOADING ==================== */
 .empty-state { text-align:center; padding:60px 30px; }
-.empty-emoji { font-size:64px; margin-bottom:16px; }
-.empty-title { font-size:20px; font-weight:700; margin-bottom:8px; }
-.empty-text { color:var(--text-2); line-height:1.5; }
-.promo-card { background:white; border-radius:14px; padding:16px; margin:0 20px 12px; box-shadow:var(--shadow-sm); }
-.promo-card-top { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
-.promo-logo { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-weight:800; font-size:18px; }
-.promo-store { font-size:15px; font-weight:700; }
-.promo-discount { font-size:17px; font-weight:800; color:var(--primary); margin-top:2px; }
-.promo-desc { font-size:13px; color:var(--text-2); margin-bottom:12px; }
-.promo-code-box { display:flex; align-items:center; gap:10px; background:var(--bg); border:2px dashed var(--primary); border-radius:10px; padding:12px; margin-bottom:10px; }
-.promo-code { flex:1; font-size:18px; font-weight:800; color:var(--primary); letter-spacing:2px; font-family:'Courier New',monospace; }
-.copy-btn { background:var(--primary); color:white; border:none; padding:8px 14px; border-radius:6px; font-weight:700; cursor:pointer; font-family:inherit; font-size:13px; }
-.copy-btn.copied { background:var(--success); }
-.stores-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:0 20px 20px; }
-.store-card { background:white; border-radius:14px; padding:20px; text-align:center; box-shadow:var(--shadow-sm); cursor:pointer; transition:transform .15s; }
-.store-card:hover { transform:translateY(-2px); }
-.store-card-logo { width:60px; height:60px; border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; color:white; font-size:26px; font-weight:800; }
-.store-card-name { font-size:15px; font-weight:700; }
-.store-card-type { font-size:11px; color:var(--text-2); margin-top:2px; }
-.toast { position:fixed; top:30px; left:50%; transform:translateX(-50%); background:var(--text); color:white; padding:12px 20px; border-radius:12px; font-size:14px; font-weight:600; z-index:2000; opacity:0; transition:opacity .3s; pointer-events:none; max-width:90%; text-align:center; }
-.toast.show { opacity:1; }
-.loading-state { text-align:center; padding:60px 20px; color:var(--text-2); }
-.spinner { width:40px; height:40px; border:3px solid var(--border); border-top-color:var(--primary); border-radius:50%; animation:spin 1s linear infinite; margin:0 auto 16px; }
-@keyframes spin { to { transform:rotate(360deg); } }
-@media (min-width:520px) { .app { margin:20px auto; border-radius:24px; overflow:hidden; } }
+.empty-emoji { font-size:72px; margin-bottom:20px; opacity:.6; }
+.empty-title { font-size:18px; font-weight:800; margin-bottom:8px; }
+.empty-text { color:var(--text-2); line-height:1.5; font-size:14px; max-width:280px; margin:0 auto; }
+
+/* Skeleton loaders */
+.skeleton { background:linear-gradient(90deg, var(--surface-alt) 25%, #EDE9E1 50%, var(--surface-alt) 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; border-radius:var(--radius-md); }
+@keyframes shimmer { 0% { background-position:200% 0; } 100% { background-position:-200% 0; } }
+.skeleton-deal { background:white; border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow-sm); }
+.skeleton-deal .sk-img { width:100%; aspect-ratio:1; }
+.skeleton-deal .sk-body { padding:12px; }
+.skeleton-deal .sk-line { height:12px; border-radius:4px; margin-bottom:8px; }
+.skeleton-deal .sk-line.short { width:60%; }
+
+/* ==================== TOAST ==================== */
+.toast { position:fixed; top:30px; left:50%; transform:translateX(-50%) translateY(-20px); background:var(--text); color:white; padding:12px 22px; border-radius:12px; font-size:14px; font-weight:600; z-index:2000; opacity:0; transition:all .3s; pointer-events:none; max-width:90%; text-align:center; box-shadow:var(--shadow-lg); }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* ==================== RESPONSIVE ==================== */
+@media (min-width:600px) {
+  .app { max-width:500px; border-radius:0 0 24px 24px; }
+  .bottom-nav { max-width:500px; }
+}
+
+/* DESKTOP LAYOUT */
+@media (min-width:900px) {
+  body { background:var(--bg); }
+  .shell { background:var(--surface); box-shadow:0 0 60px rgba(0,0,0,.06); min-height:100vh; }
+  .sidebar { display:flex; }
+  .bottom-nav { display:none; }
+  .main { padding-bottom:40px; }
+  .app { max-width:none; margin:0; background:var(--bg); border-radius:0; box-shadow:none; }
+  .header { border-radius:0 0 32px 32px; padding:32px 40px 40px; }
+  .header-top .header-logo { display:none; } /* hide since sidebar has it */
+  .header-top { justify-content:flex-end; }
+  .greeting-section { margin-bottom:24px; }
+  .tagline { font-size:36px; max-width:600px; }
+  .search-bar { max-width:600px; }
+  .quick-links { grid-template-columns:repeat(4,auto); justify-content:center; gap:24px; padding:32px 40px; }
+  .quick-link-icon { width:72px; height:72px; font-size:30px; }
+  .quick-link-label { font-size:13px; }
+  .section-header { padding:32px 40px 16px; }
+  .section-title { font-size:24px; }
+  .section-subtitle { font-size:14px; }
+  .categories-scroll, .stores-scroll, .deals-scroll { padding-left:40px; padding-right:40px; }
+  .deals-grid { grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:20px; padding:0 40px 40px; }
+  .stores-grid { grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:16px; padding:0 40px 40px; }
+  .page-header { padding:32px 40px 20px; }
+  .page-title { font-size:32px; }
+  .promo-card { margin:0 40px 16px; max-width:600px; }
+  .lang-toggle { display:none; } /* sidebar has it */
+  .deal-card:hover { transform:translateY(-6px); }
+  .modal { max-width:600px; border-radius:24px; max-height:85vh; margin:auto; }
+  .modal-overlay { align-items:center; padding:20px; }
+}
+@media (min-width:1200px) {
+  .deals-grid { grid-template-columns:repeat(4, 1fr); }
+  .stores-grid { grid-template-columns:repeat(4, 1fr); }
+}
 </style>
 </head>
 <body>
-<div class="app">
-  <div class="page active" id="page-home">
-    <header class="header">
-      <div class="header-top">
-        <div>
-          <div class="greeting" data-i18n="greeting">أهلاً وسهلاً 👋</div>
-          <div class="location">📍 <span id="current-city">الدار البيضاء</span></div>
+
+<div class="shell">
+  <!-- ============= SIDEBAR (desktop) ============= -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="pm-logo">
+        <svg class="pm-logo-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="100" rx="22" fill="#C1272D"/>
+          <g transform="translate(50,50)" opacity=".12">
+            <g fill="white">
+              <path d="M0,-38 L9,-9 L38,0 L9,9 L0,38 L-9,9 L-38,0 L-9,-9 Z"/>
+            </g>
+          </g>
+          <text x="50" y="67" font-size="42" font-weight="900" text-anchor="middle" fill="white" font-family="system-ui,sans-serif">PM</text>
+        </svg>
+        <div class="pm-logo-text">
+          <div class="brand">Promos Maroc</div>
+          <div class="tag" data-i18n="brandTag">أفضل العروض 🇲🇦</div>
         </div>
-        <button class="lang-toggle" onclick="toggleLanguage()"><span id="lang-label">FR</span></button>
       </div>
-      <h1 class="tagline" data-i18n="tagline">أفضل العروض في المغرب</h1>
-      <div class="search-bar" onclick="navigateTo('search')">
-        <span>🔍</span>
-        <input type="text" readonly data-i18n-placeholder="searchPlaceholder" placeholder="ابحث عن منتج، متجر...">
-      </div>
-    </header>
-    <div class="quick-links">
-      <div class="quick-link" onclick="navigateTo('stores')"><div class="quick-link-icon">📰</div><div class="quick-link-label" data-i18n="flyers">الكتالوجات</div></div>
-      <div class="quick-link" onclick="navigateTo('promos')"><div class="quick-link-icon">🎟️</div><div class="quick-link-label" data-i18n="codes">كوبونات</div></div>
-      <div class="quick-link" onclick="filterByFeatured()"><div class="quick-link-icon">🔥</div><div class="quick-link-label" data-i18n="topDeals">أفضل العروض</div></div>
-      <div class="quick-link" onclick="navigateTo('favorites')"><div class="quick-link-icon">❤️</div><div class="quick-link-label" data-i18n="myFavs">المفضلة</div></div>
     </div>
-    <div class="section-header"><div class="section-title" data-i18n="categories">الأقسام</div></div>
-    <div class="categories-scroll" id="categories-container"></div>
-    <div class="section-header"><div><div class="section-title">🔥 <span data-i18n="featured">عروض مميزة</span></div><div class="section-subtitle" data-i18n="featuredSub">أفضل عروض هذا الأسبوع</div></div></div>
-    <div class="deals-scroll" id="featured-deals"></div>
-    <div class="section-header"><div class="section-title" data-i18n="popularStores">متاجر شعبية</div><button class="see-all" onclick="navigateTo('stores')" data-i18n="seeAll">عرض الكل ←</button></div>
-    <div class="stores-scroll" id="stores-scroll"></div>
-    <div class="section-header"><div><div class="section-title" data-i18n="latestDeals">أحدث العروض</div><div class="section-subtitle"><span id="deals-count">0</span> <span data-i18n="activeOffers">عرض نشط</span></div></div></div>
-    <div class="deals-grid" id="deals-grid"></div>
-  </div>
-  <div class="page" id="page-stores">
-    <div class="page-header"><div class="page-title" data-i18n="storesTitle">المتاجر</div><div class="page-subtitle"><span id="stores-count">0</span> <span data-i18n="storesWith">متجر مع عروض نشطة</span></div></div>
-    <div class="stores-grid" id="stores-grid"></div>
-  </div>
-  <div class="page" id="page-favorites">
-    <div class="page-header"><div class="page-title" data-i18n="favsTitle">المفضلة</div></div>
-    <div id="favorites-content"></div>
-  </div>
-  <div class="page" id="page-promos">
-    <div class="page-header"><div class="page-title" data-i18n="promosTitle">كوبونات التخفيض</div><div class="page-subtitle"><span id="promos-count">0</span> <span data-i18n="promosValid">كوبون ساري</span></div></div>
-    <div id="promos-list"></div>
-  </div>
-  <div class="page" id="page-search">
-    <div class="page-header"><div class="search-bar" style="box-shadow:var(--shadow-sm);border:1px solid var(--border);"><span>🔍</span><input type="text" id="search-input" data-i18n-placeholder="searchPlaceholder" placeholder="ابحث عن منتج، متجر..." oninput="doSearch(this.value)"></div></div>
-    <div id="search-results" class="deals-grid"></div>
-  </div>
-  <nav class="bottom-nav">
-    <button class="nav-item active" data-page="home" onclick="navigateTo('home')"><span class="nav-icon">🏠</span><span class="nav-label" data-i18n="navHome">الرئيسية</span></button>
-    <button class="nav-item" data-page="stores" onclick="navigateTo('stores')"><span class="nav-icon">🏪</span><span class="nav-label" data-i18n="navStores">المتاجر</span></button>
-    <button class="nav-item" data-page="search" onclick="navigateTo('search')"><span class="nav-icon">🔍</span><span class="nav-label" data-i18n="navSearch">البحث</span></button>
-    <button class="nav-item" data-page="favorites" onclick="navigateTo('favorites')"><span class="nav-icon">❤️</span><span class="nav-label" data-i18n="navFavs">المفضلة</span></button>
-    <button class="nav-item" data-page="promos" onclick="navigateTo('promos')"><span class="nav-icon">🎟️</span><span class="nav-label" data-i18n="navPromos">كوبونات</span></button>
-  </nav>
+    <nav class="sidebar-nav" id="sidebar-nav">
+      <button class="sidebar-item active" data-page="home" onclick="navigateTo('home')"><span class="si-icon">🏠</span><span data-i18n="navHome">الرئيسية</span></button>
+      <button class="sidebar-item" data-page="stores" onclick="navigateTo('stores')"><span class="si-icon">🏪</span><span data-i18n="navStores">المتاجر</span></button>
+      <button class="sidebar-item" data-page="search" onclick="navigateTo('search')"><span class="si-icon">🔍</span><span data-i18n="navSearch">البحث</span></button>
+      <button class="sidebar-item" data-page="favorites" onclick="navigateTo('favorites')"><span class="si-icon">❤️</span><span data-i18n="navFavs">المفضلة</span></button>
+      <button class="sidebar-item" data-page="promos" onclick="navigateTo('promos')"><span class="si-icon">🎟️</span><span data-i18n="navPromos">كوبونات</span></button>
+    </nav>
+    <button class="sidebar-lang" onclick="toggleLanguage()"><span id="sidebar-lang-label">Français</span></button>
+    <div class="sidebar-footer">© 2026 Promos Maroc 🇲🇦</div>
+  </aside>
+
+  <!-- ============= MAIN ============= -->
+  <main class="main">
+    <div class="app">
+      <!-- ====== HOME ====== -->
+      <div class="page active" id="page-home">
+        <header class="header">
+          <div class="header-top">
+            <div class="header-logo pm-logo">
+              <svg class="pm-logo-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <rect width="100" height="100" rx="22" fill="white" opacity=".15"/>
+                <text x="50" y="67" font-size="42" font-weight="900" text-anchor="middle" fill="white" font-family="system-ui">PM</text>
+              </svg>
+              <div class="pm-logo-text">
+                <div class="brand">Promos Maroc</div>
+                <div class="tag">🇲🇦 أفضل العروض</div>
+              </div>
+            </div>
+            <button class="lang-toggle" onclick="toggleLanguage()"><span id="lang-label">FR</span></button>
+          </div>
+          <div class="greeting-section">
+            <div class="greeting" data-i18n="greeting">أهلاً وسهلاً 👋</div>
+            <div class="location">📍 <span id="current-city">الدار البيضاء</span></div>
+          </div>
+          <h1 class="tagline" data-i18n="tagline">أفضل العروض في المغرب</h1>
+          <div class="search-bar" onclick="navigateTo('search')">
+            <span class="search-icon">🔍</span>
+            <input type="text" readonly data-i18n-placeholder="searchPlaceholder" placeholder="ابحث عن منتج، متجر...">
+          </div>
+        </header>
+        <div class="quick-links">
+          <button class="quick-link" onclick="navigateTo('stores')"><div class="quick-link-icon">🏪</div><div class="quick-link-label" data-i18n="allStores">جميع المتاجر</div></button>
+          <button class="quick-link" onclick="navigateTo('promos')"><div class="quick-link-icon">🎟️</div><div class="quick-link-label" data-i18n="codes">كوبونات</div></button>
+          <button class="quick-link" onclick="filterByFeatured()"><div class="quick-link-icon">🔥</div><div class="quick-link-label" data-i18n="topDeals">أفضل العروض</div></button>
+          <button class="quick-link" onclick="navigateTo('favorites')"><div class="quick-link-icon">❤️</div><div class="quick-link-label" data-i18n="myFavs">المفضلة</div></button>
+        </div>
+        <div class="section-header"><div class="section-title" data-i18n="categories">🗂️ الأقسام</div></div>
+        <div class="categories-scroll" id="categories-container"></div>
+        <div class="section-header"><div><div class="section-title">🔥 <span data-i18n="featured">عروض مميزة</span></div><div class="section-subtitle" data-i18n="featuredSub">أفضل عروض هذا الأسبوع</div></div></div>
+        <div class="deals-scroll" id="featured-deals"></div>
+        <div class="section-header"><div class="section-title" data-i18n="popularStores">🏪 متاجر شعبية</div><button class="see-all" onclick="navigateTo('stores')" data-i18n="seeAll">عرض الكل ←</button></div>
+        <div class="stores-scroll" id="stores-scroll"></div>
+        <div class="section-header"><div><div class="section-title" data-i18n="latestDeals">⚡ أحدث العروض</div><div class="section-subtitle"><span id="deals-count">0</span> <span data-i18n="activeOffers">عرض نشط</span></div></div><div id="filter-indicator"></div></div>
+        <div id="current-filter-chip"></div>
+        <div class="deals-grid" id="deals-grid"></div>
+      </div>
+
+      <!-- ====== STORES ====== -->
+      <div class="page" id="page-stores">
+        <div class="page-header">
+          <button class="back-btn" onclick="navigateTo('home')" data-i18n-title="backHome" title="رجوع">←</button>
+          <div class="page-header-content">
+            <div class="page-title" data-i18n="storesTitle">المتاجر</div>
+            <div class="page-subtitle"><span id="stores-count">0</span> <span data-i18n="storesWith">متجر مع عروض نشطة</span></div>
+          </div>
+        </div>
+        <div class="stores-grid" id="stores-grid"></div>
+      </div>
+
+      <!-- ====== FAVORITES ====== -->
+      <div class="page" id="page-favorites">
+        <div class="page-header">
+          <button class="back-btn" onclick="navigateTo('home')" title="رجوع">←</button>
+          <div class="page-header-content"><div class="page-title" data-i18n="favsTitle">المفضلة</div></div>
+        </div>
+        <div id="favorites-content"></div>
+      </div>
+
+      <!-- ====== PROMOS ====== -->
+      <div class="page" id="page-promos">
+        <div class="page-header">
+          <button class="back-btn" onclick="navigateTo('home')" title="رجوع">←</button>
+          <div class="page-header-content">
+            <div class="page-title" data-i18n="promosTitle">كوبونات التخفيض</div>
+            <div class="page-subtitle"><span id="promos-count">0</span> <span data-i18n="promosValid">كوبون ساري</span></div>
+          </div>
+        </div>
+        <div id="promos-list"></div>
+      </div>
+
+      <!-- ====== SEARCH ====== -->
+      <div class="page" id="page-search">
+        <div class="page-header">
+          <button class="back-btn" onclick="navigateTo('home')" title="رجوع">←</button>
+          <div class="page-header-content" style="max-width:100%;">
+            <div class="search-bar" style="box-shadow:var(--shadow-sm);border:1px solid var(--border);">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="search-input" data-i18n-placeholder="searchPlaceholder" placeholder="ابحث عن منتج، متجر..." oninput="doSearch(this.value)">
+            </div>
+          </div>
+        </div>
+        <div id="search-results" class="deals-grid"></div>
+      </div>
+    </div>
+
+    <!-- ============= BOTTOM NAV (mobile) ============= -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-page="home" onclick="navigateTo('home')"><span class="nav-icon">🏠</span><span class="nav-label" data-i18n="navHome">الرئيسية</span></button>
+      <button class="nav-item" data-page="stores" onclick="navigateTo('stores')"><span class="nav-icon">🏪</span><span class="nav-label" data-i18n="navStores">المتاجر</span></button>
+      <button class="nav-item" data-page="search" onclick="navigateTo('search')"><span class="nav-icon">🔍</span><span class="nav-label" data-i18n="navSearch">البحث</span></button>
+      <button class="nav-item" data-page="favorites" onclick="navigateTo('favorites')"><span class="nav-icon">❤️</span><span class="nav-label" data-i18n="navFavs">المفضلة</span></button>
+      <button class="nav-item" data-page="promos" onclick="navigateTo('promos')"><span class="nav-icon">🎟️</span><span class="nav-label" data-i18n="navPromos">كوبونات</span></button>
+    </nav>
+  </main>
 </div>
+
+<!-- ============= DEAL MODAL ============= -->
 <div class="modal-overlay" id="deal-modal" onclick="closeModal(event)">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal()">✕</button>
     <div class="modal-img" id="modal-img"></div>
     <div class="modal-content">
+      <div class="modal-store-tag" id="modal-store-tag"></div>
       <h2 class="modal-title" id="modal-title"></h2>
       <p class="modal-desc" id="modal-desc"></p>
       <div class="price-section">
@@ -195,74 +433,73 @@ body[dir="ltr"] { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto
         <div class="modal-price-old" id="modal-price-old"></div>
         <div class="savings" id="modal-savings"></div>
       </div>
-      <p style="font-size:13px;color:var(--text-2);" id="modal-expiry"></p>
+      <div class="expiry-row" id="modal-expiry"></div>
     </div>
     <div class="modal-actions">
       <button class="icon-btn" id="modal-fav-btn" onclick="toggleFavModal()">🤍</button>
-      <button class="icon-btn" onclick="shareDeal()">📤</button>
+      <button class="icon-btn" onclick="shareDeal()" title="Share">📤</button>
       <button class="primary-btn" id="modal-action-btn" onclick="openDealLink()"></button>
     </div>
   </div>
 </div>
+
 <div class="toast" id="toast"></div>
 
-<!-- Firebase SDKs (v10 modular via CDN compat mode for simplicity) -->
+<!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script src="firebase-config.js"></script>
 <script>
-// =============================================================
-// I18N
-// =============================================================
+// ============ I18N ============
 const I18N = {
-  ar: { greeting:'أهلاً وسهلاً 👋', tagline:'أفضل العروض في المغرب', searchPlaceholder:'ابحث عن منتج، متجر...', flyers:'الكتالوجات', codes:'كوبونات', topDeals:'أفضل العروض', myFavs:'المفضلة', categories:'الأقسام', featured:'عروض مميزة', featuredSub:'أفضل عروض هذا الأسبوع', popularStores:'متاجر شعبية', seeAll:'عرض الكل ←', latestDeals:'أحدث العروض', activeOffers:'عرض نشط', storesTitle:'المتاجر', storesWith:'متجر مع عروض نشطة', favsTitle:'المفضلة', emptyFavTitle:'لا توجد عناصر في المفضلة', emptyFavText:'أضف العروض بالضغط على القلب في صفحة العرض.', promosTitle:'كوبونات التخفيض', promosValid:'كوبون ساري', navHome:'الرئيسية', navStores:'المتاجر', navSearch:'البحث', navFavs:'المفضلة', navPromos:'كوبونات', seeOffer:'شاهد العرض ←', goToStore:'اذهب إلى المتجر ←', save:'وفر', until:'حتى', daysLeft:'أيام متبقية', expiresToday:'ينتهي اليوم', expiresTomorrow:'ينتهي غداً', addedFav:'❤️ تمت الإضافة للمفضلة', removedFav:'تم الحذف من المفضلة', copyBtn:'نسخ', copied:'تم النسخ ✓', noResults:'لا توجد نتائج', searchEmpty:'ابدأ بكتابة اسم منتج أو متجر', loading:'جاري التحميل...', noDeals:'لا توجد عروض حالياً', noStores:'لا توجد متاجر حالياً', noPromos:'لا توجد كوبونات حالياً' },
-  fr: { greeting:'Bonjour 👋', tagline:'Les meilleures promos du Maroc', searchPlaceholder:'Rechercher un produit, un magasin...', flyers:'Catalogues', codes:'Codes promo', topDeals:'Top promos', myFavs:'Favoris', categories:'Catégories', featured:'Offres en vedette', featuredSub:'Les meilleures promos cette semaine', popularStores:'Magasins populaires', seeAll:'Voir tout →', latestDeals:'Dernières promos', activeOffers:'offres actives', storesTitle:'Magasins', storesWith:'enseignes avec des promos', favsTitle:'Favoris', emptyFavTitle:'Aucun favori pour l\'instant', emptyFavText:'Ajoutez des offres en cliquant sur le cœur.', promosTitle:'Codes promo', promosValid:'codes valides', navHome:'Accueil', navStores:'Magasins', navSearch:'Recherche', navFavs:'Favoris', navPromos:'Codes', seeOffer:'Voir l\'offre →', goToStore:'Aller au magasin →', save:'Économisez', until:'Jusqu\'au', daysLeft:'jours restants', expiresToday:'Expire aujourd\'hui', expiresTomorrow:'Expire demain', addedFav:'❤️ Ajouté aux favoris', removedFav:'Retiré des favoris', copyBtn:'Copier', copied:'Copié ✓', noResults:'Aucun résultat', searchEmpty:'Tapez un produit ou un magasin', loading:'Chargement...', noDeals:'Aucune promo pour le moment', noStores:'Aucun magasin pour le moment', noPromos:'Aucun code pour le moment' }
+  ar: { brandTag:'أفضل العروض 🇲🇦', greeting:'أهلاً وسهلاً 👋', tagline:'أفضل العروض والتخفيضات في المغرب', searchPlaceholder:'ابحث عن منتج، متجر...', allStores:'جميع المتاجر', codes:'كوبونات', topDeals:'أفضل العروض', myFavs:'المفضلة', categories:'الأقسام', featured:'عروض مميزة', featuredSub:'أفضل عروض هذا الأسبوع', popularStores:'متاجر شعبية', seeAll:'عرض الكل ←', latestDeals:'أحدث العروض', activeOffers:'عرض نشط', storesTitle:'المتاجر', storesWith:'متجر مع عروض', favsTitle:'المفضلة', emptyFavTitle:'لا توجد عناصر في المفضلة', emptyFavText:'أضف العروض بالضغط على القلب ❤️', promosTitle:'كوبونات التخفيض', promosValid:'كوبون ساري', navHome:'الرئيسية', navStores:'المتاجر', navSearch:'البحث', navFavs:'المفضلة', navPromos:'كوبونات', seeOffer:'شاهد العرض ←', goToStore:'اذهب إلى المتجر ←', visitStore:'زيارة الموقع ←', save:'وفر', until:'حتى', daysLeft:'أيام متبقية', expiresToday:'ينتهي اليوم!', expiresTomorrow:'ينتهي غداً', addedFav:'❤️ تمت الإضافة للمفضلة', removedFav:'تم الحذف من المفضلة', copyBtn:'نسخ', copied:'تم النسخ ✓', noResults:'لا توجد نتائج', searchEmpty:'ابدأ بكتابة اسم منتج أو متجر', noDeals:'لا توجد عروض حالياً', noDealsText:'سيتم إضافة عروض جديدة قريباً', noStores:'لا توجد متاجر', noPromos:'لا توجد كوبونات', noDealsStore:'لا توجد عروض لهذا المتجر', dealsAt:'عرض', clearFilter:'إزالة الفلتر ✕', backHome:'العودة للرئيسية' },
+  fr: { brandTag:'Meilleures promos 🇲🇦', greeting:'Bonjour 👋', tagline:'Les meilleures promos du Maroc', searchPlaceholder:'Rechercher un produit, magasin...', allStores:'Tous magasins', codes:'Codes promo', topDeals:'Top promos', myFavs:'Favoris', categories:'Catégories', featured:'Offres en vedette', featuredSub:'Meilleures promos cette semaine', popularStores:'Magasins populaires', seeAll:'Voir tout →', latestDeals:'Dernières promos', activeOffers:'offres actives', storesTitle:'Magasins', storesWith:'enseignes avec promos', favsTitle:'Favoris', emptyFavTitle:'Aucun favori pour l\'instant', emptyFavText:'Ajoutez des offres en cliquant sur ❤️', promosTitle:'Codes promo', promosValid:'codes valides', navHome:'Accueil', navStores:'Magasins', navSearch:'Recherche', navFavs:'Favoris', navPromos:'Codes', seeOffer:'Voir l\'offre →', goToStore:'Aller au magasin →', visitStore:'Visiter le site →', save:'Économisez', until:'Jusqu\'au', daysLeft:'jours restants', expiresToday:'Expire aujourd\'hui!', expiresTomorrow:'Expire demain', addedFav:'❤️ Ajouté aux favoris', removedFav:'Retiré des favoris', copyBtn:'Copier', copied:'Copié ✓', noResults:'Aucun résultat', searchEmpty:'Tapez un produit ou un magasin', noDeals:'Aucune promo pour le moment', noDealsText:'De nouvelles promos seront ajoutées bientôt', noStores:'Aucun magasin', noPromos:'Aucun code promo', noDealsStore:'Aucune promo pour ce magasin', dealsAt:'offre(s)', clearFilter:'Effacer le filtre ✕', backHome:'Retour à l\'accueil' }
 };
 
-// =============================================================
-// FIREBASE INIT
-// =============================================================
-let db = null;
-let firebaseReady = false;
+// Official store websites
+const STORE_URLS = {
+  marjane: 'https://www.marjane.ma',
+  carrefour: 'https://www.carrefour.ma',
+  bim: 'https://www.bim.ma',
+  aswak: 'https://www.aswakassalam.com',
+  atacadao: 'https://www.atacadao.ma',
+  labelvie: 'https://www.labelvie.ma',
+  acima: 'https://www.acima.ma',
+  electroplanet: 'https://www.electroplanet.ma',
+  biougnach: 'https://www.biougnach.ma',
+  decathlon: 'https://www.decathlon.ma',
+  hm: 'https://www2.hm.com/fr_ma/',
+  jumia: 'https://www.jumia.ma'
+};
+
+// ============ FIREBASE INIT ============
+let db = null, firebaseReady = false;
 try {
   if (typeof firebase !== 'undefined' && firebaseConfig.apiKey !== 'PASTE_YOUR_API_KEY_HERE') {
     firebase.initializeApp(firebaseConfig);
     db = firebase.firestore();
     firebaseReady = true;
-  } else {
-    console.warn('⚠️ Firebase not configured. Edit firebase-config.js with your keys.');
   }
-} catch (e) {
-  console.error('Firebase init error:', e);
-}
+} catch (e) { console.error('Firebase init error:', e); }
 
-// =============================================================
-// STATE
-// =============================================================
+// ============ STATE ============
 let lang = localStorage.getItem('lang') || 'ar';
 let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
 let currentFilter = null;
 let currentDeal = null;
+let DEALS = [], STORES = [], CATEGORIES = [], PROMO_CODES = [];
+let dataLoaded = { deals:false, stores:false, categories:false, promos:false };
 
-// Data from Firestore (live)
-let DEALS = [];
-let STORES = [];
-let CATEGORIES = [];
-let PROMO_CODES = [];
-
-// =============================================================
-// HELPERS
-// =============================================================
+// ============ HELPERS ============
 function t(k) { return I18N[lang][k] || k; }
-function getTitle(d) { return lang === 'ar' ? (d.titleAr || d.title) : d.title; }
+function getTitle(d) { return lang === 'ar' ? (d.titleAr || d.title) : (d.title || d.titleAr); }
 function getStore(id) { return STORES.find(s => s.id === id); }
+function getStoreUrl(s) { return (s && STORE_URLS[s.id]) || (s && s.url) || null; }
 function currency() { return lang === 'ar' ? 'درهم' : 'DH'; }
 function fmt(p) { return p + ' ' + currency(); }
-function daysUntil(s) { return Math.ceil((new Date(s) - new Date()) / 86400000); }
+function daysUntil(s) { if (!s) return null; return Math.ceil((new Date(s) - new Date()) / 86400000); }
 function expiryLabel(s) {
-  if (!s) return '';
-  const d = daysUntil(s);
-  if (d < 0) return '';
+  const d = daysUntil(s); if (d === null || d < 0) return '';
   if (d === 0) return t('expiresToday');
   if (d === 1) return t('expiresTomorrow');
   if (d <= 7) return d + ' ' + t('daysLeft');
@@ -272,17 +509,18 @@ function showToast(m) {
   const el = document.getElementById('toast');
   el.textContent = m;
   el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 2000);
+  setTimeout(() => el.classList.remove('show'), 2200);
 }
+function esc(s) { return (s || '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c])); }
 
-// =============================================================
-// LANGUAGE
-// =============================================================
+// ============ LANGUAGE ============
 function applyLanguage() {
   document.documentElement.lang = lang;
   document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
   document.body.dir = lang === 'ar' ? 'rtl' : 'ltr';
-  document.getElementById('lang-label').textContent = lang === 'ar' ? 'FR' : 'ع';
+  const label = lang === 'ar' ? 'FR' : 'ع';
+  document.getElementById('lang-label').textContent = label;
+  const sl = document.getElementById('sidebar-lang-label'); if (sl) sl.textContent = lang === 'ar' ? 'Français' : 'العربية';
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.getAttribute('data-i18n')); });
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.getAttribute('data-i18n-placeholder')); });
   document.getElementById('current-city').textContent = lang === 'ar' ? 'الدار البيضاء' : 'Casablanca';
@@ -294,57 +532,88 @@ function toggleLanguage() {
   renderAll();
 }
 
-// =============================================================
-// NAVIGATION
-// =============================================================
+// ============ NAVIGATION ============
 function navigateTo(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.page === page));
+  document.querySelectorAll('.nav-item, .sidebar-item').forEach(n => n.classList.toggle('active', n.dataset.page === page));
   window.scrollTo(0, 0);
   if (page === 'favorites') renderFavorites();
-  if (page === 'search') document.getElementById('search-input').focus();
+  if (page === 'search') { const si = document.getElementById('search-input'); if (si) si.focus(); }
 }
 
-// =============================================================
-// RENDERERS
-// =============================================================
-function dealImageHTML(d, store) {
-  if (d.imageUrl) {
-    return '<img src="' + d.imageUrl + '" alt="' + getTitle(d) + '" loading="lazy">';
+// ============ SKELETONS ============
+function skeletonGrid(count) {
+  let html = '';
+  for (let i = 0; i < count; i++) {
+    html += '<div class="skeleton-deal"><div class="skeleton sk-img"></div><div class="sk-body"><div class="skeleton sk-line"></div><div class="skeleton sk-line short"></div></div></div>';
   }
-  return d.emoji || '🛍️';
+  return html;
+}
+
+// ============ RENDERERS ============
+function dealImage(d, store) {
+  if (d.imageUrl) return '<img src="' + esc(d.imageUrl) + '" alt="' + esc(getTitle(d)) + '" loading="lazy">';
+  return '<span>' + (d.emoji || '🛍️') + '</span>';
 }
 
 function dealCardHTML(d) {
   const store = getStore(d.storeId);
   if (!store) return '';
   const expiry = expiryLabel(d.expires);
-  const bg = d.imageUrl ? '' : 'background:' + store.color + '22';
-  return '<div class="deal-card" onclick="openDealModal(\'' + d.id + '\')"><div class="deal-img" style="' + bg + '">' + dealImageHTML(d, store) + '<div class="discount-badge">-' + d.disc + '%</div><div class="store-badge" style="background:' + store.color + '">' + store.name + '</div></div><div class="deal-content"><div class="deal-title">' + getTitle(d) + '</div><div class="deal-prices"><span class="price-new">' + fmt(d.new) + '</span><span class="price-old">' + fmt(d.old) + '</span></div>' + (expiry ? '<div class="deal-expiry">⏰ ' + expiry + '</div>' : '') + '</div></div>';
+  const urgent = daysUntil(d.expires) !== null && daysUntil(d.expires) <= 3;
+  const isFav = favorites.includes(d.id);
+  const bg = d.imageUrl ? 'background:' + store.color + '15' : 'background:' + store.color + '22';
+  return '<div class="deal-card" onclick="openDealModal(\'' + d.id + '\')">'
+    + '<div class="deal-img" style="' + bg + '">'
+    +   dealImage(d, store)
+    +   '<div class="discount-badge">-' + d.disc + '%</div>'
+    +   '<div class="store-badge" style="background:' + store.color + '">' + esc(store.name) + '</div>'
+    +   '<button class="fav-badge ' + (isFav ? 'active' : '') + '" onclick="event.stopPropagation(); toggleFav(\'' + d.id + '\')">' + (isFav ? '❤️' : '🤍') + '</button>'
+    + '</div>'
+    + '<div class="deal-content">'
+    +   '<div class="deal-title">' + esc(getTitle(d)) + '</div>'
+    +   '<div class="deal-prices"><span class="price-new">' + fmt(d.new) + '</span><span class="price-old">' + fmt(d.old) + '</span></div>'
+    +   (expiry ? '<div class="deal-expiry ' + (urgent ? 'urgent' : '') + '">⏰ ' + esc(expiry) + '</div>' : '')
+    + '</div></div>';
 }
 
 function renderCategories() {
   const c = document.getElementById('categories-container');
   if (CATEGORIES.length === 0) { c.innerHTML = ''; return; }
   c.innerHTML = CATEGORIES.map(cat =>
-    '<div class="category-chip ' + (currentFilter === cat.id ? 'active' : '') + '" onclick="filterByCategory(\'' + cat.id + '\')"><div class="category-emoji">' + cat.icon + '</div><div class="category-label">' + (cat[lang] || cat.ar || cat.fr) + '</div></div>'
+    '<div class="category-chip ' + (currentFilter === cat.id ? 'active' : '') + '" onclick="filterByCategory(\'' + cat.id + '\')"><div class="category-emoji">' + (cat.icon || '📂') + '</div><div class="category-label">' + esc(cat[lang] || cat.ar || cat.fr || cat.id) + '</div></div>'
   ).join('');
 }
 
 function renderFeatured() {
   const c = document.getElementById('featured-deals');
+  if (!dataLoaded.deals) { c.innerHTML = skeletonGrid(4).replace(/skeleton-deal/g, 'skeleton-deal').split('').join(''); return; }
   const featured = DEALS.filter(d => d.featured);
-  if (featured.length === 0) { c.innerHTML = ''; return; }
+  if (featured.length === 0) { c.innerHTML = ''; document.querySelector('#page-home .section-header:has(#featured-deals)')?.classList.add('hidden'); return; }
   c.innerHTML = featured.map(dealCardHTML).join('');
 }
 
 function renderStoresScroll() {
   const c = document.getElementById('stores-scroll');
   if (STORES.length === 0) { c.innerHTML = ''; return; }
-  c.innerHTML = STORES.slice(0, 8).map(s =>
-    '<div class="store-chip" style="border-color:' + s.color + '" onclick="filterByStore(\'' + s.id + '\')"><div class="store-logo" style="background:' + s.color + '">' + s.name.charAt(0) + '</div><div class="store-name">' + s.name + '</div></div>'
+  c.innerHTML = STORES.slice(0, 10).map(s =>
+    '<div class="store-chip" style="border-color:' + s.color + '" onclick="filterByStore(\'' + s.id + '\')"><div class="store-logo" style="background:' + s.color + '">' + (s.logoUrl ? '<img src="' + esc(s.logoUrl) + '">' : esc(s.name.charAt(0))) + '</div><div class="store-name">' + esc(s.name) + '</div></div>'
   ).join('');
+}
+
+function renderFilterChip() {
+  const c = document.getElementById('current-filter-chip');
+  if (!currentFilter) { c.innerHTML = ''; return; }
+  let label = '';
+  if (currentFilter === 'featured') label = '🔥 ' + t('featured');
+  else {
+    const cat = CATEGORIES.find(x => x.id === currentFilter);
+    const store = STORES.find(x => x.id === currentFilter);
+    if (cat) label = (cat.icon || '📂') + ' ' + (cat[lang] || cat.ar || cat.fr);
+    else if (store) label = '🏪 ' + store.name;
+  }
+  if (label) c.innerHTML = '<button class="filter-chip" onclick="clearFilter()">' + esc(label) + ' · ' + t('clearFilter') + '</button>';
 }
 
 function renderDealsGrid() {
@@ -354,10 +623,14 @@ function renderDealsGrid() {
     else if (CATEGORIES.find(c => c.id === currentFilter)) deals = DEALS.filter(d => d.cat === currentFilter);
     else if (STORES.find(s => s.id === currentFilter)) deals = DEALS.filter(d => d.storeId === currentFilter);
   }
+  // Filter out expired
+  deals = deals.filter(d => !d.expires || new Date(d.expires) >= new Date(new Date().setHours(0,0,0,0)));
   document.getElementById('deals-count').textContent = deals.length;
   const c = document.getElementById('deals-grid');
+  if (!dataLoaded.deals) { c.innerHTML = skeletonGrid(6); return; }
+  renderFilterChip();
   if (deals.length === 0) {
-    c.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-emoji">🛍️</div><div class="empty-text">' + t('noDeals') + '</div></div>';
+    c.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-emoji">🛍️</div><div class="empty-title">' + t('noDeals') + '</div><div class="empty-text">' + t('noDealsText') + '</div></div>';
   } else {
     c.innerHTML = deals.map(dealCardHTML).join('');
   }
@@ -365,14 +638,38 @@ function renderDealsGrid() {
 
 function renderStoresGrid() {
   const c = document.getElementById('stores-grid');
+  if (!dataLoaded.stores) { c.innerHTML = skeletonGrid(6); return; }
   if (STORES.length === 0) {
-    c.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-emoji">🏪</div><div class="empty-text">' + t('noStores') + '</div></div>';
+    c.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-emoji">🏪</div><div class="empty-title">' + t('noStores') + '</div></div>';
   } else {
-    c.innerHTML = STORES.map(s =>
-      '<div class="store-card" onclick="filterByStore(\'' + s.id + '\'); navigateTo(\'home\');"><div class="store-card-logo" style="background:' + s.color + '">' + s.name.charAt(0) + '</div><div class="store-card-name">' + s.name + '</div><div class="store-card-type">' + (lang === 'ar' ? (s.type || '') : (s.typeFr || '')) + '</div></div>'
-    ).join('');
+    c.innerHTML = STORES.map(s => {
+      const dealCount = DEALS.filter(d => d.storeId === s.id).length;
+      const url = getStoreUrl(s);
+      return '<div class="store-card" style="color:' + s.color + '" onclick="onStoreCardClick(\'' + s.id + '\')">'
+        + '<div class="store-card-logo" style="background:' + s.color + '">' + (s.logoUrl ? '<img src="' + esc(s.logoUrl) + '">' : esc(s.name.charAt(0))) + '</div>'
+        + '<div class="store-card-name">' + esc(s.name) + '</div>'
+        + '<div class="store-card-type">' + esc(lang === 'ar' ? (s.type || '') : (s.typeFr || '')) + '</div>'
+        + '<div class="store-card-count">' + dealCount + ' ' + t('dealsAt') + '</div>'
+        + (url ? '<div class="store-card-link">🔗 ' + t('visitStore') + '</div>' : '')
+        + '</div>';
+    }).join('');
   }
   document.getElementById('stores-count').textContent = STORES.length;
+}
+
+function onStoreCardClick(id) {
+  const store = STORES.find(s => s.id === id);
+  if (!store) return;
+  const url = getStoreUrl(store);
+  const dealCount = DEALS.filter(d => d.storeId === id).length;
+  // If store has deals, show them. Otherwise open external.
+  if (dealCount > 0) {
+    filterByStore(id);
+  } else if (url) {
+    window.open(url, '_blank');
+  } else {
+    showToast(t('noDealsStore'));
+  }
 }
 
 function renderFavorites() {
@@ -387,44 +684,60 @@ function renderFavorites() {
 
 function renderPromos() {
   const c = document.getElementById('promos-list');
+  if (!dataLoaded.promos) { c.innerHTML = '<div style="padding:20px;">' + skeletonGrid(3) + '</div>'; return; }
   if (PROMO_CODES.length === 0) {
-    c.innerHTML = '<div class="empty-state"><div class="empty-emoji">🎟️</div><div class="empty-text">' + t('noPromos') + '</div></div>';
+    c.innerHTML = '<div class="empty-state"><div class="empty-emoji">🎟️</div><div class="empty-title">' + t('noPromos') + '</div></div>';
   } else {
     c.innerHTML = PROMO_CODES.map((p, i) => {
       const store = getStore(p.storeId) || { color:'#999', name:p.store || '?' };
-      return '<div class="promo-card"><div class="promo-card-top"><div class="promo-logo" style="background:' + store.color + '">' + (p.store || store.name).charAt(0) + '</div><div><div class="promo-store">' + (p.store || store.name) + '</div><div class="promo-discount">' + (lang === 'ar' ? (p.discountAr || p.discount) : (p.discount || p.discountAr)) + '</div></div></div><div class="promo-desc">' + (lang === 'ar' ? (p.descAr || p.desc || '') : (p.desc || p.descAr || '')) + '</div><div class="promo-code-box"><div class="promo-code">' + p.code + '</div><button class="copy-btn" id="copy-' + i + '" onclick="copyCode(\'' + p.code + '\', ' + i + ')">' + t('copyBtn') + '</button></div>' + (p.link ? '<button class="copy-btn" style="width:100%;padding:10px" onclick="window.open(\'' + p.link + '\', \'_blank\')">' + (lang === 'ar' ? 'زيارة المتجر ←' : 'Visiter le magasin →') + '</button>' : '') + '</div>';
+      const link = p.link || getStoreUrl(store);
+      return '<div class="promo-card">'
+        + '<div class="promo-card-top">'
+        +   '<div class="promo-logo" style="background:' + store.color + '">' + (store.logoUrl ? '<img src="' + esc(store.logoUrl) + '">' : esc((p.store || store.name).charAt(0))) + '</div>'
+        +   '<div><div class="promo-store">' + esc(p.store || store.name) + '</div><div class="promo-discount">' + esc(lang === 'ar' ? (p.discountAr || p.discount || '') : (p.discount || p.discountAr || '')) + '</div></div>'
+        + '</div>'
+        + '<div class="promo-desc">' + esc(lang === 'ar' ? (p.descAr || p.desc || '') : (p.desc || p.descAr || '')) + '</div>'
+        + '<div class="promo-code-box"><div class="promo-code">' + esc(p.code) + '</div><button class="copy-btn" id="copy-' + i + '" onclick="copyCode(\'' + esc(p.code) + '\', ' + i + ')">' + t('copyBtn') + '</button></div>'
+        + (link ? '<button class="promo-store-link" onclick="window.open(\'' + link + '\', \'_blank\')">' + t('visitStore') + '</button>' : '')
+        + '</div>';
     }).join('');
   }
   document.getElementById('promos-count').textContent = PROMO_CODES.length;
 }
 
-// =============================================================
-// FILTERS
-// =============================================================
+// ============ FILTERS ============
 function filterByCategory(id) {
   currentFilter = currentFilter === id ? null : id;
   renderCategories();
   renderDealsGrid();
+  setTimeout(() => document.getElementById('deals-grid').scrollIntoView({ behavior:'smooth', block:'start' }), 50);
 }
 function filterByStore(id) {
   currentFilter = id;
-  renderDealsGrid();
   navigateTo('home');
+  renderDealsGrid();
+  setTimeout(() => document.getElementById('deals-grid').scrollIntoView({ behavior:'smooth', block:'start' }), 100);
 }
 function filterByFeatured() {
   currentFilter = 'featured';
+  navigateTo('home');
+  renderDealsGrid();
+  setTimeout(() => document.getElementById('deals-grid').scrollIntoView({ behavior:'smooth', block:'start' }), 100);
+}
+function clearFilter() {
+  currentFilter = null;
+  renderCategories();
   renderDealsGrid();
 }
 
-// =============================================================
-// SEARCH
-// =============================================================
+// ============ SEARCH ============
 function doSearch(q) {
   q = q.trim().toLowerCase();
   const results = q.length === 0 ? [] : DEALS.filter(d =>
     (d.title && d.title.toLowerCase().includes(q)) ||
     (d.titleAr && d.titleAr.includes(q)) ||
-    (d.desc && d.desc.toLowerCase().includes(q))
+    (d.desc && d.desc.toLowerCase().includes(q)) ||
+    (getStore(d.storeId) && getStore(d.storeId).name.toLowerCase().includes(q))
   );
   const c = document.getElementById('search-results');
   if (q.length === 0) c.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-emoji">🔍</div><div class="empty-text">' + t('searchEmpty') + '</div></div>';
@@ -432,28 +745,29 @@ function doSearch(q) {
   else c.innerHTML = results.map(dealCardHTML).join('');
 }
 
-// =============================================================
-// MODAL
-// =============================================================
+// ============ MODAL ============
 function openDealModal(id) {
   const d = DEALS.find(x => x.id === id);
   if (!d) return;
   currentDeal = d;
   const store = getStore(d.storeId) || { color:'#999', name:'?' };
   const imgEl = document.getElementById('modal-img');
-  if (d.imageUrl) {
-    imgEl.innerHTML = '<img src="' + d.imageUrl + '" alt="' + getTitle(d) + '">';
-  } else {
-    imgEl.innerHTML = '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:120px;background:' + store.color + '22">' + (d.emoji || '🛍️') + '</div>';
-  }
+  if (d.imageUrl) imgEl.innerHTML = '<img src="' + esc(d.imageUrl) + '" alt="' + esc(getTitle(d)) + '">';
+  else imgEl.innerHTML = '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:140px;background:linear-gradient(135deg,' + store.color + '22,' + store.color + '11)">' + (d.emoji || '🛍️') + '</div>';
+
+  document.getElementById('modal-store-tag').innerHTML = '🏪 ' + esc(store.name);
+  document.getElementById('modal-store-tag').style.background = store.color;
   document.getElementById('modal-title').textContent = getTitle(d);
   document.getElementById('modal-desc').textContent = d.desc || '';
   document.getElementById('modal-price-new').textContent = fmt(d.new);
   document.getElementById('modal-price-old').textContent = fmt(d.old);
-  document.getElementById('modal-savings').textContent = t('save') + ' ' + fmt(d.old - d.new);
-  document.getElementById('modal-expiry').textContent = '⏰ ' + expiryLabel(d.expires);
+  document.getElementById('modal-savings').innerHTML = '💰 ' + t('save') + ' ' + fmt(d.old - d.new);
+  const expiryEl = document.getElementById('modal-expiry');
+  const urgent = daysUntil(d.expires) !== null && daysUntil(d.expires) <= 3;
+  expiryEl.textContent = '⏰ ' + expiryLabel(d.expires);
+  expiryEl.classList.toggle('urgent', urgent);
   document.getElementById('modal-fav-btn').textContent = favorites.includes(d.id) ? '❤️' : '🤍';
-  document.getElementById('modal-action-btn').textContent = d.link ? t('seeOffer') : t('goToStore');
+  document.getElementById('modal-action-btn').textContent = d.link ? t('seeOffer') : (getStoreUrl(store) ? t('visitStore') : t('goToStore'));
   document.getElementById('deal-modal').classList.add('active');
   document.body.style.overflow = 'hidden';
 }
@@ -462,9 +776,7 @@ function closeModal(e) {
   document.getElementById('deal-modal').classList.remove('active');
   document.body.style.overflow = '';
 }
-function toggleFavModal() {
-  if (!currentDeal) return;
-  const id = currentDeal.id;
+function toggleFav(id) {
   if (favorites.includes(id)) {
     favorites = favorites.filter(f => f !== id);
     showToast(t('removedFav'));
@@ -473,20 +785,29 @@ function toggleFavModal() {
     showToast(t('addedFav'));
   }
   localStorage.setItem('favorites', JSON.stringify(favorites));
-  document.getElementById('modal-fav-btn').textContent = favorites.includes(id) ? '❤️' : '🤍';
+  renderDealsGrid();
+  renderFeatured();
+  renderFavorites();
+}
+function toggleFavModal() {
+  if (!currentDeal) return;
+  toggleFav(currentDeal.id);
+  document.getElementById('modal-fav-btn').textContent = favorites.includes(currentDeal.id) ? '❤️' : '🤍';
 }
 function openDealLink() {
-  if (currentDeal && currentDeal.link) window.open(currentDeal.link, '_blank');
-  else if (currentDeal) {
-    const s = getStore(currentDeal.storeId);
-    showToast((lang === 'ar' ? 'ابحث عن هذا العرض في ' : 'Cherchez cette offre chez ') + (s ? s.name : '?'));
-  }
+  if (!currentDeal) return;
+  if (currentDeal.link) { window.open(currentDeal.link, '_blank'); return; }
+  const store = getStore(currentDeal.storeId);
+  const url = getStoreUrl(store);
+  if (url) window.open(url, '_blank');
+  else showToast((lang === 'ar' ? 'ابحث عن هذا العرض في ' : 'Cherchez cette offre chez ') + (store ? store.name : '?'));
 }
 function shareDeal() {
   if (!currentDeal) return;
-  const text = getTitle(currentDeal) + ' - ' + fmt(currentDeal.new) + ' (' + currentDeal.disc + '% ' + (lang === 'ar' ? 'خصم' : 'off') + ')';
-  if (navigator.share) navigator.share({ title:'Promos Maroc', text });
-  else { navigator.clipboard.writeText(text); showToast(lang === 'ar' ? 'تم النسخ للمشاركة' : 'Copié pour partager'); }
+  const text = getTitle(currentDeal) + ' - ' + fmt(currentDeal.new) + ' (' + currentDeal.disc + '% ' + (lang === 'ar' ? 'خصم' : 'off') + ') · Promos Maroc';
+  const url = window.location.href;
+  if (navigator.share) navigator.share({ title:'Promos Maroc', text, url }).catch(()=>{});
+  else { navigator.clipboard.writeText(text + ' ' + url); showToast(lang === 'ar' ? 'تم النسخ للمشاركة' : 'Copié pour partager'); }
 }
 function copyCode(code, idx) {
   navigator.clipboard.writeText(code);
@@ -497,9 +818,7 @@ function copyCode(code, idx) {
   setTimeout(() => { btn.textContent = t('copyBtn'); btn.classList.remove('copied'); }, 2000);
 }
 
-// =============================================================
-// RENDER ALL
-// =============================================================
+// ============ RENDER ALL ============
 function renderAll() {
   renderCategories();
   renderFeatured();
@@ -510,48 +829,43 @@ function renderAll() {
   renderPromos();
 }
 
-// =============================================================
-// FIREBASE LIVE LOADERS
-// =============================================================
+// ============ FIREBASE LIVE ============
 function loadFromFirebase() {
   if (!firebaseReady) {
-    document.getElementById('deals-grid').innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-emoji">⚙️</div><div class="empty-title">' + (lang === 'ar' ? 'لم يتم إعداد Firebase' : 'Firebase non configuré') + '</div><div class="empty-text">' + (lang === 'ar' ? 'افتح firebase-config.js وأضف مفاتيح Firebase الخاصة بك' : 'Éditez firebase-config.js avec vos clés Firebase') + '</div></div>';
+    document.getElementById('deals-grid').innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-emoji">⚙️</div><div class="empty-title">' + (lang === 'ar' ? 'لم يتم إعداد Firebase' : 'Firebase non configuré') + '</div></div>';
     return;
   }
+  // Show skeletons immediately
+  renderDealsGrid();
+  renderStoresGrid();
+  renderPromos();
 
-  // Live listener: deals
   db.collection('deals').onSnapshot(snap => {
     DEALS = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    renderFeatured();
-    renderDealsGrid();
-    renderFavorites();
+    dataLoaded.deals = true;
+    renderFeatured(); renderDealsGrid(); renderFavorites(); renderStoresGrid();
   }, err => console.error('Deals load error:', err));
 
-  // Live listener: stores
   db.collection('stores').onSnapshot(snap => {
     STORES = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    renderStoresScroll();
-    renderStoresGrid();
-    renderDealsGrid();
-    renderFeatured();
+    dataLoaded.stores = true;
+    renderStoresScroll(); renderStoresGrid(); renderDealsGrid(); renderFeatured(); renderPromos();
   }, err => console.error('Stores load error:', err));
 
-  // Live listener: categories
   db.collection('categories').onSnapshot(snap => {
     CATEGORIES = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    dataLoaded.categories = true;
     renderCategories();
   }, err => console.error('Categories load error:', err));
 
-  // Live listener: promo codes
   db.collection('promos').onSnapshot(snap => {
     PROMO_CODES = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    dataLoaded.promos = true;
     renderPromos();
   }, err => console.error('Promos load error:', err));
 }
 
-// =============================================================
-// INIT
-// =============================================================
+// ============ INIT ============
 applyLanguage();
 loadFromFirebase();
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
