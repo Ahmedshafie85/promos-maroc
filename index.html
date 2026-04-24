@@ -52,9 +52,10 @@ body[dir="ltr"] { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto
 .deals-scroll .deal-card { width:220px; flex-shrink:0; }
 .deal-card { background:white; border-radius:16px; overflow:hidden; box-shadow:var(--shadow-sm); cursor:pointer; transition:transform .2s,box-shadow .2s; position:relative; }
 .deal-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-md); }
-.deal-img { width:100%; aspect-ratio:1; background:var(--surface-alt); position:relative; display:flex; align-items:center; justify-content:center; font-size:64px; }
-.discount-badge { position:absolute; top:8px; background:#E74C3C; color:white; padding:4px 8px; border-radius:6px; font-weight:800; font-size:13px; }
-.store-badge { position:absolute; bottom:8px; color:white; padding:3px 10px; border-radius:6px; font-weight:700; font-size:11px; max-width:70%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.deal-img { width:100%; aspect-ratio:1; background:var(--surface-alt); position:relative; display:flex; align-items:center; justify-content:center; font-size:64px; overflow:hidden; }
+.deal-img img { width:100%; height:100%; object-fit:cover; }
+.discount-badge { position:absolute; top:8px; background:#E74C3C; color:white; padding:4px 8px; border-radius:6px; font-weight:800; font-size:13px; z-index:2; }
+.store-badge { position:absolute; bottom:8px; color:white; padding:3px 10px; border-radius:6px; font-weight:700; font-size:11px; max-width:70%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; z-index:2; }
 [dir="rtl"] .discount-badge, [dir="rtl"] .store-badge { right:8px; }
 [dir="ltr"] .discount-badge, [dir="ltr"] .store-badge { left:8px; }
 .deal-content { padding:12px; }
@@ -80,7 +81,8 @@ body[dir="ltr"] { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto
 .modal { background:white; width:100%; max-width:480px; max-height:90vh; border-radius:24px 24px 0 0; overflow:hidden; display:flex; flex-direction:column; animation:slideUp .3s; }
 @keyframes slideUp { from { transform:translateY(100%); } to { transform:translateY(0); } }
 .modal-handle { width:40px; height:4px; background:var(--border); border-radius:2px; margin:12px auto; }
-.modal-img { width:100%; aspect-ratio:1; background:var(--surface-alt); position:relative; }
+.modal-img { width:100%; aspect-ratio:1; background:var(--surface-alt); position:relative; overflow:hidden; }
+.modal-img img { width:100%; height:100%; object-fit:cover; }
 .modal-content { padding:16px 20px; overflow-y:auto; flex:1; }
 .modal-title { font-size:22px; font-weight:800; margin-bottom:6px; }
 .modal-desc { color:var(--text-2); font-size:14px; margin-bottom:16px; }
@@ -119,6 +121,9 @@ body[dir="ltr"] { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto
 .store-card-type { font-size:11px; color:var(--text-2); margin-top:2px; }
 .toast { position:fixed; top:30px; left:50%; transform:translateX(-50%); background:var(--text); color:white; padding:12px 20px; border-radius:12px; font-size:14px; font-weight:600; z-index:2000; opacity:0; transition:opacity .3s; pointer-events:none; max-width:90%; text-align:center; }
 .toast.show { opacity:1; }
+.loading-state { text-align:center; padding:60px 20px; color:var(--text-2); }
+.spinner { width:40px; height:40px; border:3px solid var(--border); border-top-color:var(--primary); border-radius:50%; animation:spin 1s linear infinite; margin:0 auto 16px; }
+@keyframes spin { to { transform:rotate(360deg); } }
 @media (min-width:520px) { .app { margin:20px auto; border-radius:24px; overflow:hidden; } }
 </style>
 </head>
@@ -155,7 +160,7 @@ body[dir="ltr"] { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto
     <div class="deals-grid" id="deals-grid"></div>
   </div>
   <div class="page" id="page-stores">
-    <div class="page-header"><div class="page-title" data-i18n="storesTitle">المتاجر</div><div class="page-subtitle"><span id="stores-count">12</span> <span data-i18n="storesWith">متجر مع عروض نشطة</span></div></div>
+    <div class="page-header"><div class="page-title" data-i18n="storesTitle">المتاجر</div><div class="page-subtitle"><span id="stores-count">0</span> <span data-i18n="storesWith">متجر مع عروض نشطة</span></div></div>
     <div class="stores-grid" id="stores-grid"></div>
   </div>
   <div class="page" id="page-favorites">
@@ -163,7 +168,7 @@ body[dir="ltr"] { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto
     <div id="favorites-content"></div>
   </div>
   <div class="page" id="page-promos">
-    <div class="page-header"><div class="page-title" data-i18n="promosTitle">كوبونات التخفيض</div><div class="page-subtitle"><span id="promos-count">5</span> <span data-i18n="promosValid">كوبون ساري</span></div></div>
+    <div class="page-header"><div class="page-title" data-i18n="promosTitle">كوبونات التخفيض</div><div class="page-subtitle"><span id="promos-count">0</span> <span data-i18n="promosValid">كوبون ساري</span></div></div>
     <div id="promos-list"></div>
   </div>
   <div class="page" id="page-search">
@@ -200,68 +205,54 @@ body[dir="ltr"] { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto
   </div>
 </div>
 <div class="toast" id="toast"></div>
+
+<!-- Firebase SDKs (v10 modular via CDN compat mode for simplicity) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
 <script>
+// =============================================================
+// I18N
+// =============================================================
 const I18N = {
-  ar: { greeting:'أهلاً وسهلاً 👋', tagline:'أفضل العروض في المغرب', searchPlaceholder:'ابحث عن منتج، متجر...', flyers:'الكتالوجات', codes:'كوبونات', topDeals:'أفضل العروض', myFavs:'المفضلة', categories:'الأقسام', featured:'عروض مميزة', featuredSub:'أفضل عروض هذا الأسبوع', popularStores:'متاجر شعبية', seeAll:'عرض الكل ←', latestDeals:'أحدث العروض', activeOffers:'عرض نشط', storesTitle:'المتاجر', storesWith:'متجر مع عروض نشطة', favsTitle:'المفضلة', emptyFavTitle:'لا توجد عناصر في المفضلة', emptyFavText:'أضف العروض بالضغط على القلب في صفحة العرض.', promosTitle:'كوبونات التخفيض', promosValid:'كوبون ساري', navHome:'الرئيسية', navStores:'المتاجر', navSearch:'البحث', navFavs:'المفضلة', navPromos:'كوبونات', seeOffer:'شاهد العرض ←', goToStore:'اذهب إلى المتجر ←', save:'وفر', until:'حتى', daysLeft:'أيام متبقية', expiresToday:'ينتهي اليوم', expiresTomorrow:'ينتهي غداً', addedFav:'❤️ تمت الإضافة للمفضلة', removedFav:'تم الحذف من المفضلة', copyBtn:'نسخ', copied:'تم النسخ ✓', noResults:'لا توجد نتائج', searchEmpty:'ابدأ بكتابة اسم منتج أو متجر' },
-  fr: { greeting:'Bonjour 👋', tagline:'Les meilleures promos du Maroc', searchPlaceholder:'Rechercher un produit, un magasin...', flyers:'Catalogues', codes:'Codes promo', topDeals:'Top promos', myFavs:'Favoris', categories:'Catégories', featured:'Offres en vedette', featuredSub:'Les meilleures promos cette semaine', popularStores:'Magasins populaires', seeAll:'Voir tout →', latestDeals:'Dernières promos', activeOffers:'offres actives', storesTitle:'Magasins', storesWith:'enseignes avec des promos', favsTitle:'Favoris', emptyFavTitle:'Aucun favori pour l\'instant', emptyFavText:'Ajoutez des offres en cliquant sur le cœur.', promosTitle:'Codes promo', promosValid:'codes valides', navHome:'Accueil', navStores:'Magasins', navSearch:'Recherche', navFavs:'Favoris', navPromos:'Codes', seeOffer:'Voir l\'offre →', goToStore:'Aller au magasin →', save:'Économisez', until:'Jusqu\'au', daysLeft:'jours restants', expiresToday:'Expire aujourd\'hui', expiresTomorrow:'Expire demain', addedFav:'❤️ Ajouté aux favoris', removedFav:'Retiré des favoris', copyBtn:'Copier', copied:'Copié ✓', noResults:'Aucun résultat', searchEmpty:'Tapez un produit ou un magasin' }
+  ar: { greeting:'أهلاً وسهلاً 👋', tagline:'أفضل العروض في المغرب', searchPlaceholder:'ابحث عن منتج، متجر...', flyers:'الكتالوجات', codes:'كوبونات', topDeals:'أفضل العروض', myFavs:'المفضلة', categories:'الأقسام', featured:'عروض مميزة', featuredSub:'أفضل عروض هذا الأسبوع', popularStores:'متاجر شعبية', seeAll:'عرض الكل ←', latestDeals:'أحدث العروض', activeOffers:'عرض نشط', storesTitle:'المتاجر', storesWith:'متجر مع عروض نشطة', favsTitle:'المفضلة', emptyFavTitle:'لا توجد عناصر في المفضلة', emptyFavText:'أضف العروض بالضغط على القلب في صفحة العرض.', promosTitle:'كوبونات التخفيض', promosValid:'كوبون ساري', navHome:'الرئيسية', navStores:'المتاجر', navSearch:'البحث', navFavs:'المفضلة', navPromos:'كوبونات', seeOffer:'شاهد العرض ←', goToStore:'اذهب إلى المتجر ←', save:'وفر', until:'حتى', daysLeft:'أيام متبقية', expiresToday:'ينتهي اليوم', expiresTomorrow:'ينتهي غداً', addedFav:'❤️ تمت الإضافة للمفضلة', removedFav:'تم الحذف من المفضلة', copyBtn:'نسخ', copied:'تم النسخ ✓', noResults:'لا توجد نتائج', searchEmpty:'ابدأ بكتابة اسم منتج أو متجر', loading:'جاري التحميل...', noDeals:'لا توجد عروض حالياً', noStores:'لا توجد متاجر حالياً', noPromos:'لا توجد كوبونات حالياً' },
+  fr: { greeting:'Bonjour 👋', tagline:'Les meilleures promos du Maroc', searchPlaceholder:'Rechercher un produit, un magasin...', flyers:'Catalogues', codes:'Codes promo', topDeals:'Top promos', myFavs:'Favoris', categories:'Catégories', featured:'Offres en vedette', featuredSub:'Les meilleures promos cette semaine', popularStores:'Magasins populaires', seeAll:'Voir tout →', latestDeals:'Dernières promos', activeOffers:'offres actives', storesTitle:'Magasins', storesWith:'enseignes avec des promos', favsTitle:'Favoris', emptyFavTitle:'Aucun favori pour l\'instant', emptyFavText:'Ajoutez des offres en cliquant sur le cœur.', promosTitle:'Codes promo', promosValid:'codes valides', navHome:'Accueil', navStores:'Magasins', navSearch:'Recherche', navFavs:'Favoris', navPromos:'Codes', seeOffer:'Voir l\'offre →', goToStore:'Aller au magasin →', save:'Économisez', until:'Jusqu\'au', daysLeft:'jours restants', expiresToday:'Expire aujourd\'hui', expiresTomorrow:'Expire demain', addedFav:'❤️ Ajouté aux favoris', removedFav:'Retiré des favoris', copyBtn:'Copier', copied:'Copié ✓', noResults:'Aucun résultat', searchEmpty:'Tapez un produit ou un magasin', loading:'Chargement...', noDeals:'Aucune promo pour le moment', noStores:'Aucun magasin pour le moment', noPromos:'Aucun code pour le moment' }
 };
-const CATEGORIES = [
-  { id:'food', icon:'🛒', ar:'المواد الغذائية', fr:'Alimentation' },
-  { id:'electronics', icon:'📱', ar:'إلكترونيات', fr:'Électronique' },
-  { id:'fashion', icon:'👕', ar:'الأزياء', fr:'Mode' },
-  { id:'beauty', icon:'💄', ar:'الجمال', fr:'Beauté' },
-  { id:'home', icon:'🏠', ar:'المنزل', fr:'Maison' },
-  { id:'kids', icon:'🧸', ar:'الأطفال', fr:'Enfants' },
-  { id:'sports', icon:'⚽', ar:'رياضة', fr:'Sport' },
-  { id:'appliances', icon:'🔌', ar:'الأجهزة المنزلية', fr:'Électroménager' }
-];
-const STORES = [
-  { id:'marjane', name:'Marjane', color:'#E30613', type:'سوبر ماركت', typeFr:'Supermarché' },
-  { id:'carrefour', name:'Carrefour', color:'#004E9F', type:'سوبر ماركت', typeFr:'Supermarché' },
-  { id:'bim', name:'BIM', color:'#E30613', type:'سوبر ماركت', typeFr:'Supermarché' },
-  { id:'aswak', name:'Aswak Assalam', color:'#00A651', type:'سوبر ماركت', typeFr:'Supermarché' },
-  { id:'atacadao', name:'Atacadão', color:'#FFD100', type:'سوبر ماركت', typeFr:'Supermarché' },
-  { id:'labelvie', name:"Label'Vie", color:'#00A651', type:'سوبر ماركت', typeFr:'Supermarché' },
-  { id:'acima', name:'Acima', color:'#1A8FE3', type:'سوبر ماركت', typeFr:'Supermarché' },
-  { id:'electroplanet', name:'Electroplanet', color:'#0062A3', type:'إلكترونيات', typeFr:'Électronique' },
-  { id:'biougnach', name:'Biougnach', color:'#E30613', type:'إلكترونيات', typeFr:'Électronique' },
-  { id:'decathlon', name:'Decathlon', color:'#0082C3', type:'رياضة', typeFr:'Sport' },
-  { id:'hm', name:'H&M', color:'#E50010', type:'أزياء', typeFr:'Mode' },
-  { id:'jumia', name:'Jumia', color:'#F68B1E', type:'متجر إلكتروني', typeFr:'E-commerce' }
-];
-const DEALS = [
-  { id:1, title:'Huile Lesieur 5L', titleAr:'زيت لسيور 5 لتر', desc:'Huile de table 5 litres', storeId:'marjane', cat:'food', old:145, new:99, disc:32, featured:true, expires:'2026-05-15', emoji:'🫒' },
-  { id:2, title:'Samsung Galaxy A25', titleAr:'سامسونج جالاكسي A25', desc:'Smartphone 128GB, écran 6.5"', storeId:'electroplanet', cat:'electronics', old:2799, new:1999, disc:29, featured:true, expires:'2026-05-20', emoji:'📱' },
-  { id:3, title:'Lait Centrale 1L', titleAr:'حليب سنطرال 1 لتر', desc:'Pack 6x1L lait UHT', storeId:'carrefour', cat:'food', old:48, new:39, disc:19, featured:false, expires:'2026-05-10', emoji:'🥛' },
-  { id:4, title:'Ballon Adidas Tiro', titleAr:'كرة أديداس تيرو', desc:'Ballon football taille 5', storeId:'decathlon', cat:'sports', old:299, new:199, disc:33, featured:false, expires:'2026-05-25', emoji:'⚽' },
-  { id:5, title:'Climatiseur LG 12000 BTU', titleAr:'مكيف LG 12000 BTU', desc:'LG Dual Inverter A++', storeId:'biougnach', cat:'appliances', old:5499, new:4199, disc:24, featured:true, expires:'2026-05-30', emoji:'❄️' },
-  { id:6, title:'Riz Basmati 5kg', titleAr:'أرز بسمتي 5 كلغ', desc:'Riz long grain 5kg', storeId:'bim', cat:'food', old:89, new:69, disc:22, featured:false, expires:'2026-05-12', emoji:'🍚' },
-  { id:7, title:'T-shirts H&M x3', titleAr:'قمصان H&M x3', desc:'Lot de 3 t-shirts coton', storeId:'hm', cat:'fashion', old:199, new:129, disc:35, featured:false, expires:'2026-05-18', emoji:'👕' },
-  { id:8, title:'Pampers Baby-Dry T4', titleAr:'حفاضات بامبرز T4', desc:'Méga pack 120 couches', storeId:'aswak', cat:'kids', old:289, new:219, disc:24, featured:false, expires:'2026-05-20', emoji:'👶' },
-  { id:9, title:'Yaourt Jibal x16', titleAr:'ياغورت جبال x16', desc:'Pack 16 yaourts natures', storeId:'atacadao', cat:'food', old:42, new:29, disc:31, featured:false, expires:'2026-05-08', emoji:'🥤' },
-  { id:10, title:'Smart TV TCL 43" 4K', titleAr:'تلفاز TCL 43 بوصة 4K', desc:'Smart TV Android 4K', storeId:'jumia', cat:'electronics', old:4599, new:2999, disc:35, featured:true, expires:'2026-05-15', emoji:'📺', link:'https://www.jumia.ma' },
-  { id:11, title:'Shampoing Dove 400ml', titleAr:'شامبو دوف 400 مل', desc:'Dove nutrition pack de 2', storeId:'marjane', cat:'beauty', old:79, new:55, disc:30, featured:false, expires:'2026-05-20', emoji:'🧴' },
-  { id:12, title:'Machine à laver Beko 8kg', titleAr:'غسالة بيكو 8 كلغ', desc:'Beko A+, 1200 tours', storeId:'electroplanet', cat:'appliances', old:4299, new:3199, disc:26, featured:false, expires:'2026-05-25', emoji:'🧺' },
-  { id:13, title:'Farine Tria 5kg', titleAr:'طحين تريا 5 كلغ', desc:'Farine de blé T55', storeId:'marjane', cat:'food', old:65, new:49, disc:25, featured:false, expires:'2026-05-12', emoji:'🌾' },
-  { id:14, title:'Thé Sultan 200g', titleAr:'أتاي السلطان 200غ', desc:'Thé vert gunpowder', storeId:'aswak', cat:'food', old:45, new:35, disc:22, featured:false, expires:'2026-05-15', emoji:'🍵' },
-  { id:15, title:'Dattes Medjool 1kg', titleAr:'تمر مجدول 1 كلغ', desc:'Dattes premium origine Maroc', storeId:'carrefour', cat:'food', old:159, new:119, disc:25, featured:true, expires:'2026-05-20', emoji:'🌴' },
-  { id:16, title:'JBL Tune 510BT', titleAr:'سماعات JBL 510BT', desc:'Casque Bluetooth 40h', storeId:'biougnach', cat:'electronics', old:699, new:449, disc:36, featured:false, expires:'2026-05-22', emoji:'🎧' },
-  { id:17, title:'Robe H&M été', titleAr:'فستان H&M صيفي', desc:'Collection printemps', storeId:'hm', cat:'fashion', old:299, new:179, disc:40, featured:true, expires:'2026-05-18', emoji:'👗' },
-  { id:18, title:'Kalenji Run Active', titleAr:'أحذية كالينجي للجري', desc:'Chaussures running', storeId:'decathlon', cat:'sports', old:399, new:249, disc:38, featured:true, expires:'2026-05-25', emoji:'👟' },
-  { id:19, title:'Tajine terre cuite 30cm', titleAr:'طاجين فخار 30 سم', desc:'Tajine traditionnel marocain', storeId:'carrefour', cat:'home', old:189, new:129, disc:32, featured:true, expires:'2026-05-20', emoji:'🫕' },
-  { id:20, title:'Crème Nivea 300ml', titleAr:'كريم نيفيا 300 مل', desc:'Crème hydratante visage', storeId:'acima', cat:'beauty', old:59, new:39, disc:34, featured:false, expires:'2026-05-15', emoji:'🧴' }
-];
-const PROMO_CODES = [
-  { store:'Jumia', storeId:'jumia', code:'PROMO10', discount:'10% de réduction', discountAr:'خصم 10%', desc:'Sur votre première commande, min. 300 DH', descAr:'على طلبك الأول، بحد أدنى 300 درهم', link:'https://www.jumia.ma' },
-  { store:'H&M', storeId:'hm', code:'SPRING20', discount:'20% de réduction', discountAr:'خصم 20%', desc:'Collection printemps', descAr:'مجموعة الربيع', link:'https://www2.hm.com/fr_ma/' },
-  { store:'Decathlon', storeId:'decathlon', code:'SPORT15', discount:'15% sur les vêtements', discountAr:'15% على الملابس', desc:"Min. 500 DH d'achat", descAr:'بحد أدنى 500 درهم', link:'https://www.decathlon.ma' },
-  { store:'Marjane', storeId:'marjane', code:'MARJANE50', discount:'50 DH offerts', discountAr:'50 درهم مجانية', desc:"Dès 500 DH d'achat", descAr:'على شراء 500 درهم أو أكثر', link:'https://www.marjane.ma' },
-  { store:'Jumia', storeId:'jumia', code:'TECH25', discount:"25% sur l'électronique", discountAr:'25% على الإلكترونيات', desc:'Smartphones, tablettes, min. 1000 DH', descAr:'الهواتف الذكية، اللوحيات', link:'https://www.jumia.ma' }
-];
+
+// =============================================================
+// FIREBASE INIT
+// =============================================================
+let db = null;
+let firebaseReady = false;
+try {
+  if (typeof firebase !== 'undefined' && firebaseConfig.apiKey !== 'PASTE_YOUR_API_KEY_HERE') {
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+    firebaseReady = true;
+  } else {
+    console.warn('⚠️ Firebase not configured. Edit firebase-config.js with your keys.');
+  }
+} catch (e) {
+  console.error('Firebase init error:', e);
+}
+
+// =============================================================
+// STATE
+// =============================================================
 let lang = localStorage.getItem('lang') || 'ar';
 let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
 let currentFilter = null;
 let currentDeal = null;
+
+// Data from Firestore (live)
+let DEALS = [];
+let STORES = [];
+let CATEGORIES = [];
+let PROMO_CODES = [];
+
+// =============================================================
+// HELPERS
+// =============================================================
 function t(k) { return I18N[lang][k] || k; }
 function getTitle(d) { return lang === 'ar' ? (d.titleAr || d.title) : d.title; }
 function getStore(id) { return STORES.find(s => s.id === id); }
@@ -269,6 +260,7 @@ function currency() { return lang === 'ar' ? 'درهم' : 'DH'; }
 function fmt(p) { return p + ' ' + currency(); }
 function daysUntil(s) { return Math.ceil((new Date(s) - new Date()) / 86400000); }
 function expiryLabel(s) {
+  if (!s) return '';
   const d = daysUntil(s);
   if (d < 0) return '';
   if (d === 0) return t('expiresToday');
@@ -282,6 +274,10 @@ function showToast(m) {
   el.classList.add('show');
   setTimeout(() => el.classList.remove('show'), 2000);
 }
+
+// =============================================================
+// LANGUAGE
+// =============================================================
 function applyLanguage() {
   document.documentElement.lang = lang;
   document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
@@ -297,6 +293,10 @@ function toggleLanguage() {
   applyLanguage();
   renderAll();
 }
+
+// =============================================================
+// NAVIGATION
+// =============================================================
 function navigateTo(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
@@ -305,24 +305,48 @@ function navigateTo(page) {
   if (page === 'favorites') renderFavorites();
   if (page === 'search') document.getElementById('search-input').focus();
 }
+
+// =============================================================
+// RENDERERS
+// =============================================================
+function dealImageHTML(d, store) {
+  if (d.imageUrl) {
+    return '<img src="' + d.imageUrl + '" alt="' + getTitle(d) + '" loading="lazy">';
+  }
+  return d.emoji || '🛍️';
+}
+
 function dealCardHTML(d) {
   const store = getStore(d.storeId);
+  if (!store) return '';
   const expiry = expiryLabel(d.expires);
-  return '<div class="deal-card" onclick="openDealModal(' + d.id + ')"><div class="deal-img" style="background:' + store.color + '22">' + d.emoji + '<div class="discount-badge">-' + d.disc + '%</div><div class="store-badge" style="background:' + store.color + '">' + store.name + '</div></div><div class="deal-content"><div class="deal-title">' + getTitle(d) + '</div><div class="deal-prices"><span class="price-new">' + fmt(d.new) + '</span><span class="price-old">' + fmt(d.old) + '</span></div>' + (expiry ? '<div class="deal-expiry">⏰ ' + expiry + '</div>' : '') + '</div></div>';
+  const bg = d.imageUrl ? '' : 'background:' + store.color + '22';
+  return '<div class="deal-card" onclick="openDealModal(\'' + d.id + '\')"><div class="deal-img" style="' + bg + '">' + dealImageHTML(d, store) + '<div class="discount-badge">-' + d.disc + '%</div><div class="store-badge" style="background:' + store.color + '">' + store.name + '</div></div><div class="deal-content"><div class="deal-title">' + getTitle(d) + '</div><div class="deal-prices"><span class="price-new">' + fmt(d.new) + '</span><span class="price-old">' + fmt(d.old) + '</span></div>' + (expiry ? '<div class="deal-expiry">⏰ ' + expiry + '</div>' : '') + '</div></div>';
 }
+
 function renderCategories() {
-  document.getElementById('categories-container').innerHTML = CATEGORIES.map(c =>
-    '<div class="category-chip ' + (currentFilter === c.id ? 'active' : '') + '" onclick="filterByCategory(\'' + c.id + '\')"><div class="category-emoji">' + c.icon + '</div><div class="category-label">' + c[lang] + '</div></div>'
+  const c = document.getElementById('categories-container');
+  if (CATEGORIES.length === 0) { c.innerHTML = ''; return; }
+  c.innerHTML = CATEGORIES.map(cat =>
+    '<div class="category-chip ' + (currentFilter === cat.id ? 'active' : '') + '" onclick="filterByCategory(\'' + cat.id + '\')"><div class="category-emoji">' + cat.icon + '</div><div class="category-label">' + (cat[lang] || cat.ar || cat.fr) + '</div></div>'
   ).join('');
 }
+
 function renderFeatured() {
-  document.getElementById('featured-deals').innerHTML = DEALS.filter(d => d.featured).map(dealCardHTML).join('');
+  const c = document.getElementById('featured-deals');
+  const featured = DEALS.filter(d => d.featured);
+  if (featured.length === 0) { c.innerHTML = ''; return; }
+  c.innerHTML = featured.map(dealCardHTML).join('');
 }
+
 function renderStoresScroll() {
-  document.getElementById('stores-scroll').innerHTML = STORES.slice(0, 8).map(s =>
+  const c = document.getElementById('stores-scroll');
+  if (STORES.length === 0) { c.innerHTML = ''; return; }
+  c.innerHTML = STORES.slice(0, 8).map(s =>
     '<div class="store-chip" style="border-color:' + s.color + '" onclick="filterByStore(\'' + s.id + '\')"><div class="store-logo" style="background:' + s.color + '">' + s.name.charAt(0) + '</div><div class="store-name">' + s.name + '</div></div>'
   ).join('');
 }
+
 function renderDealsGrid() {
   let deals = DEALS;
   if (currentFilter) {
@@ -331,14 +355,26 @@ function renderDealsGrid() {
     else if (STORES.find(s => s.id === currentFilter)) deals = DEALS.filter(d => d.storeId === currentFilter);
   }
   document.getElementById('deals-count').textContent = deals.length;
-  document.getElementById('deals-grid').innerHTML = deals.map(dealCardHTML).join('');
+  const c = document.getElementById('deals-grid');
+  if (deals.length === 0) {
+    c.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-emoji">🛍️</div><div class="empty-text">' + t('noDeals') + '</div></div>';
+  } else {
+    c.innerHTML = deals.map(dealCardHTML).join('');
+  }
 }
+
 function renderStoresGrid() {
-  document.getElementById('stores-grid').innerHTML = STORES.map(s =>
-    '<div class="store-card" onclick="filterByStore(\'' + s.id + '\'); navigateTo(\'home\');"><div class="store-card-logo" style="background:' + s.color + '">' + s.name.charAt(0) + '</div><div class="store-card-name">' + s.name + '</div><div class="store-card-type">' + (lang === 'ar' ? s.type : s.typeFr) + '</div></div>'
-  ).join('');
+  const c = document.getElementById('stores-grid');
+  if (STORES.length === 0) {
+    c.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-emoji">🏪</div><div class="empty-text">' + t('noStores') + '</div></div>';
+  } else {
+    c.innerHTML = STORES.map(s =>
+      '<div class="store-card" onclick="filterByStore(\'' + s.id + '\'); navigateTo(\'home\');"><div class="store-card-logo" style="background:' + s.color + '">' + s.name.charAt(0) + '</div><div class="store-card-name">' + s.name + '</div><div class="store-card-type">' + (lang === 'ar' ? (s.type || '') : (s.typeFr || '')) + '</div></div>'
+    ).join('');
+  }
   document.getElementById('stores-count').textContent = STORES.length;
 }
+
 function renderFavorites() {
   const favDeals = DEALS.filter(d => favorites.includes(d.id));
   const container = document.getElementById('favorites-content');
@@ -348,13 +384,23 @@ function renderFavorites() {
     container.innerHTML = '<div class="deals-grid">' + favDeals.map(dealCardHTML).join('') + '</div>';
   }
 }
+
 function renderPromos() {
-  document.getElementById('promos-list').innerHTML = PROMO_CODES.map((p, i) => {
-    const store = getStore(p.storeId);
-    return '<div class="promo-card"><div class="promo-card-top"><div class="promo-logo" style="background:' + store.color + '">' + p.store.charAt(0) + '</div><div><div class="promo-store">' + p.store + '</div><div class="promo-discount">' + (lang === 'ar' ? p.discountAr : p.discount) + '</div></div></div><div class="promo-desc">' + (lang === 'ar' ? p.descAr : p.desc) + '</div><div class="promo-code-box"><div class="promo-code">' + p.code + '</div><button class="copy-btn" id="copy-' + i + '" onclick="copyCode(\'' + p.code + '\', ' + i + ')">' + t('copyBtn') + '</button></div><button class="copy-btn" style="width:100%;padding:10px" onclick="window.open(\'' + p.link + '\', \'_blank\')">' + (lang === 'ar' ? 'زيارة المتجر ←' : 'Visiter le magasin →') + '</button></div>';
-  }).join('');
+  const c = document.getElementById('promos-list');
+  if (PROMO_CODES.length === 0) {
+    c.innerHTML = '<div class="empty-state"><div class="empty-emoji">🎟️</div><div class="empty-text">' + t('noPromos') + '</div></div>';
+  } else {
+    c.innerHTML = PROMO_CODES.map((p, i) => {
+      const store = getStore(p.storeId) || { color:'#999', name:p.store || '?' };
+      return '<div class="promo-card"><div class="promo-card-top"><div class="promo-logo" style="background:' + store.color + '">' + (p.store || store.name).charAt(0) + '</div><div><div class="promo-store">' + (p.store || store.name) + '</div><div class="promo-discount">' + (lang === 'ar' ? (p.discountAr || p.discount) : (p.discount || p.discountAr)) + '</div></div></div><div class="promo-desc">' + (lang === 'ar' ? (p.descAr || p.desc || '') : (p.desc || p.descAr || '')) + '</div><div class="promo-code-box"><div class="promo-code">' + p.code + '</div><button class="copy-btn" id="copy-' + i + '" onclick="copyCode(\'' + p.code + '\', ' + i + ')">' + t('copyBtn') + '</button></div>' + (p.link ? '<button class="copy-btn" style="width:100%;padding:10px" onclick="window.open(\'' + p.link + '\', \'_blank\')">' + (lang === 'ar' ? 'زيارة المتجر ←' : 'Visiter le magasin →') + '</button>' : '') + '</div>';
+    }).join('');
+  }
   document.getElementById('promos-count').textContent = PROMO_CODES.length;
 }
+
+// =============================================================
+// FILTERS
+// =============================================================
 function filterByCategory(id) {
   currentFilter = currentFilter === id ? null : id;
   renderCategories();
@@ -369,22 +415,39 @@ function filterByFeatured() {
   currentFilter = 'featured';
   renderDealsGrid();
 }
+
+// =============================================================
+// SEARCH
+// =============================================================
 function doSearch(q) {
   q = q.trim().toLowerCase();
-  const results = q.length === 0 ? [] : DEALS.filter(d => d.title.toLowerCase().includes(q) || (d.titleAr && d.titleAr.includes(q)) || d.desc.toLowerCase().includes(q));
+  const results = q.length === 0 ? [] : DEALS.filter(d =>
+    (d.title && d.title.toLowerCase().includes(q)) ||
+    (d.titleAr && d.titleAr.includes(q)) ||
+    (d.desc && d.desc.toLowerCase().includes(q))
+  );
   const c = document.getElementById('search-results');
-  if (q.length === 0) c.innerHTML = '<div class="empty-state"><div class="empty-emoji">🔍</div><div class="empty-text">' + t('searchEmpty') + '</div></div>';
-  else if (results.length === 0) c.innerHTML = '<div class="empty-state"><div class="empty-emoji">😕</div><div class="empty-title">' + t('noResults') + '</div></div>';
+  if (q.length === 0) c.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-emoji">🔍</div><div class="empty-text">' + t('searchEmpty') + '</div></div>';
+  else if (results.length === 0) c.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-emoji">😕</div><div class="empty-title">' + t('noResults') + '</div></div>';
   else c.innerHTML = results.map(dealCardHTML).join('');
 }
+
+// =============================================================
+// MODAL
+// =============================================================
 function openDealModal(id) {
   const d = DEALS.find(x => x.id === id);
   if (!d) return;
   currentDeal = d;
-  const store = getStore(d.storeId);
-  document.getElementById('modal-img').innerHTML = '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:120px;background:' + store.color + '22">' + d.emoji + '</div>';
+  const store = getStore(d.storeId) || { color:'#999', name:'?' };
+  const imgEl = document.getElementById('modal-img');
+  if (d.imageUrl) {
+    imgEl.innerHTML = '<img src="' + d.imageUrl + '" alt="' + getTitle(d) + '">';
+  } else {
+    imgEl.innerHTML = '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:120px;background:' + store.color + '22">' + (d.emoji || '🛍️') + '</div>';
+  }
   document.getElementById('modal-title').textContent = getTitle(d);
-  document.getElementById('modal-desc').textContent = d.desc;
+  document.getElementById('modal-desc').textContent = d.desc || '';
   document.getElementById('modal-price-new').textContent = fmt(d.new);
   document.getElementById('modal-price-old').textContent = fmt(d.old);
   document.getElementById('modal-savings').textContent = t('save') + ' ' + fmt(d.old - d.new);
@@ -416,7 +479,7 @@ function openDealLink() {
   if (currentDeal && currentDeal.link) window.open(currentDeal.link, '_blank');
   else if (currentDeal) {
     const s = getStore(currentDeal.storeId);
-    showToast((lang === 'ar' ? 'ابحث عن هذا العرض في ' : 'Cherchez cette offre chez ') + s.name);
+    showToast((lang === 'ar' ? 'ابحث عن هذا العرض في ' : 'Cherchez cette offre chez ') + (s ? s.name : '?'));
   }
 }
 function shareDeal() {
@@ -433,6 +496,10 @@ function copyCode(code, idx) {
   showToast(code + ' ' + (lang === 'ar' ? 'تم النسخ' : 'copié'));
   setTimeout(() => { btn.textContent = t('copyBtn'); btn.classList.remove('copied'); }, 2000);
 }
+
+// =============================================================
+// RENDER ALL
+// =============================================================
 function renderAll() {
   renderCategories();
   renderFeatured();
@@ -442,8 +509,51 @@ function renderAll() {
   renderFavorites();
   renderPromos();
 }
+
+// =============================================================
+// FIREBASE LIVE LOADERS
+// =============================================================
+function loadFromFirebase() {
+  if (!firebaseReady) {
+    document.getElementById('deals-grid').innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-emoji">⚙️</div><div class="empty-title">' + (lang === 'ar' ? 'لم يتم إعداد Firebase' : 'Firebase non configuré') + '</div><div class="empty-text">' + (lang === 'ar' ? 'افتح firebase-config.js وأضف مفاتيح Firebase الخاصة بك' : 'Éditez firebase-config.js avec vos clés Firebase') + '</div></div>';
+    return;
+  }
+
+  // Live listener: deals
+  db.collection('deals').onSnapshot(snap => {
+    DEALS = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    renderFeatured();
+    renderDealsGrid();
+    renderFavorites();
+  }, err => console.error('Deals load error:', err));
+
+  // Live listener: stores
+  db.collection('stores').onSnapshot(snap => {
+    STORES = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    renderStoresScroll();
+    renderStoresGrid();
+    renderDealsGrid();
+    renderFeatured();
+  }, err => console.error('Stores load error:', err));
+
+  // Live listener: categories
+  db.collection('categories').onSnapshot(snap => {
+    CATEGORIES = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    renderCategories();
+  }, err => console.error('Categories load error:', err));
+
+  // Live listener: promo codes
+  db.collection('promos').onSnapshot(snap => {
+    PROMO_CODES = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    renderPromos();
+  }, err => console.error('Promos load error:', err));
+}
+
+// =============================================================
+// INIT
+// =============================================================
 applyLanguage();
-renderAll();
+loadFromFirebase();
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 </script>
 </body>
