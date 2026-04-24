@@ -11,8 +11,6 @@ const firebaseConfig = {
   appId: "1:56006761255:web:f8e2e5b6236a722e386702"
 };
 
-// =============================================================
-// 🔐 ADMIN EMAIL
-// =============================================================
-
 const ADMIN_EMAIL = "abdelshafie.ahmed@gmail.com";
+
+const SMART_PASTE_WORKER_URL = "https://promos-maroc-fetcher.abdelshafie-ahmed.workers.dev";
