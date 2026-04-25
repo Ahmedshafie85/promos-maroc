@@ -69,17 +69,6 @@ button, input, select, textarea { font-family:inherit; }
 .btn-mini.delete { color:var(--danger); }
 .btn-mini:hover { background:var(--border); }
 
-.badge { display:inline-block; padding:2px 8px; border-radius:4px; font-size:11px; font-weight:700; }
-.badge-featured { background:#FFF3E0; color:var(--warning); }
-.badge-discount { background:#FFE5E5; color:var(--danger); }
-.badge-active { background:#E8F8ED; color:var(--success); }
-.badge-expired { background:#F0F0F0; color:var(--text-3); }
-
-.empty { text-align:center; padding:60px 20px; color:var(--text-2); }
-.empty-icon { font-size:64px; margin-bottom:16px; }
-.empty-title { font-size:18px; font-weight:700; margin-bottom:8px; color:var(--text); }
-.empty-hint { font-size:14px; }
-
 .modal-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.6); z-index:200; display:none; align-items:center; justify-content:center; padding:20px; overflow-y:auto; }
 .modal-overlay.show { display:flex; }
 .modal { background:white; border-radius:16px; width:100%; max-width:560px; max-height:90vh; overflow-y:auto; padding:24px; }
@@ -89,73 +78,25 @@ button, input, select, textarea { font-family:inherit; }
 .field label { display:block; font-size:13px; font-weight:700; color:var(--text-2); margin-bottom:6px; }
 .field input, .field select, .field textarea { width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:8px; font-size:14px; outline:none; transition:border-color .2s; }
 .field input:focus, .field select:focus, .field textarea:focus { border-color:var(--primary); }
-.field textarea { resize:vertical; min-height:60px; }
 .field-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-.field-checkbox { display:flex; align-items:center; gap:8px; cursor:pointer; }
-.field-checkbox input { width:auto; }
-.field-checkbox label { margin:0; cursor:pointer; }
-.field-hint { font-size:12px; color:var(--text-3); margin-top:4px; }
-.color-input { display:flex; gap:8px; align-items:center; }
-.color-input input[type="color"] { width:48px; padding:0; border:1.5px solid var(--border); border-radius:8px; cursor:pointer; height:40px; }
-.image-upload { border:2px dashed var(--border); border-radius:10px; padding:20px; text-align:center; cursor:pointer; transition:border-color .2s; display:block; }
-.image-upload:hover { border-color:var(--primary); }
-.image-upload input { display:none; }
-.image-upload-icon { font-size:36px; margin-bottom:8px; }
-.image-upload-text { font-size:13px; color:var(--text-2); }
-.image-preview { margin-top:12px; position:relative; display:none; }
-.image-preview.show { display:block; }
-.image-preview img { width:100%; max-height:200px; object-fit:cover; border-radius:8px; }
-.image-preview .remove-img { position:absolute; top:8px; right:8px; background:var(--danger); color:white; border:none; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:16px; font-weight:800; }
-.upload-progress { margin-top:8px; font-size:12px; color:var(--text-2); }
-.modal-actions { display:flex; gap:10px; margin-top:20px; padding-top:16px; border-top:1px solid var(--border); }
-.btn-cancel { flex:1; background:var(--bg); border:1.5px solid var(--border); color:var(--text); padding:12px; border-radius:8px; font-weight:700; cursor:pointer; }
-.btn-cancel:hover { background:var(--border); }
-.btn-save { flex:1; background:var(--primary); color:white; border:none; padding:12px; border-radius:8px; font-weight:800; cursor:pointer; }
-.btn-save:hover { background:var(--primary-dark); }
-.btn-save:disabled { opacity:.6; cursor:wait; }
+.btn-save { flex:1; background:var(--primary); color:white; border:none; padding:12px; border-radius:8px; font-weight:800; cursor:pointer; width:100%; margin-top:10px;}
 
-.toast { position:fixed; top:24px; left:50%; transform:translateX(-50%); background:var(--text); color:white; padding:12px 20px; border-radius:10px; font-size:14px; font-weight:600; z-index:300; opacity:0; transition:opacity .3s; pointer-events:none; max-width:90%; }
-.toast.show { opacity:1; }
-.toast.error { background:var(--danger); }
-.toast.success { background:var(--success); }
-
-.stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin-bottom:24px; }
-.stat-card { background:white; border-radius:12px; padding:18px; box-shadow:var(--shadow-sm); }
-.stat-icon { font-size:28px; margin-bottom:6px; }
-.stat-value { font-size:28px; font-weight:800; line-height:1; }
-.stat-label { font-size:13px; color:var(--text-2); margin-top:4px; }
-
-.seed-card { background:linear-gradient(135deg, #FDEEEF, #FFF5F6); border:2px solid var(--primary); border-radius:16px; padding:24px; margin-bottom:24px; position:relative; overflow:hidden; }
-.seed-card::before { content:'🌱'; position:absolute; top:-20px; inset-inline-end:-20px; font-size:140px; opacity:.1; }
-.seed-title { font-size:18px; font-weight:900; color:var(--primary); margin-bottom:6px; }
-.seed-desc { font-size:14px; color:var(--text-2); line-height:1.6; margin-bottom:16px; max-width:600px; }
-.seed-btn { background:var(--primary); color:white; border:none; padding:14px 28px; border-radius:10px; font-size:15px; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:8px; box-shadow:0 4px 12px rgba(193,39,45,.25); }
-.seed-btn:hover { background:var(--primary-dark); transform:translateY(-1px); }
-.seed-btn:disabled { opacity:.6; cursor:wait; }
-.seed-note { font-size:12px; color:var(--text-3); margin-top:12px; }
-
-.tips-card { background:white; border-radius:12px; padding:20px; box-shadow:var(--shadow-sm); }
-.tips-card h3 { font-size:16px; font-weight:800; margin-bottom:12px; }
-.tips-card p { color:var(--text-2); font-size:14px; line-height:1.6; }
-
-/* Smart paste */
+/* Smart paste styling */
 .smart-paste { background:linear-gradient(135deg,#FFF8E1,#FFF3CD); border:2px solid var(--secondary); border-radius:12px; padding:16px; margin-bottom:18px; }
 .smart-paste-label { font-size:13px; font-weight:800; color:#7A5A00; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
 .smart-paste-row { display:flex; gap:8px; }
 .smart-paste-row input { flex:1; padding:10px 12px; border:1.5px solid var(--border); border-radius:8px; font-size:13px; outline:none; }
-.smart-paste-row input:focus { border-color:var(--secondary); }
-.smart-paste-row button { background:var(--secondary); color:white; border:none; padding:10px 18px; border-radius:8px; font-weight:800; cursor:pointer; white-space:nowrap; font-size:13px; }
-.smart-paste-row button:hover { background:#B8890C; }
-.smart-paste-row button:disabled { opacity:.6; cursor:wait; }
-.smart-paste-hint { font-size:11px; color:#7A5A00; margin-top:6px; }
+.smart-paste-row button { background:var(--secondary); color:white; border:none; padding:10px 18px; border-radius:8px; font-weight:800; cursor:pointer; }
 .smart-paste-status { font-size:12px; margin-top:8px; padding:8px 10px; border-radius:6px; display:none; }
 .smart-paste-status.show { display:block; }
 .smart-paste-status.success { background:#D4F4DD; color:#1B5E2E; }
 .smart-paste-status.error { background:#FFE5E5; color:var(--danger); }
 
-/* Store logo upload preview */
-.logo-preview { display:flex; align-items:center; gap:12px; padding:10px; background:var(--bg); border-radius:8px; margin-top:8px; }
-.logo-preview-img { width:48px; height:48px; border-radius:8px; object-fit:cover; background:white; }
+.toast { position:fixed; top:24px; left:50%; transform:translateX(-50%); background:var(--text); color:white; padding:12px 20px; border-radius:10px; font-size:14px; font-weight:600; z-index:300; opacity:0; transition:opacity .3s; pointer-events:none; }
+.toast.show { opacity:1; }
+
+.seed-card { background:linear-gradient(135deg, #FDEEEF, #FFF5F6); border:2px solid var(--primary); border-radius:16px; padding:24px; margin-bottom:24px; }
+.seed-btn { background:var(--primary); color:white; border:none; padding:14px 28px; border-radius:10px; font-size:15px; font-weight:800; cursor:pointer; }
 </style>
 </head>
 <body>
@@ -164,33 +105,19 @@ button, input, select, textarea { font-family:inherit; }
   <div class="login-card">
     <div class="login-logo">⚙️</div>
     <div class="login-title">لوحة التحكم</div>
-    <div class="login-subtitle">Admin · Promos Maroc 🇲🇦</div>
     <div class="login-error" id="login-error"></div>
     <form id="login-form">
-      <div class="login-field">
-        <label>Email</label>
-        <input type="email" id="login-email" required autocomplete="email" placeholder="admin@example.com">
-      </div>
-      <div class="login-field">
-        <label>كلمة المرور · Password</label>
-        <input type="password" id="login-password" required autocomplete="current-password" placeholder="••••••••">
-      </div>
-      <button type="submit" class="login-btn" id="login-btn">دخول · Sign in</button>
+      <div class="login-field"><label>Email</label><input type="email" id="login-email" required></div>
+      <div class="login-field"><label>Password</label><input type="password" id="login-password" required></div>
+      <button type="submit" class="login-btn" id="login-btn">Sign in</button>
     </form>
-    <div class="login-footer">
-      <a href="index.html">← العودة إلى الموقع</a>
-    </div>
   </div>
 </div>
 
 <div class="admin-app" id="admin-app">
   <div class="topbar">
-    <div class="topbar-brand">⚙️ Promos Maroc · Admin</div>
-    <div class="topbar-user">
-      <span id="user-email"></span>
-      <a class="view-site-btn" href="index.html" target="_blank">🌐 View site</a>
-      <button class="logout-btn" onclick="doLogout()">Logout</button>
-    </div>
+    <div class="topbar-brand">⚙️ Admin Panel</div>
+    <div class="topbar-user"><span id="user-email"></span> <button class="logout-btn" onclick="doLogout()">Logout</button></div>
   </div>
 
   <div class="tabs">
@@ -198,27 +125,35 @@ button, input, select, textarea { font-family:inherit; }
     <button class="tab" data-tab="deals" onclick="showTab('deals')">🛍️ Deals</button>
     <button class="tab" data-tab="stores" onclick="showTab('stores')">🏪 Stores</button>
     <button class="tab" data-tab="categories" onclick="showTab('categories')">📂 Categories</button>
-    <button class="tab" data-tab="promos" onclick="showTab('promos')">🎟️ Promo codes</button>
   </div>
 
   <div class="content">
     <div class="section active" id="section-dashboard">
       <div class="section-head"><h2>📊 Dashboard</h2></div>
+      <div class="seed-card" id="seed-card" style="display:none;">
+        <div class="seed-title">🌱 Database empty? Restore sample data.</div>
+        <button class="seed-btn" onclick="seedData()">🚀 Seed Sample Data</button>
+      </div>
       <div class="stats-grid">
-        <div class="stat-card"><div class="stat-icon">🛍️</div><div class="stat-value" id="stat-deals">0</div><div class="stat-label">Total deals</div></div>
-        <div class="stat-card"><div class="stat-icon">🏪</div><div class="stat-value" id="stat-stores">0</div><div class="stat-label">Stores</div></div>
+        <div class="stat-card">🛍️ <span id="stat-deals">0</span> Deals</div>
+        <div class="stat-card">🏪 <span id="stat-stores">0</span> Stores</div>
       </div>
     </div>
+
     <div class="section" id="section-deals">
-      <div class="section-head">
-        <h2>🛍️ Deals <span class="count" id="count-deals">0</span></h2>
-        <button class="add-btn" onclick="openDealForm()">+ Add deal</button>
-      </div>
+      <div class="section-head"><h2>🛍️ Deals <span id="count-deals">0</span></h2><button class="add-btn" onclick="openDealForm()">+ Add Deal</button></div>
       <div id="deals-list" class="cards-grid"></div>
     </div>
-    <div class="section" id="section-stores"><div class="section-head"><h2>🏪 Stores</h2><button class="add-btn" onclick="openStoreForm()">+ Add store</button></div><div id="stores-list" class="cards-grid"></div></div>
-    <div class="section" id="section-categories"><div class="section-head"><h2>📂 Categories</h2><button class="add-btn" onclick="openCategoryForm()">+ Add category</button></div><div id="categories-list" class="cards-grid"></div></div>
-    <div class="section" id="section-promos"><div class="section-head"><h2>🎟️ Promos</h2><button class="add-btn" onclick="openPromoForm()">+ Add promo</button></div><div id="promos-list" class="cards-grid"></div></div>
+
+    <div class="section" id="section-stores">
+      <div class="section-head"><h2>🏪 Stores</h2><button class="add-btn" onclick="openStoreForm()">+ Add Store</button></div>
+      <div id="stores-list" class="cards-grid"></div>
+    </div>
+
+    <div class="section" id="section-categories">
+      <div class="section-head"><h2>📂 Categories</h2><button class="add-btn" onclick="openCategoryForm()">+ Add Category</button></div>
+      <div id="categories-list" class="cards-grid"></div>
+    </div>
   </div>
 </div>
 
@@ -232,14 +167,12 @@ button, input, select, textarea { font-family:inherit; }
 <script src="firebase-config.js"></script>
 
 <script>
-// --- THE MASTER WORKER URL ---
+// Master Fetcher URL
 const SCRAPER_URL = "https://promos-maroc-fetcher.abdelshafie-ahmed.workers.dev";
 
 let db, auth, storage, currentUser;
-let DEALS = [], STORES = [], CATEGORIES = [], PROMOS = [];
-let pendingImageFile = null;
+let DEALS=[], STORES=[], CATEGORIES=[];
 
-// Initialize Firebase
 try {
     firebase.initializeApp(firebaseConfig);
     db = firebase.firestore();
@@ -250,16 +183,15 @@ try {
             $('user-email').textContent = user.email;
             showAdmin();
             startListeners();
-        } else {
-            showLogin();
-        }
+        } else { showLogin(); }
     });
-} catch (e) { console.error("Firebase Error:", e); }
+} catch (e) { console.error(e); }
 
 function $(id) { return document.getElementById(id); }
-function showLogin() { $('login-screen').style.display = 'flex'; $('admin-app').classList.remove('show'); }
-function showAdmin() { $('login-screen').style.display = 'none'; $('admin-app').classList.add('show'); }
+function showLogin() { $('login-screen').style.display='flex'; $('admin-app').classList.remove('show'); }
+function showAdmin() { $('login-screen').style.display='none'; $('admin-app').classList.add('show'); }
 function doLogout() { auth.signOut(); }
+function showToast(m, t) { const e=$('toast'); e.textContent=m; e.className='toast show '+t; setTimeout(()=>e.className='toast', 3000); }
 
 function showTab(name) {
     document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
@@ -267,10 +199,15 @@ function showTab(name) {
 }
 
 function startListeners() {
-    db.collection('deals').onSnapshot(snap => { DEALS = snap.docs.map(d => ({id:d.id, ...d.data()})); renderDeals(); });
-    db.collection('stores').onSnapshot(snap => { STORES = snap.docs.map(d => ({id:d.id, ...d.data()})); renderStores(); });
-    db.collection('categories').onSnapshot(snap => { CATEGORIES = snap.docs.map(d => ({id:d.id, ...d.data()})); });
-    db.collection('promos').onSnapshot(snap => { PROMOS = snap.docs.map(d => ({id:d.id, ...d.data()})); });
+    db.collection('deals').onSnapshot(snap => { DEALS = snap.docs.map(d => ({id:d.id, ...d.data()})); renderDeals(); updateStats(); });
+    db.collection('stores').onSnapshot(snap => { STORES = snap.docs.map(d => ({id:d.id, ...d.data()})); renderStores(); updateStats(); });
+    db.collection('categories').onSnapshot(snap => { CATEGORIES = snap.docs.map(d => ({id:d.id, ...d.data()})); renderCategories(); });
+}
+
+function updateStats() {
+    $('stat-deals').textContent = DEALS.length;
+    $('stat-stores').textContent = STORES.length;
+    $('seed-card').style.display = (STORES.length === 0) ? 'block' : 'none';
 }
 
 function renderDeals() {
@@ -280,17 +217,34 @@ function renderDeals() {
             <div class="item-thumb">${d.imageUrl ? `<img src="${d.imageUrl}">` : '🛍️'}</div>
             <div class="item-body">
                 <div class="item-title">${d.titleAr || d.title}</div>
+                <div class="item-meta">💰 ${d.new} DH</div>
                 <div class="item-actions">
                     <button class="btn-mini edit" onclick="openDealForm('${d.id}')">Edit</button>
-                    <button class="btn-mini delete" onclick="deleteItem('deals','${d.id}')">Delete</button>
+                    <button class="btn-mini delete" onclick="deleteItem('deals','${d.id}','${d.title}')">Delete</button>
                 </div>
             </div>
-        </div>
-    `).join('');
+        </div>`).join('');
 }
 
-// ... Additional render functions for Stores/Categories go here ...
+function renderStores() {
+    $('stores-list').innerHTML = STORES.map(s => `
+        <div class="item-card">
+            <div class="item-thumb" style="background:${s.color}; color:white;">${s.logoUrl ? `<img src="${s.logoUrl}">` : s.name.charAt(0)}</div>
+            <div class="item-body">
+                <div class="item-title">${s.name}</div>
+                <div class="item-actions">
+                    <button class="btn-mini edit" onclick="openStoreForm('${s.id}')">Edit</button>
+                </div>
+            </div>
+        </div>`).join('');
+}
 
+function renderCategories() {
+    $('categories-list').innerHTML = CATEGORIES.map(c => `
+        <div class="item-card"><div class="item-thumb">${c.icon || '📂'}</div><div class="item-body"><div class="item-title">${c.fr}</div></div></div>`).join('');
+}
+
+// --- FORMS ---
 function openDealForm(id) {
     const d = id ? DEALS.find(x => x.id === id) : { title:'', titleAr:'', old:0, new:0, disc:0, storeId:'', cat:'', expires:'' };
     showModal(`
@@ -298,7 +252,7 @@ function openDealForm(id) {
         <div class="smart-paste">
             <div class="smart-paste-label">🪄 Smart Paste</div>
             <div class="smart-paste-row">
-                <input type="url" id="sp-url" placeholder="Paste store URL here...">
+                <input type="url" id="sp-url" placeholder="Paste link here...">
                 <button type="button" onclick="runSmartPaste()" id="sp-btn">Fetch</button>
             </div>
             <div id="sp-status" class="smart-paste-status"></div>
@@ -310,52 +264,62 @@ function openDealForm(id) {
                 <div class="field"><label>Old Price</label><input type="number" id="f-old" value="${d.old}"></div>
                 <div class="field"><label>New Price</label><input type="number" id="f-new" value="${d.new}"></div>
             </div>
-            <div class="field"><label>Store ID</label><input id="f-storeId" value="${d.storeId}"></div>
+            <div class="field"><label>Discount %</label><input type="number" id="f-disc" value="${d.disc}"></div>
+            <div class="field"><label>Store ID</label><select id="f-storeId">${STORES.map(s=>`<option value="${s.id}" ${d.storeId===s.id?'selected':''}>${s.name}</option>`).join('')}</select></div>
             <button type="submit" class="btn-save">Save Deal</button>
         </form>
     `);
 }
 
+// --- THE SMART FETCHER ---
 async function runSmartPaste() {
     const url = $('sp-url').value.trim();
     if (!url) return;
-    
     const btn = $('sp-btn');
     const status = $('sp-status');
     btn.disabled = true;
-    status.textContent = "Connecting to Cloud Browser...";
+    status.textContent = "Launching Browser...";
     status.className = "smart-paste-status show success";
 
     try {
-        const response = await window.fetch(SCRAPER_URL, {
+        // We use global fetch
+        const response = await fetch(SCRAPER_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ url: url })
         });
-
         const data = await response.json();
-        if (!data.success) throw new Error(data.error || "Fetch failed");
+        if (!data.success) throw new Error(data.error || "Server error");
 
-        // Simple Parser
         const parser = new DOMParser();
         const doc = parser.parseFromString(data.html, "text/html");
-        
-        $('f-title').value = doc.querySelector('h1')?.innerText || doc.title || "";
-        const priceText = data.html.match(/([0-9]{1,5})[.,][0-9]{2}\s*DH/i);
-        if (priceText) $('f-new').value = priceText[1];
+        const domain = new URL(url).hostname.toLowerCase();
 
-        status.textContent = "✅ Data Captured!";
+        // Aswak Assalam Fix
+        if (domain.includes('aswakassalam')) {
+            $('f-title').value = doc.querySelector('.product_title')?.innerText || doc.title;
+            const p = doc.querySelector('.woocommerce-Price-amount bdi')?.innerText.replace(/[^0-9.]/g, '');
+            if (p) $('f-new').value = p;
+        } else {
+            $('f-title').value = doc.querySelector('h1')?.innerText || doc.title;
+            const match = data.html.match(/([0-9]{1,5})[.,][0-9]{2}\s*DH/i);
+            if (match) $('f-new').value = match[1];
+        }
+        status.textContent = "✅ Success!";
     } catch (err) {
-        status.textContent = "❌ " + err.message;
+        status.textContent = "❌ Error: " + err.message;
         status.className = "smart-paste-status show error";
-    } finally {
-        btn.disabled = false;
-    }
+    } finally { btn.disabled = false; }
 }
 
-function showModal(html) { $('modal-content').innerHTML = html; $('modal-overlay').classList.add('show'); }
+function showModal(html) { $('modal-content').innerHTML=html; $('modal-overlay').classList.add('show'); }
 function closeModal() { $('modal-overlay').classList.remove('show'); }
-function showToast(m, t) { const e = $('toast'); e.textContent = m; e.className = 'toast show ' + t; setTimeout(() => e.className = 'toast', 3000); }
+
+async function deleteItem(col, id, name) {
+    if(!confirm(`Delete ${name}?`)) return;
+    await db.collection(col).doc(id).delete();
+    showToast("Deleted", "success");
+}
 </script>
 </body>
 </html>
