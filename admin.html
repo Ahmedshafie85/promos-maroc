@@ -163,7 +163,6 @@ button, input, select, textarea { font-family:inherit; }
 </head>
 <body>
 
-<!-- LOGIN -->
 <div class="login-screen" id="login-screen">
   <div class="login-card">
     <div class="login-logo">⚙️</div>
@@ -187,7 +186,6 @@ button, input, select, textarea { font-family:inherit; }
   </div>
 </div>
 
-<!-- ADMIN APP -->
 <div class="admin-app" id="admin-app">
   <div class="topbar">
     <div class="topbar-brand">⚙️ Promos Maroc · Admin</div>
@@ -207,7 +205,6 @@ button, input, select, textarea { font-family:inherit; }
   </div>
 
   <div class="content">
-    <!-- DASHBOARD -->
     <div class="section active" id="section-dashboard">
       <div class="section-head"><h2>📊 Dashboard</h2></div>
 
@@ -241,7 +238,6 @@ button, input, select, textarea { font-family:inherit; }
       </div>
     </div>
 
-    <!-- DEALS -->
     <div class="section" id="section-deals">
       <div class="section-head">
         <h2>🛍️ Deals <span class="count" id="count-deals">0</span></h2>
@@ -250,7 +246,6 @@ button, input, select, textarea { font-family:inherit; }
       <div id="deals-list" class="cards-grid"></div>
     </div>
 
-    <!-- STORES -->
     <div class="section" id="section-stores">
       <div class="section-head">
         <h2>🏪 Stores <span class="count" id="count-stores">0</span></h2>
@@ -259,7 +254,6 @@ button, input, select, textarea { font-family:inherit; }
       <div id="stores-list" class="cards-grid"></div>
     </div>
 
-    <!-- CATEGORIES -->
     <div class="section" id="section-categories">
       <div class="section-head">
         <h2>📂 Categories <span class="count" id="count-categories">0</span></h2>
@@ -268,7 +262,6 @@ button, input, select, textarea { font-family:inherit; }
       <div id="categories-list" class="cards-grid"></div>
     </div>
 
-    <!-- PROMOS -->
     <div class="section" id="section-promos">
       <div class="section-head">
         <h2>🎟️ Promo codes <span class="count" id="count-promos">0</span></h2>
@@ -290,6 +283,7 @@ button, input, select, textarea { font-family:inherit; }
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
 <script src="firebase-config.js"></script>
+
 <script>
 // ============ FIREBASE INIT ============
 let db = null, auth = null, storage = null, firebaseReady = false;
@@ -389,22 +383,10 @@ async function seedData() {
   btn.disabled = true;
   btn.innerHTML = '<span>⏳</span> Seeding...';
   try {
-    // Stores (use doc IDs)
-    for (const s of SEED_STORES) {
-      await db.collection('stores').doc(s.id).set(s);
-    }
-    // Categories (use doc IDs)
-    for (const c of SEED_CATEGORIES) {
-      await db.collection('categories').doc(c.id).set(c);
-    }
-    // Deals (auto IDs)
-    for (const d of SEED_DEALS) {
-      await db.collection('deals').add({ ...d, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-    }
-    // Promos (auto IDs)
-    for (const p of SEED_PROMOS) {
-      await db.collection('promos').add(p);
-    }
+    for (const s of SEED_STORES) { await db.collection('stores').doc(s.id).set(s); }
+    for (const c of SEED_CATEGORIES) { await db.collection('categories').doc(c.id).set(c); }
+    for (const d of SEED_DEALS) { await db.collection('deals').add({ ...d, createdAt: firebase.firestore.FieldValue.serverTimestamp() }); }
+    for (const p of SEED_PROMOS) { await db.collection('promos').add(p); }
     showToast('🎉 Seed complete! Check your site.', 'success');
     document.getElementById('seed-card').style.display = 'none';
   } catch (err) {
@@ -501,7 +483,6 @@ function updateStats() {
   $('stat-promos').textContent = PROMOS.length;
   const now = new Date(); const week = new Date(now.getTime() + 7 * 86400000);
   $('stat-expiring').textContent = DEALS.filter(d => { if(!d.expires)return false; const exp = new Date(d.expires); return exp >= now && exp <= week; }).length;
-  // Hide seed card if data already exists
   if (STORES.length > 0 || DEALS.length > 0) {
     const sc = document.getElementById('seed-card');
     if (sc) sc.style.display = 'none';
@@ -670,6 +651,90 @@ function openDealForm(id) {
   });
 }
 
+// ============ SMART PASTE ENGINE ============
+async function smartPaste() {
+  const url = $('sp-url').value.trim();
+  if (!url) { showSmartPasteStatus('Paste a URL first', 'error'); return; }
+  
+  const workerUrl = window.SMART_PASTE_WORKER_URL;
+  if (!workerUrl) {
+    showSmartPasteStatus('Scraper URL not found in config', 'error');
+    return;
+  }
+
+  const btn = $('sp-btn');
+  btn.disabled = true; btn.textContent = '⏳';
+  showSmartPasteStatus('Fetching (Cloud Browser)...', 'success');
+
+  try {
+    const response = await fetch(workerUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: url })
+    });
+
+    const data = await response.json();
+
+    if (!data.success || !data.html) {
+        throw new Error(data.error || "Failed to fetch page HTML");
+    }
+
+    // CREATE A VIRTUAL DOCUMENT TO READ THE HTML
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(data.html, "text/html");
+    const domain = new URL(url).hostname.toLowerCase();
+
+    let result = { title: "", price: 0, oldPrice: 0, img: "" };
+
+    // --- LOGIC FOR JUMIA ---
+    if (domain.includes('jumia')) {
+      result.title = doc.querySelector('h1')?.innerText || "";
+      result.price = parseFloat(doc.querySelector('span[data-price]')?.getAttribute('data-price')) || 0;
+      result.oldPrice = parseFloat(doc.querySelector('.old')?.innerText.replace(/[^0-9.]/g, '')) || 0;
+      result.img = doc.querySelector('#imgs-lp img[data-src]')?.getAttribute('data-src') || "";
+    } 
+    // --- LOGIC FOR MARJANE ---
+    else if (domain.includes('marjane')) {
+      result.title = doc.querySelector('.product-title')?.innerText || "";
+      result.price = parseFloat(doc.querySelector('.price-current')?.innerText.replace(/[^0-9.]/g, '')) || 0;
+      result.img = doc.querySelector('.product-image img')?.src || "";
+    }
+    // --- GENERIC FALLBACK ---
+    else {
+      result.title = doc.querySelector('h1')?.innerText || doc.title;
+      const prices = data.html.match(/([0-9]{1,5})[.,][0-9]{2}\s*DH/i);
+      if (prices) result.price = parseFloat(prices[1]);
+    }
+
+    // AUTO-FILL THE FORM
+    if (result.title) $('f-title').value = result.title;
+    if (result.price > 0) $('f-new').value = result.price;
+    if (result.oldPrice > 0) $('f-old').value = result.oldPrice;
+    if (result.price > 0 && result.oldPrice > result.price) {
+        $('f-disc').value = Math.round(((result.oldPrice - result.price) / result.oldPrice) * 100);
+    }
+    $('f-link').value = url;
+
+    // Detect store
+    const matchStore = STORES.find(s => domain.includes(s.id));
+    if (matchStore) $('f-storeId').value = matchStore.id;
+
+    showSmartPasteStatus('✅ Data imported! Review and Save.', 'success');
+
+  } catch (err) {
+    console.error("Scraper Error:", err);
+    showSmartPasteStatus('❌ Error: ' + err.message, 'error');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Fetch';
+  }
+}
+
+function showSmartPasteStatus(msg, type) {
+  const el = $('sp-status');
+  el.textContent = msg;
+  el.className = 'smart-paste-status show ' + (type || '');
+}
+
 function previewImage(input) {
   const file = input.files[0];
   if (!file) return;
@@ -779,95 +844,6 @@ function removeLogo() {
   $('logo-preview').classList.remove('show');
   $('logo-preview').dataset.existingUrl = '';
   $('f-logo').value = '';
-}
-
-// ============ SMART PASTE ============
-async function smartPaste() {
-  if (typeof SMART_PASTE_WORKER_URL === 'undefined' || !SMART_PASTE_WORKER_URL) {
-    showSmartPasteStatus('Worker URL not configured. See SMART_PASTE_SETUP.md', 'error');
-    return;
-  }
-  const url = $('sp-url').value.trim();
-  if (!url) { showSmartPasteStatus('Paste a URL first', 'error'); return; }
-  if (!url.startsWith('http')) { showSmartPasteStatus('URL must start with http:// or https://', 'error'); return; }
-
-  const btn = $('sp-btn');
-  btn.disabled = true; btn.textContent = '⏳';
-  showSmartPasteStatus('Fetching page...', 'success');
-
-  try {
-    const workerUrl = SMART_PASTE_WORKER_URL.replace(/\/$/, '') + '/?url=' + encodeURIComponent(url);
-    const res = await fetch(workerUrl);
-    const data = await res.json();
-
-    if (data.error) {
-      showSmartPasteStatus('❌ ' + data.error, 'error');
-      btn.disabled = false; btn.textContent = 'Fetch';
-      return;
-    }
-
-    let filledCount = 0;
-    if (data.title) {
-      $('f-title').value = data.title;
-      // If looks Arabic (heuristic), put in Ar field too
-      if (/[\u0600-\u06FF]/.test(data.title)) $('f-titleAr').value = data.title;
-      filledCount++;
-    }
-    if (data.description) {
-      $('f-desc').value = data.description.substring(0, 200);
-      filledCount++;
-    }
-    if (data.price) {
-      $('f-new').value = data.price;
-      filledCount++;
-    }
-    if (data.oldPrice) {
-      $('f-old').value = data.oldPrice;
-      filledCount++;
-      if (data.price && data.oldPrice > data.price) {
-        const discount = Math.round(((data.oldPrice - data.price) / data.oldPrice) * 100);
-        $('f-disc').value = discount;
-      }
-    }
-    $('f-link').value = url;
-
-    // Auto-detect store from URL
-    try {
-      const host = new URL(url).hostname.toLowerCase();
-      const matchStore = STORES.find(s => {
-        if (s.url) return host.includes(new URL(s.url).hostname.replace('www.', ''));
-        return host.includes(s.id);
-      });
-      if (matchStore) $('f-storeId').value = matchStore.id;
-    } catch (e) {}
-
-    // Set image preview from URL
-    if (data.image) {
-      try {
-        // We'll display it but admin must save - we'll fetch and re-upload to Firebase Storage on save
-        const imgRes = await fetch(data.image);
-        const blob = await imgRes.blob();
-        if (blob.size > 0 && blob.size < 5 * 1024 * 1024) {
-          pendingImageFile = new File([blob], 'fetched-' + Date.now() + '.jpg', { type: blob.type || 'image/jpeg' });
-          $('image-preview-img').src = data.image;
-          $('image-preview').classList.add('show');
-          filledCount++;
-        }
-      } catch (e) { console.warn('Image fetch failed:', e); }
-    }
-
-    showSmartPasteStatus('✅ Filled ' + filledCount + ' fields. Review and save.', 'success');
-  } catch (err) {
-    showSmartPasteStatus('❌ ' + err.message, 'error');
-  } finally {
-    btn.disabled = false; btn.textContent = 'Fetch';
-  }
-}
-
-function showSmartPasteStatus(msg, type) {
-  const el = $('sp-status');
-  el.textContent = msg;
-  el.className = 'smart-paste-status show ' + (type || '');
 }
 
 function openCategoryForm(id) {
