@@ -19,84 +19,54 @@ button, input, select, textarea { font-family:inherit; }
 .login-card { background:white; border-radius:20px; padding:40px 32px; width:100%; max-width:400px; box-shadow:var(--shadow-lg); }
 .login-logo { font-size:64px; text-align:center; margin-bottom:16px; }
 .login-title { font-size:24px; font-weight:800; text-align:center; margin-bottom:8px; }
-.login-subtitle { text-align:center; color:var(--text-2); margin-bottom:28px; font-size:14px; }
 .login-field { margin-bottom:16px; }
 .login-field label { display:block; font-size:13px; font-weight:700; color:var(--text-2); margin-bottom:6px; }
-.login-field input { width:100%; padding:12px 14px; border:1.5px solid var(--border); border-radius:10px; font-size:15px; outline:none; transition:border-color .2s; }
-.login-field input:focus { border-color:var(--primary); }
-.login-btn { width:100%; background:var(--primary); color:white; border:none; padding:14px; border-radius:10px; font-size:16px; font-weight:800; cursor:pointer; margin-top:8px; }
-.login-btn:hover { background:var(--primary-dark); }
-.login-btn:disabled { opacity:.6; cursor:wait; }
+.login-field input { width:100%; padding:12px 14px; border:1.5px solid var(--border); border-radius:10px; font-size:15px; outline:none; }
+.login-btn { width:100%; background:var(--primary); color:white; border:none; padding:14px; border-radius:10px; font-size:16px; font-weight:800; cursor:pointer; }
 .login-error { background:#FFE5E5; color:var(--danger); padding:10px 14px; border-radius:8px; font-size:13px; margin-bottom:16px; display:none; }
 .login-error.show { display:block; }
-.login-footer { text-align:center; margin-top:24px; font-size:12px; color:var(--text-3); }
-.login-footer a { color:var(--primary); text-decoration:none; font-weight:700; }
 
 .admin-app { display:none; }
 .admin-app.show { display:block; }
 .topbar { background:white; padding:14px 24px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:50; }
-.topbar-brand { font-size:18px; font-weight:800; display:flex; align-items:center; gap:8px; }
-.topbar-user { font-size:13px; color:var(--text-2); display:flex; align-items:center; gap:12px; }
-.logout-btn { background:none; border:1.5px solid var(--border); padding:6px 12px; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; color:var(--text); }
-.logout-btn:hover { background:var(--bg); }
-.view-site-btn { background:var(--accent); color:white; border:none; padding:6px 12px; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; text-decoration:none; }
+.topbar-brand { font-size:18px; font-weight:800; }
+.logout-btn { background:none; border:1.5px solid var(--border); padding:6px 12px; border-radius:8px; cursor:pointer; }
 
-.tabs { background:white; padding:0 24px; border-bottom:1px solid var(--border); display:flex; gap:4px; overflow-x:auto; scrollbar-width:none; }
-.tabs::-webkit-scrollbar { display:none; }
-.tab { background:none; border:none; padding:14px 18px; font-size:14px; font-weight:700; color:var(--text-2); cursor:pointer; border-bottom:3px solid transparent; white-space:nowrap; transition:all .15s; }
+.tabs { background:white; padding:0 24px; border-bottom:1px solid var(--border); display:flex; gap:4px; overflow-x:auto; }
+.tab { background:none; border:none; padding:14px 18px; font-size:14px; font-weight:700; color:var(--text-2); cursor:pointer; border-bottom:3px solid transparent; white-space:nowrap; }
 .tab.active { color:var(--primary); border-bottom-color:var(--primary); }
-.tab:hover { color:var(--text); }
 
 .content { padding:24px; max-width:1200px; margin:0 auto; }
 .section { display:none; }
 .section.active { display:block; }
-.section-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
-.section-head h2 { font-size:24px; font-weight:800; }
-.section-head .count { color:var(--text-2); font-size:14px; font-weight:500; margin-inline-start:8px; }
-.add-btn { background:var(--primary); color:white; border:none; padding:10px 18px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px; }
-.add-btn:hover { background:var(--primary-dark); }
+.section-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+.add-btn { background:var(--primary); color:white; border:none; padding:10px 18px; border-radius:10px; font-weight:700; cursor:pointer; }
 
 .cards-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; }
 .item-card { background:white; border-radius:12px; padding:14px; box-shadow:var(--shadow-sm); display:flex; gap:12px; }
-.item-thumb { width:64px; height:64px; border-radius:10px; background:var(--bg); display:flex; align-items:center; justify-content:center; font-size:32px; flex-shrink:0; overflow:hidden; }
+.item-thumb { width:64px; height:64px; border-radius:10px; background:var(--bg); display:flex; align-items:center; justify-content:center; overflow:hidden; }
 .item-thumb img { width:100%; height:100%; object-fit:cover; }
 .item-body { flex:1; min-width:0; }
-.item-title { font-size:14px; font-weight:700; margin-bottom:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.item-meta { font-size:12px; color:var(--text-2); display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px; }
-.item-actions { display:flex; gap:6px; }
-.btn-mini { background:var(--bg); border:1px solid var(--border); padding:5px 10px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; color:var(--text); }
-.btn-mini.edit { color:var(--accent); }
-.btn-mini.delete { color:var(--danger); }
-.btn-mini:hover { background:var(--border); }
+.item-title { font-size:14px; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.item-actions { display:flex; gap:6px; margin-top:8px; }
+.btn-mini { background:var(--bg); border:1px solid var(--border); padding:5px 10px; border-radius:6px; font-size:12px; cursor:pointer; }
 
-.modal-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.6); z-index:200; display:none; align-items:center; justify-content:center; padding:20px; overflow-y:auto; }
+.modal-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.6); z-index:200; display:none; align-items:center; justify-content:center; padding:20px; }
 .modal-overlay.show { display:flex; }
-.modal { background:white; border-radius:16px; width:100%; max-width:560px; max-height:90vh; overflow-y:auto; padding:24px; }
-.modal-title { font-size:20px; font-weight:800; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; }
-.modal-close { background:none; border:none; font-size:24px; cursor:pointer; color:var(--text-3); }
+.modal { background:white; border-radius:16px; width:100%; max-width:560px; padding:24px; max-height:90vh; overflow-y:auto; }
 .field { margin-bottom:14px; }
-.field label { display:block; font-size:13px; font-weight:700; color:var(--text-2); margin-bottom:6px; }
-.field input, .field select, .field textarea { width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:8px; font-size:14px; outline:none; transition:border-color .2s; }
-.field input:focus, .field select:focus, .field textarea:focus { border-color:var(--primary); }
-.field-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-.btn-save { flex:1; background:var(--primary); color:white; border:none; padding:12px; border-radius:8px; font-weight:800; cursor:pointer; width:100%; margin-top:10px;}
+.field label { display:block; font-size:12px; font-weight:700; margin-bottom:4px; color:var(--text-2); }
+.field input, .field select { width:100%; padding:10px; border:1px solid var(--border); border-radius:8px; }
 
-/* Smart paste styling */
 .smart-paste { background:linear-gradient(135deg,#FFF8E1,#FFF3CD); border:2px solid var(--secondary); border-radius:12px; padding:16px; margin-bottom:18px; }
-.smart-paste-label { font-size:13px; font-weight:800; color:#7A5A00; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
-.smart-paste-row { display:flex; gap:8px; }
-.smart-paste-row input { flex:1; padding:10px 12px; border:1.5px solid var(--border); border-radius:8px; font-size:13px; outline:none; }
+.smart-paste-row { display:flex; gap:8px; margin-top:8px; }
+.smart-paste-row input { flex:1; padding:10px; border:1px solid var(--border); border-radius:8px; }
 .smart-paste-row button { background:var(--secondary); color:white; border:none; padding:10px 18px; border-radius:8px; font-weight:800; cursor:pointer; }
-.smart-paste-status { font-size:12px; margin-top:8px; padding:8px 10px; border-radius:6px; display:none; }
+.smart-paste-status { font-size:12px; margin-top:8px; display:none; }
 .smart-paste-status.show { display:block; }
-.smart-paste-status.success { background:#D4F4DD; color:#1B5E2E; }
-.smart-paste-status.error { background:#FFE5E5; color:var(--danger); }
 
-.toast { position:fixed; top:24px; left:50%; transform:translateX(-50%); background:var(--text); color:white; padding:12px 20px; border-radius:10px; font-size:14px; font-weight:600; z-index:300; opacity:0; transition:opacity .3s; pointer-events:none; }
+.toast { position:fixed; top:24px; left:50%; transform:translateX(-50%); background:var(--text); color:white; padding:12px 24px; border-radius:10px; opacity:0; transition:0.3s; z-index:999; }
 .toast.show { opacity:1; }
-
-.seed-card { background:linear-gradient(135deg, #FDEEEF, #FFF5F6); border:2px solid var(--primary); border-radius:16px; padding:24px; margin-bottom:24px; }
-.seed-btn { background:var(--primary); color:white; border:none; padding:14px 28px; border-radius:10px; font-size:15px; font-weight:800; cursor:pointer; }
 </style>
 </head>
 <body>
@@ -104,20 +74,20 @@ button, input, select, textarea { font-family:inherit; }
 <div class="login-screen" id="login-screen">
   <div class="login-card">
     <div class="login-logo">⚙️</div>
-    <div class="login-title">لوحة التحكم</div>
+    <div class="login-title">Admin Login</div>
     <div class="login-error" id="login-error"></div>
     <form id="login-form">
       <div class="login-field"><label>Email</label><input type="email" id="login-email" required></div>
       <div class="login-field"><label>Password</label><input type="password" id="login-password" required></div>
-      <button type="submit" class="login-btn" id="login-btn">Sign in</button>
+      <button type="submit" class="login-btn">Sign In</button>
     </form>
   </div>
 </div>
 
 <div class="admin-app" id="admin-app">
   <div class="topbar">
-    <div class="topbar-brand">⚙️ Admin Panel</div>
-    <div class="topbar-user"><span id="user-email"></span> <button class="logout-btn" onclick="doLogout()">Logout</button></div>
+    <div class="topbar-brand">⚙️ Promos Maroc Admin</div>
+    <div class="topbar-user"><span id="user-email"></span> <button onclick="auth.signOut()">Logout</button></div>
   </div>
 
   <div class="tabs">
@@ -129,19 +99,13 @@ button, input, select, textarea { font-family:inherit; }
 
   <div class="content">
     <div class="section active" id="section-dashboard">
-      <div class="section-head"><h2>📊 Dashboard</h2></div>
-      <div class="seed-card" id="seed-card" style="display:none;">
-        <div class="seed-title">🌱 Database empty? Restore sample data.</div>
-        <button class="seed-btn" onclick="seedData()">🚀 Seed Sample Data</button>
-      </div>
-      <div class="stats-grid">
-        <div class="stat-card">🛍️ <span id="stat-deals">0</span> Deals</div>
-        <div class="stat-card">🏪 <span id="stat-stores">0</span> Stores</div>
-      </div>
+      <h2>📊 Stats</h2>
+      <p>Deals: <strong id="stat-deals">0</strong></p>
+      <p>Stores: <strong id="stat-stores">0</strong></p>
     </div>
 
     <div class="section" id="section-deals">
-      <div class="section-head"><h2>🛍️ Deals <span id="count-deals">0</span></h2><button class="add-btn" onclick="openDealForm()">+ Add Deal</button></div>
+      <div class="section-head"><h2>🛍️ Deals</h2><button class="add-btn" onclick="openDealForm()">+ Add Deal</button></div>
       <div id="deals-list" class="cards-grid"></div>
     </div>
 
@@ -167,10 +131,10 @@ button, input, select, textarea { font-family:inherit; }
 <script src="firebase-config.js"></script>
 
 <script>
-// Master Fetcher URL
-const SCRAPER_URL = "https://promos-maroc-fetcher.abdelshafie-ahmed.workers.dev";
+// The Engine URL
+const WORKER_URL = "https://promos-maroc-fetcher.abdelshafie-ahmed.workers.dev";
 
-let db, auth, storage, currentUser;
+let db, auth, storage;
 let DEALS=[], STORES=[], CATEGORIES=[];
 
 try {
@@ -178,20 +142,21 @@ try {
     db = firebase.firestore();
     auth = firebase.auth();
     storage = firebase.storage();
+    
     auth.onAuthStateChanged(user => {
         if (user && user.email === ADMIN_EMAIL) {
-            $('user-email').textContent = user.email;
-            showAdmin();
+            document.getElementById('user-email').textContent = user.email;
+            document.getElementById('admin-app').classList.add('show');
+            document.getElementById('login-screen').style.display = 'none';
             startListeners();
-        } else { showLogin(); }
+        } else {
+            document.getElementById('admin-app').classList.remove('show');
+            document.getElementById('login-screen').style.display = 'flex';
+        }
     });
-} catch (e) { console.error(e); }
+} catch (e) { console.error("Firebase Init Failed", e); }
 
 function $(id) { return document.getElementById(id); }
-function showLogin() { $('login-screen').style.display='flex'; $('admin-app').classList.remove('show'); }
-function showAdmin() { $('login-screen').style.display='none'; $('admin-app').classList.add('show'); }
-function doLogout() { auth.signOut(); }
-function showToast(m, t) { const e=$('toast'); e.textContent=m; e.className='toast show '+t; setTimeout(()=>e.className='toast', 3000); }
 
 function showTab(name) {
     document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
@@ -199,127 +164,132 @@ function showTab(name) {
 }
 
 function startListeners() {
-    db.collection('deals').onSnapshot(snap => { DEALS = snap.docs.map(d => ({id:d.id, ...d.data()})); renderDeals(); updateStats(); });
-    db.collection('stores').onSnapshot(snap => { STORES = snap.docs.map(d => ({id:d.id, ...d.data()})); renderStores(); updateStats(); });
+    db.collection('deals').onSnapshot(snap => { DEALS = snap.docs.map(d => ({id:d.id, ...d.data()})); renderDeals(); });
+    db.collection('stores').onSnapshot(snap => { STORES = snap.docs.map(d => ({id:d.id, ...d.data()})); renderStores(); });
     db.collection('categories').onSnapshot(snap => { CATEGORIES = snap.docs.map(d => ({id:d.id, ...d.data()})); renderCategories(); });
 }
 
-function updateStats() {
-    $('stat-deals').textContent = DEALS.length;
-    $('stat-stores').textContent = STORES.length;
-    $('seed-card').style.display = (STORES.length === 0) ? 'block' : 'none';
-}
-
 function renderDeals() {
-    $('count-deals').textContent = DEALS.length;
+    $('stat-deals').textContent = DEALS.length;
     $('deals-list').innerHTML = DEALS.map(d => `
         <div class="item-card">
             <div class="item-thumb">${d.imageUrl ? `<img src="${d.imageUrl}">` : '🛍️'}</div>
             <div class="item-body">
                 <div class="item-title">${d.titleAr || d.title}</div>
-                <div class="item-meta">💰 ${d.new} DH</div>
                 <div class="item-actions">
-                    <button class="btn-mini edit" onclick="openDealForm('${d.id}')">Edit</button>
-                    <button class="btn-mini delete" onclick="deleteItem('deals','${d.id}','${d.title}')">Delete</button>
+                    <button class="btn-mini" onclick="openDealForm('${d.id}')">Edit</button>
+                    <button class="btn-mini" onclick="deleteItem('deals','${d.id}')">Delete</button>
                 </div>
             </div>
         </div>`).join('');
 }
 
 function renderStores() {
+    $('stat-stores').textContent = STORES.length;
     $('stores-list').innerHTML = STORES.map(s => `
         <div class="item-card">
-            <div class="item-thumb" style="background:${s.color}; color:white;">${s.logoUrl ? `<img src="${s.logoUrl}">` : s.name.charAt(0)}</div>
+            <div class="item-thumb" style="background:${s.color}">${s.logoUrl ? `<img src="${s.logoUrl}">` : s.name.charAt(0)}</div>
             <div class="item-body">
                 <div class="item-title">${s.name}</div>
-                <div class="item-actions">
-                    <button class="btn-mini edit" onclick="openStoreForm('${s.id}')">Edit</button>
-                </div>
+                <button class="btn-mini" onclick="deleteItem('stores','${s.id}')">Delete</button>
             </div>
         </div>`).join('');
 }
 
 function renderCategories() {
     $('categories-list').innerHTML = CATEGORIES.map(c => `
-        <div class="item-card"><div class="item-thumb">${c.icon || '📂'}</div><div class="item-body"><div class="item-title">${c.fr}</div></div></div>`).join('');
+        <div class="item-card">
+            <div class="item-thumb">${c.icon || '📂'}</div>
+            <div class="item-body"><div class="item-title">${c.fr}</div></div>
+        </div>`).join('');
 }
 
-// --- FORMS ---
 function openDealForm(id) {
-    const d = id ? DEALS.find(x => x.id === id) : { title:'', titleAr:'', old:0, new:0, disc:0, storeId:'', cat:'', expires:'' };
+    const d = id ? DEALS.find(x => x.id === id) : { title:'', titleAr:'', old:0, new:0, disc:0, storeId:'', cat:'' };
     showModal(`
-        <div class="modal-title">🛍️ Deal Form</div>
+        <h3>🛍️ Deal Details</h3>
         <div class="smart-paste">
-            <div class="smart-paste-label">🪄 Smart Paste</div>
+            <strong>🪄 Smart Paste</strong>
             <div class="smart-paste-row">
                 <input type="url" id="sp-url" placeholder="Paste link here...">
-                <button type="button" onclick="runSmartPaste()" id="sp-btn">Fetch</button>
+                <button type="button" onclick="runScraper()" id="sp-btn">Fetch</button>
             </div>
             <div id="sp-status" class="smart-paste-status"></div>
         </div>
         <form id="deal-form">
             <div class="field"><label>Title (FR)</label><input id="f-title" value="${d.title}"></div>
             <div class="field"><label>Title (AR)</label><input id="f-titleAr" value="${d.titleAr}"></div>
-            <div class="field-row">
-                <div class="field"><label>Old Price</label><input type="number" id="f-old" value="${d.old}"></div>
-                <div class="field"><label>New Price</label><input type="number" id="f-new" value="${d.new}"></div>
+            <div class="field"><label>Price (DH)</label><input type="number" id="f-new" value="${d.new}"></div>
+            <div class="field"><label>Store</label>
+                <select id="f-storeId">${STORES.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select>
             </div>
-            <div class="field"><label>Discount %</label><input type="number" id="f-disc" value="${d.disc}"></div>
-            <div class="field"><label>Store ID</label><select id="f-storeId">${STORES.map(s=>`<option value="${s.id}" ${d.storeId===s.id?'selected':''}>${s.name}</option>`).join('')}</select></div>
-            <button type="submit" class="btn-save">Save Deal</button>
+            <button type="submit" class="login-btn">Save Deal</button>
         </form>
     `);
 }
 
-// --- THE SMART FETCHER ---
-async function runSmartPaste() {
-    const url = $('sp-url').value.trim();
-    if (!url) return;
+// --- BULLETPROOF SCRAPER ---
+async function runScraper() {
+    const targetUrl = $('sp-url').value.trim();
+    if (!targetUrl) return;
+
     const btn = $('sp-btn');
     const status = $('sp-status');
+    
     btn.disabled = true;
-    status.textContent = "Launching Browser...";
+    status.textContent = "Connecting to Cloud Browser...";
     status.className = "smart-paste-status show success";
 
     try {
-        // We use global fetch
-        const response = await fetch(SCRAPER_URL, {
+        // Use the native global fetch explicitly
+        const response = await window.fetch(WORKER_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ url: url })
+            body: JSON.stringify({ url: targetUrl })
         });
+
         const data = await response.json();
-        if (!data.success) throw new Error(data.error || "Server error");
+        if (!data.success) throw new Error(data.error || "Scraper Error");
 
         const parser = new DOMParser();
         const doc = parser.parseFromString(data.html, "text/html");
-        const domain = new URL(url).hostname.toLowerCase();
+        const domain = new URL(targetUrl).hostname.toLowerCase();
 
-        // Aswak Assalam Fix
+        // Aswak Assalam & Standard Parsers
         if (domain.includes('aswakassalam')) {
             $('f-title').value = doc.querySelector('.product_title')?.innerText || doc.title;
-            const p = doc.querySelector('.woocommerce-Price-amount bdi')?.innerText.replace(/[^0-9.]/g, '');
-            if (p) $('f-new').value = p;
+            const price = doc.querySelector('.woocommerce-Price-amount bdi')?.innerText.replace(/[^0-9.]/g, '');
+            if (price) $('f-new').value = price;
         } else {
             $('f-title').value = doc.querySelector('h1')?.innerText || doc.title;
-            const match = data.html.match(/([0-9]{1,5})[.,][0-9]{2}\s*DH/i);
-            if (match) $('f-new').value = match[1];
+            const prices = data.html.match(/([0-9]{1,5})[.,][0-9]{2}\s*DH/i);
+            if (prices) $('f-new').value = prices[1];
         }
+
         status.textContent = "✅ Success!";
     } catch (err) {
-        status.textContent = "❌ Error: " + err.message;
+        status.textContent = "❌ " + err.message;
         status.className = "smart-paste-status show error";
-    } finally { btn.disabled = false; }
+    } finally {
+        btn.disabled = false;
+    }
 }
 
 function showModal(html) { $('modal-content').innerHTML=html; $('modal-overlay').classList.add('show'); }
-function closeModal() { $('modal-overlay').classList.remove('show'); }
+$('modal-overlay').onclick = (e) => { if(e.target === $('modal-overlay')) $('modal-overlay').classList.remove('show'); };
 
-async function deleteItem(col, id, name) {
-    if(!confirm(`Delete ${name}?`)) return;
+async function deleteItem(col, id) {
+    if(!confirm("Delete this?")) return;
     await db.collection(col).doc(id).delete();
-    showToast("Deleted", "success");
+    alert("Deleted");
 }
+
+$('login-form').onsubmit = async (e) => {
+    e.preventDefault();
+    try {
+        await auth.signInWithEmailAndPassword($('login-email').value, $('login-password').value);
+    } catch(err) { $('login-error').textContent = err.message; $('login-error').classList.add('show'); }
+};
 </script>
 </body>
 </html>
