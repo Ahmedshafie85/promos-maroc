@@ -70,6 +70,25 @@ button, input, select, textarea { font-family:inherit; }
 .img-preview { margin-top:8px; min-height:0; }
 .img-preview img { max-width:160px; max-height:160px; border-radius:8px; border:1px solid var(--border); }
 
+/* Upload UI */
+.upload-row { display:flex; gap:8px; align-items:stretch; margin-top:6px; }
+.upload-row input[type="url"] { flex:1; }
+.upload-btn { background:var(--accent); color:white; border:none; padding:0 14px; border-radius:8px; font-weight:700; font-size:13px; cursor:pointer; white-space:nowrap; display:inline-flex; align-items:center; gap:4px; }
+.upload-btn:disabled { opacity:0.6; cursor:not-allowed; }
+.upload-progress { font-size:12px; color:var(--text-2); margin-top:6px; display:none; }
+.upload-progress.show { display:block; }
+.upload-progress-bar { width:100%; height:4px; background:var(--bg); border-radius:2px; margin-top:4px; overflow:hidden; }
+.upload-progress-bar div { height:100%; background:var(--success); width:0%; transition:width 0.2s; }
+.upload-or { text-align:center; font-size:11px; color:var(--text-3); margin:8px 0; text-transform:uppercase; letter-spacing:1px; }
+
+/* Catalog cards */
+.catalog-card { background:white; border-radius:12px; padding:14px; box-shadow:var(--shadow-sm); }
+.catalog-card .pdf-icon { font-size:32px; margin-bottom:8px; }
+.catalog-card .catalog-name { font-weight:700; font-size:14px; margin-bottom:4px; word-break:break-word; }
+.catalog-card .catalog-meta { font-size:11px; color:var(--text-3); margin-bottom:8px; }
+.catalog-card .catalog-actions { display:flex; gap:6px; }
+.catalog-card a { color:var(--primary); text-decoration:none; font-weight:700; font-size:12px; }
+
 .toast { position:fixed; top:24px; left:50%; transform:translateX(-50%); background:var(--text); color:white; padding:12px 24px; border-radius:10px; opacity:0; transition:0.3s; z-index:999; }
 .toast.show { opacity:1; }
 </style>
@@ -100,6 +119,7 @@ button, input, select, textarea { font-family:inherit; }
     <button class="tab" data-tab="deals" onclick="showTab('deals')">🛍️ Deals</button>
     <button class="tab" data-tab="stores" onclick="showTab('stores')">🏪 Stores</button>
     <button class="tab" data-tab="categories" onclick="showTab('categories')">📂 Categories</button>
+    <button class="tab" data-tab="catalogs" onclick="showTab('catalogs')">📄 Catalogs</button>
   </div>
 
   <div class="content">
@@ -123,6 +143,12 @@ button, input, select, textarea { font-family:inherit; }
       <div class="section-head"><h2>📂 Categories</h2><button class="add-btn" onclick="openCategoryForm()">+ Add Category</button></div>
       <div id="categories-list" class="cards-grid"></div>
     </div>
+
+    <div class="section" id="section-catalogs">
+      <div class="section-head"><h2>📄 Catalogs (PDF)</h2><button class="add-btn" onclick="openCatalogForm()">+ Upload Catalog</button></div>
+      <p style="color:var(--text-2);font-size:13px;margin-bottom:16px">Upload promotional catalogs as PDFs (e.g. weekly Aswak flyer, Marjane Ramadan catalog).</p>
+      <div id="catalogs-list" class="cards-grid"></div>
+    </div>
   </div>
 </div>
 
@@ -140,7 +166,7 @@ button, input, select, textarea { font-family:inherit; }
 const WORKER_URL = "https://promos-maroc-fetcher.abdelshafie-ahmed.workers.dev";
 
 let db, auth, storage;
-let DEALS=[], STORES=[], CATEGORIES=[];
+let DEALS=[], STORES=[], CATEGORIES=[], CATALOGS=[];
 
 try {
     firebase.initializeApp(firebaseConfig);
@@ -172,6 +198,7 @@ function startListeners() {
     db.collection('deals').onSnapshot(snap => { DEALS = snap.docs.map(d => ({id:d.id, ...d.data()})); renderDeals(); });
     db.collection('stores').onSnapshot(snap => { STORES = snap.docs.map(d => ({id:d.id, ...d.data()})); renderStores(); });
     db.collection('categories').onSnapshot(snap => { CATEGORIES = snap.docs.map(d => ({id:d.id, ...d.data()})); renderCategories(); });
+    db.collection('catalogs').orderBy('createdAt', 'desc').onSnapshot(snap => { CATALOGS = snap.docs.map(d => ({id:d.id, ...d.data()})); renderCatalogs(); });
 }
 
 function renderDeals() {
@@ -241,8 +268,13 @@ function openDealForm(id) {
             </div>
             <div class="field"><label>Discount (%)</label><input type="number" id="f-disc" value="${d.disc || ''}" placeholder="auto-calculated if empty"></div>
             <div class="field">
-                <label>Image URL</label>
-                <input type="url" id="f-imageUrl" value="${esc(d.imageUrl || '')}" placeholder="https://...">
+                <label>Image</label>
+                <div class="upload-row">
+                    <input type="url" id="f-imageUrl" value="${esc(d.imageUrl || '')}" placeholder="Paste URL or upload below">
+                    <button type="button" class="upload-btn" id="f-img-upload-btn">📤 Upload</button>
+                </div>
+                <input type="file" id="f-img-file-input" style="display:none">
+                <div id="f-img-upload-progress" class="upload-progress"></div>
                 <div id="img-preview" class="img-preview">${d.imageUrl ? `<img src="${esc(d.imageUrl)}">` : ''}</div>
             </div>
             <div class="field"><label>Source URL <span style="color:#999;font-weight:400">— optional</span></label><input type="url" id="f-sourceUrl" value="${esc(d.sourceUrl || '')}"></div>
@@ -266,6 +298,8 @@ function openDealForm(id) {
         const url = $('f-imageUrl').value.trim();
         $('img-preview').innerHTML = url ? `<img src="${url}" onerror="this.style.display='none'">` : '';
     };
+    // Image file upload
+    wireUpload('f-img-upload-btn', 'f-img-file-input', 'f-img-upload-progress', 'f-imageUrl', 'img-preview', 'deals', 'image/*');
     // Save handler
     $('deal-form').onsubmit = async (e) => {
         e.preventDefault();
@@ -316,8 +350,13 @@ function openStoreForm() {
             <div class="field"><label>Name</label><input id="s-name" required></div>
             <div class="field"><label>Color (hex)</label><input id="s-color" value="#C1272D"></div>
             <div class="field">
-                <label>Logo URL</label>
-                <input id="s-logo" type="url" placeholder="https://...">
+                <label>Logo</label>
+                <div class="upload-row">
+                    <input type="url" id="s-logo" placeholder="Paste URL or upload below">
+                    <button type="button" class="upload-btn" id="s-logo-upload-btn">📤 Upload</button>
+                </div>
+                <input type="file" id="s-logo-file-input" style="display:none">
+                <div id="s-logo-upload-progress" class="upload-progress"></div>
                 <div id="store-img-preview" class="img-preview"></div>
             </div>
             <button type="submit" class="login-btn">Save Store</button>
@@ -327,6 +366,7 @@ function openStoreForm() {
         const url = $('s-logo').value.trim();
         $('store-img-preview').innerHTML = url ? `<img src="${url}" onerror="this.style.display='none'">` : '';
     };
+    wireUpload('s-logo-upload-btn', 's-logo-file-input', 's-logo-upload-progress', 's-logo', 'store-img-preview', 'stores', 'image/*');
     $('store-form').onsubmit = async (e) => {
         e.preventDefault();
         try {
@@ -349,8 +389,13 @@ function openCategoryForm() {
             <div class="field"><label>Name (FR)</label><input id="c-fr" required></div>
             <div class="field"><label>Name (EN)</label><input id="c-en"></div>
             <div class="field">
-                <label>Image URL</label>
-                <input id="c-img" type="url" placeholder="https://...">
+                <label>Image</label>
+                <div class="upload-row">
+                    <input id="c-img" type="url" placeholder="Paste URL or upload below">
+                    <button type="button" class="upload-btn" id="c-img-upload-btn">📤 Upload</button>
+                </div>
+                <input type="file" id="c-img-file-input" style="display:none">
+                <div id="c-img-upload-progress" class="upload-progress"></div>
                 <div id="cat-img-preview" class="img-preview"></div>
             </div>
             <div class="field"><label>Keywords (comma-separated, for auto-categorize)</label><input id="c-kw" placeholder="e.g. seche-cheveux, hygiene, beaute"></div>
@@ -361,6 +406,7 @@ function openCategoryForm() {
         const url = $('c-img').value.trim();
         $('cat-img-preview').innerHTML = url ? `<img src="${url}" onerror="this.style.display='none'">` : '';
     };
+    wireUpload('c-img-upload-btn', 'c-img-file-input', 'c-img-upload-progress', 'c-img', 'cat-img-preview', 'categories', 'image/*');
     $('cat-form').onsubmit = async (e) => {
         e.preventDefault();
         try {
@@ -600,6 +646,156 @@ $('login-form').onsubmit = async (e) => {
         await auth.signInWithEmailAndPassword($('login-email').value, $('login-password').value);
     } catch(err) { $('login-error').textContent = err.message; $('login-error').classList.add('show'); }
 };
+
+// ============================================================
+// FILE UPLOAD HELPER (Firebase Storage)
+// ============================================================
+// uploadFile(file, folder, onProgress) -> returns download URL
+async function uploadFile(file, folder, onProgress) {
+    if (!storage) throw new Error("Firebase Storage not initialized");
+    if (!file) throw new Error("No file selected");
+    
+    // Sanitize filename, prepend timestamp to avoid collisions
+    const clean = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+    const path = `${folder}/${Date.now()}_${clean}`;
+    const ref = storage.ref(path);
+    
+    return new Promise((resolve, reject) => {
+        const task = ref.put(file);
+        task.on('state_changed',
+            (snap) => {
+                const pct = (snap.bytesTransferred / snap.totalBytes) * 100;
+                if (onProgress) onProgress(pct);
+            },
+            (err) => reject(err),
+            async () => {
+                try {
+                    const url = await task.snapshot.ref.getDownloadURL();
+                    resolve({ url, path, size: file.size, name: file.name, type: file.type });
+                } catch(e) { reject(e); }
+            }
+        );
+    });
+}
+
+// Wires up an upload button + hidden file input to fill a target URL field.
+// targetInputId: id of the URL <input> to populate
+// previewId: id of the preview <div> (optional)
+// folder: storage folder name (e.g. 'deals', 'stores')
+// accept: file accept attribute (e.g. 'image/*', 'application/pdf')
+function wireUpload(buttonId, fileInputId, progressId, targetInputId, previewId, folder, accept) {
+    const btn = $(buttonId);
+    const file = $(fileInputId);
+    const progress = $(progressId);
+    if (!btn || !file) return;
+    
+    file.accept = accept;
+    btn.onclick = () => file.click();
+    file.onchange = async () => {
+        const f = file.files[0];
+        if (!f) return;
+        // Sanity check size: 10MB image cap, 25MB PDF cap
+        const maxMB = accept.includes('pdf') ? 25 : 10;
+        if (f.size > maxMB * 1024 * 1024) {
+            alert(`File too large. Max ${maxMB}MB.`);
+            file.value = '';
+            return;
+        }
+        btn.disabled = true;
+        progress.classList.add('show');
+        progress.innerHTML = `Uploading… <div class="upload-progress-bar"><div id="${progressId}-bar"></div></div>`;
+        try {
+            const result = await uploadFile(f, folder, (pct) => {
+                const bar = $(`${progressId}-bar`);
+                if (bar) bar.style.width = pct + '%';
+            });
+            if (targetInputId) {
+                $(targetInputId).value = result.url;
+                $(targetInputId).dispatchEvent(new Event('input')); // trigger preview
+            }
+            progress.innerHTML = `✅ Uploaded (${(f.size/1024).toFixed(0)} KB)`;
+            // Return result for catalog form etc.
+            file._lastUpload = result;
+        } catch(err) {
+            progress.innerHTML = `❌ ${err.message || 'Upload failed'}`;
+            progress.style.color = 'var(--danger)';
+        } finally {
+            btn.disabled = false;
+        }
+    };
+}
+
+// ============================================================
+// CATALOGS (PDF uploads)
+// ============================================================
+function renderCatalogs() {
+    const list = $('catalogs-list');
+    if (!list) return;
+    list.innerHTML = CATALOGS.map(c => `
+        <div class="catalog-card">
+            <div class="pdf-icon">📄</div>
+            <div class="catalog-name">${esc(c.title || c.fileName || 'Untitled')}</div>
+            <div class="catalog-meta">
+                ${c.storeName ? esc(c.storeName) + ' · ' : ''}
+                ${c.size ? (c.size/1024/1024).toFixed(1) + ' MB · ' : ''}
+                ${c.createdAt && c.createdAt.toDate ? c.createdAt.toDate().toLocaleDateString() : ''}
+            </div>
+            <div class="catalog-actions">
+                <a href="${esc(c.fileUrl)}" target="_blank" rel="noopener">📥 View PDF</a>
+                <button class="btn-mini" onclick="deleteItem('catalogs','${c.id}')" style="margin-left:auto">Delete</button>
+            </div>
+        </div>`).join('') || '<p style="color:var(--text-3);grid-column:1/-1;text-align:center;padding:40px">No catalogs uploaded yet.</p>';
+}
+
+function openCatalogForm() {
+    showModal(`
+        <h3>📄 Upload Catalog (PDF)</h3>
+        <form id="catalog-form">
+            <div class="field"><label>Title</label><input id="cat-title" placeholder="e.g. Aswak weekly flyer — April 2026" required></div>
+            <div class="field"><label>Store (optional)</label>
+                <select id="cat-store">
+                    <option value="">— None —</option>
+                    ${STORES.map(s => `<option value="${s.id}">${esc(s.name)}</option>`).join('')}
+                </select>
+            </div>
+            <div class="field">
+                <label>PDF File</label>
+                <div class="upload-row">
+                    <input type="url" id="cat-fileUrl" placeholder="No file uploaded yet" readonly style="background:#f5f5f7">
+                    <button type="button" class="upload-btn" id="cat-upload-btn">📤 Upload</button>
+                </div>
+                <input type="file" id="cat-file-input" style="display:none">
+                <div id="cat-upload-progress" class="upload-progress"></div>
+            </div>
+            <div class="field"><label>Valid until (optional)</label><input type="date" id="cat-validUntil"></div>
+            <button type="submit" class="login-btn">Save Catalog</button>
+        </form>
+    `);
+    wireUpload('cat-upload-btn', 'cat-file-input', 'cat-upload-progress', 'cat-fileUrl', null, 'catalogs', 'application/pdf');
+    $('catalog-form').onsubmit = async (e) => {
+        e.preventDefault();
+        const fileInput = $('cat-file-input');
+        const upload = fileInput._lastUpload;
+        if (!upload || !upload.url) { alert("Please upload a PDF first."); return; }
+        const storeId = $('cat-store').value;
+        const store = STORES.find(s => s.id === storeId);
+        try {
+            await db.collection('catalogs').add({
+                title: $('cat-title').value.trim(),
+                storeId: storeId || null,
+                storeName: store ? store.name : null,
+                fileUrl: upload.url,
+                filePath: upload.path,
+                fileName: upload.name,
+                size: upload.size,
+                validUntil: $('cat-validUntil').value || null,
+                createdAt: new Date()
+            });
+            $('modal-overlay').classList.remove('show');
+            showToast('Catalog uploaded');
+        } catch(err) { alert('Save failed: ' + err.message); }
+    };
+}
 </script>
 </body>
 </html>
