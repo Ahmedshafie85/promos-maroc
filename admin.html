@@ -348,6 +348,7 @@ function openStoreForm() {
         <h3>🏪 Add Store</h3>
         <form id="store-form">
             <div class="field"><label>Name</label><input id="s-name" required></div>
+            <div class="field"><label>Website URL</label><input id="s-url" type="url" placeholder="https://www.example.ma"></div>
             <div class="field"><label>Color (hex)</label><input id="s-color" value="#C1272D"></div>
             <div class="field">
                 <label>Logo</label>
@@ -372,6 +373,7 @@ function openStoreForm() {
         try {
             await db.collection('stores').add({
                 name: $('s-name').value.trim(),
+                url: $('s-url').value.trim(),
                 color: $('s-color').value.trim(),
                 logoUrl: $('s-logo').value.trim(),
                 createdAt: new Date()
