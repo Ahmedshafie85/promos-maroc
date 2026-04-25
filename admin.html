@@ -407,23 +407,70 @@ async function runScraper() {
         let title = '', newPrice = '', oldPrice = '', disc = '', img = '';
         let categoryGuess = '';
 
+        // Helpers shared across all stores
+        const grabMeta = (sel) => doc.querySelector(sel)?.getAttribute('content') || '';
+        const ogImage = grabMeta('meta[property="og:image"]')
+                     || grabMeta('meta[name="og:image"]')
+                     || grabMeta('meta[property="twitter:image"]')
+                     || grabMeta('meta[name="twitter:image"]');
+        const ogTitle = grabMeta('meta[property="og:title"]') || grabMeta('meta[name="og:title"]');
+
+        // French price markers used by many Moroccan e-commerce sites (WooCommerce, Magento FR)
+        const findOld = () => {
+            const m = html.match(/prix initial[^0-9]*([0-9][0-9\s.]*[,.]?[0-9]{0,2})\s*(?:Dh|DH|MAD)/i)
+                  || html.match(/(?:Ancien|Old)\s*prix[^0-9]*([0-9][0-9\s.]*[,.]?[0-9]{0,2})\s*(?:Dh|DH|MAD)/i);
+            return m ? m[1].replace(/\s/g, '').replace(',', '.') : '';
+        };
+        const findNew = () => {
+            const m = html.match(/prix actuel[^0-9]*([0-9][0-9\s.]*[,.]?[0-9]{0,2})\s*(?:Dh|DH|MAD)/i)
+                  || html.match(/(?:Nouveau|New)\s*prix[^0-9]*([0-9][0-9\s.]*[,.]?[0-9]{0,2})\s*(?:Dh|DH|MAD)/i);
+            return m ? m[1].replace(/\s/g, '').replace(',', '.') : '';
+        };
+
+        // Smart image picker — finds the largest reasonable product image on a page.
+        // Skips logos, social icons, tracking pixels.
+        const findBestImage = () => {
+            if (ogImage && !ogImage.includes('logo')) return ogImage;
+            const imgs = Array.from(doc.querySelectorAll('img'));
+            const scored = imgs.map(el => {
+                const src = el.getAttribute('src') || el.getAttribute('data-src') || el.getAttribute('data-original') || '';
+                if (!src || src.startsWith('data:')) return null;
+                const lower = src.toLowerCase();
+                // Reject obvious non-product images
+                if (/logo|icon|sprite|pixel|tracker|social|footer|header|placeholder|favicon|loader/.test(lower)) return null;
+                // Reject very small images (under 200px in either dimension)
+                const w = parseInt(el.getAttribute('width') || el.naturalWidth || 0, 10);
+                const h = parseInt(el.getAttribute('height') || el.naturalHeight || 0, 10);
+                if (w && w < 200) return null;
+                if (h && h < 200) return null;
+                // Score by class/id hints
+                let score = 0;
+                const cls = (el.className || '').toString().toLowerCase();
+                const id = (el.id || '').toLowerCase();
+                if (/product|gallery|main|primary|fotorama|zoom|featured/.test(cls + id)) score += 10;
+                if (cls.includes('thumb') || id.includes('thumb')) score -= 3;
+                if (w * h) score += Math.min(5, Math.log10(w * h));
+                return { src, score };
+            }).filter(Boolean);
+            scored.sort((a, b) => b.score - a.score);
+            // Resolve relative URLs against the page URL
+            if (scored.length) {
+                try { return new URL(scored[0].src, targetUrl).href; }
+                catch { return scored[0].src; }
+            }
+            return ogImage || '';
+        };
+
         if (domain.includes('aswakassalam')) {
-            // Title: WooCommerce class first, then h1
+            // -------- ASWAK ASSALAM (WooCommerce) --------
             title = doc.querySelector('.product_title')?.innerText
                  || doc.querySelector('h1.entry-title')?.innerText
                  || doc.querySelector('h1')?.innerText
                  || '';
 
-            // Aswak (WooCommerce FR) renders prices as:
-            //   "Le prix initial était : 299,00 Dh."   (old)
-            //   "Le prix actuel est : 199,00 Dh."      (new)
-            // Comma is the decimal separator. Match those literal markers.
-            const oldM = html.match(/prix initial était[^0-9]*([0-9][0-9 .]*[,.]?[0-9]{0,2})\s*Dh/i);
-            const newM = html.match(/prix actuel est[^0-9]*([0-9][0-9 .]*[,.]?[0-9]{0,2})\s*Dh/i);
-            if (oldM) oldPrice = oldM[1].replace(/\s/g, '').replace(',', '.');
-            if (newM) newPrice = newM[1].replace(/\s/g, '').replace(',', '.');
+            oldPrice = findOld();
+            newPrice = findNew();
 
-            // Fallback for products with no discount (single price only)
             if (!newPrice) {
                 const single = doc.querySelector('p.price .woocommerce-Price-amount bdi')
                             || doc.querySelector('.price .woocommerce-Price-amount bdi')
@@ -431,29 +478,65 @@ async function runScraper() {
                 if (single) newPrice = single.innerText.replace(/[^0-9.,]/g, '').replace(',', '.');
             }
 
-            // Discount badge: "-33%"
             const dm = html.match(/-\s*([0-9]{1,2})\s*%/);
             if (dm) disc = dm[1];
 
-            // Main image: og:image meta first, then product gallery
-            img = doc.querySelector('meta[property="og:image"]')?.getAttribute('content')
+            img = ogImage
                || doc.querySelector('.woocommerce-product-gallery__image img')?.getAttribute('src')
                || doc.querySelector('.wp-post-image')?.getAttribute('src')
-               || '';
+               || findBestImage();
 
-            // Category guess from breadcrumbs / category links on page
             const catLinks = Array.from(doc.querySelectorAll('a[href*="product-category"]'));
-            if (catLinks.length) {
-                categoryGuess = catLinks[0].innerText.trim();
-            }
+            if (catLinks.length) categoryGuess = catLinks[0].innerText.trim();
+
+        } else if (domain.includes('electroplanet')) {
+            // -------- ELECTROPLANET (Magento 2) --------
+            title = doc.querySelector('h1.page-title span')?.innerText
+                 || doc.querySelector('h1.page-title')?.innerText
+                 || doc.querySelector('h1')?.innerText
+                 || ogTitle;
+
+            // Magento standard price selectors
+            const oldEl = doc.querySelector('[data-price-type="oldPrice"] .price')
+                       || doc.querySelector('.old-price .price')
+                       || doc.querySelector('span.old-price');
+            const newEl = doc.querySelector('[data-price-type="finalPrice"] .price')
+                       || doc.querySelector('.special-price .price')
+                       || doc.querySelector('[data-price-type="finalPrice"]')
+                       || doc.querySelector('.price-wrapper .price');
+            if (oldEl) oldPrice = oldEl.innerText.replace(/[^0-9.,]/g, '').replace(/\s/g, '').replace(',', '.');
+            if (newEl) newPrice = newEl.innerText.replace(/[^0-9.,]/g, '').replace(/\s/g, '').replace(',', '.');
+
+            // Magento often embeds a JSON gallery in a script tag; fall back to smart image picker
+            const galleryImg = doc.querySelector('.fotorama__img')?.getAttribute('src')
+                            || doc.querySelector('.gallery-placeholder img')?.getAttribute('src')
+                            || doc.querySelector('img.product-image-photo')?.getAttribute('src');
+            img = galleryImg || ogImage || findBestImage();
+
+            // Pull category from breadcrumbs
+            const crumbs = Array.from(doc.querySelectorAll('.breadcrumbs a, nav.breadcrumb a'));
+            if (crumbs.length > 1) categoryGuess = crumbs[crumbs.length - 1].innerText.trim();
+
+            // Discount badge — Magento uses "-XX%" labels but format varies
+            const dm = html.match(/-\s*([0-9]{1,2})\s*%/);
+            if (dm) disc = dm[1];
+
         } else {
-            // Generic fallback
-            title = doc.querySelector('h1')?.innerText
-                 || doc.querySelector('meta[property="og:title"]')?.getAttribute('content')
-                 || doc.title;
-            const newM = html.match(/([0-9]{1,5}(?:[.,][0-9]{2})?)\s*(?:DH|Dh|MAD|درهم)/);
-            if (newM) newPrice = newM[1].replace(',', '.');
-            img = doc.querySelector('meta[property="og:image"]')?.getAttribute('content') || '';
+            // -------- GENERIC FALLBACK --------
+            title = doc.querySelector('h1')?.innerText || ogTitle || doc.title;
+
+            // Try French markers first, then any DH-suffixed number
+            oldPrice = findOld();
+            newPrice = findNew();
+            if (!newPrice) {
+                const m = html.match(/([0-9]{1,5}(?:[\s.][0-9]{3})*[,.]?[0-9]{0,2})\s*(?:DH|Dh|MAD|درهم)/);
+                if (m) newPrice = m[1].replace(/\s/g, '').replace(',', '.');
+            }
+
+            const dm = html.match(/-\s*([0-9]{1,2})\s*%/);
+            if (dm) disc = dm[1];
+
+            img = findBestImage();
         }
 
         // Auto-calc discount if we have both prices and no explicit %
