@@ -66,6 +66,9 @@ button, input, select, textarea { font-family:inherit; }
 .smart-paste-status.show { display:block; }
 .smart-paste-status.success { color:var(--success); }
 .smart-paste-status.error { color:var(--danger); }
+.row-2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.img-preview { margin-top:8px; min-height:0; }
+.img-preview img { max-width:160px; max-height:160px; border-radius:8px; border:1px solid var(--border); }
 
 .toast { position:fixed; top:24px; left:50%; transform:translateX(-50%); background:var(--text); color:white; padding:12px 24px; border-radius:10px; opacity:0; transition:0.3s; z-index:999; }
 .toast.show { opacity:1; }
@@ -175,9 +178,14 @@ function renderDeals() {
     $('stat-deals').textContent = DEALS.length;
     $('deals-list').innerHTML = DEALS.map(d => `
         <div class="item-card">
-            <div class="item-thumb">${d.imageUrl ? `<img src="${d.imageUrl}">` : '🛍️'}</div>
+            <div class="item-thumb">${d.imageUrl ? `<img src="${d.imageUrl}" onerror="this.parentElement.innerHTML='🛍️'">` : '🛍️'}</div>
             <div class="item-body">
-                <div class="item-title">${d.titleAr || d.title}</div>
+                <div class="item-title">${d.title || d.titleEn || d.titleAr || '(untitled)'}</div>
+                <div style="font-size:12px;color:var(--text-2);margin-top:2px">
+                    ${d.new ? `<strong style="color:var(--primary)">${d.new} DH</strong>` : ''}
+                    ${d.old && d.old > d.new ? `<span style="text-decoration:line-through;margin-left:6px">${d.old} DH</span>` : ''}
+                    ${d.disc ? `<span style="background:var(--success);color:white;padding:1px 6px;border-radius:4px;margin-left:6px;font-size:11px">-${d.disc}%</span>` : ''}
+                </div>
                 <div class="item-actions">
                     <button class="btn-mini" onclick="openDealForm('${d.id}')">Edit</button>
                     <button class="btn-mini" onclick="deleteItem('deals','${d.id}')">Delete</button>
@@ -201,40 +209,82 @@ function renderStores() {
 function renderCategories() {
     $('categories-list').innerHTML = CATEGORIES.map(c => `
         <div class="item-card">
-            <div class="item-thumb">${c.icon || '📂'}</div>
-            <div class="item-body"><div class="item-title">${c.fr}</div></div>
+            <div class="item-thumb">${c.imageUrl ? `<img src="${c.imageUrl}" onerror="this.parentElement.textContent='📂'">` : (c.icon || '📂')}</div>
+            <div class="item-body">
+                <div class="item-title">${c.fr || ''}</div>
+                <div style="font-size:11px;color:var(--text-3)">${c.en || ''}</div>
+                <div class="item-actions">
+                    <button class="btn-mini" onclick="deleteItem('categories','${c.id}')">Delete</button>
+                </div>
+            </div>
         </div>`).join('');
 }
 
 function openDealForm(id) {
-    const d = id ? DEALS.find(x => x.id === id) : { title:'', titleAr:'', old:0, new:0, disc:0, storeId:'', cat:'' };
+    const d = id ? DEALS.find(x => x.id === id) : { title:'', titleEn:'', old:0, new:0, disc:0, storeId:'', cat:'', imageUrl:'', sourceUrl:'' };
     showModal(`
         <h3>🛍️ Deal Details</h3>
         <div class="smart-paste">
             <strong>🪄 Smart Paste</strong>
             <div class="smart-paste-row">
-                <input type="url" id="sp-url" placeholder="Paste link here...">
+                <input type="url" id="sp-url" placeholder="Paste product URL...">
                 <button type="button" onclick="runScraper()" id="sp-btn">Fetch</button>
             </div>
             <div id="sp-status" class="smart-paste-status"></div>
         </div>
         <form id="deal-form">
-            <div class="field"><label>Title (FR)</label><input id="f-title" value="${d.title}"></div>
-            <div class="field"><label>Title (AR)</label><input id="f-titleAr" value="${d.titleAr}"></div>
-            <div class="field"><label>Price (DH)</label><input type="number" id="f-new" value="${d.new}"></div>
+            <div class="field"><label>Title (FR)</label><input id="f-title" value="${esc(d.title)}"></div>
+            <div class="field"><label>Title (EN) <span style="color:#999;font-weight:400">— optional</span></label><input id="f-titleEn" value="${esc(d.titleEn || d.titleAr || '')}"></div>
+            <div class="row-2">
+                <div class="field"><label>New Price (DH)</label><input type="number" step="0.01" id="f-new" value="${d.new || ''}"></div>
+                <div class="field"><label>Old Price (DH)</label><input type="number" step="0.01" id="f-old" value="${d.old || ''}"></div>
+            </div>
+            <div class="field"><label>Discount (%)</label><input type="number" id="f-disc" value="${d.disc || ''}" placeholder="auto-calculated if empty"></div>
+            <div class="field">
+                <label>Image URL</label>
+                <input type="url" id="f-imageUrl" value="${esc(d.imageUrl || '')}" placeholder="https://...">
+                <div id="img-preview" class="img-preview">${d.imageUrl ? `<img src="${esc(d.imageUrl)}">` : ''}</div>
+            </div>
+            <div class="field"><label>Source URL <span style="color:#999;font-weight:400">— optional</span></label><input type="url" id="f-sourceUrl" value="${esc(d.sourceUrl || '')}"></div>
             <div class="field"><label>Store</label>
-                <select id="f-storeId">${STORES.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select>
+                <select id="f-storeId">
+                    <option value="">— Select store —</option>
+                    ${STORES.map(s => `<option value="${s.id}" ${d.storeId === s.id ? 'selected' : ''}>${esc(s.name)}</option>`).join('')}
+                </select>
+            </div>
+            <div class="field"><label>Category</label>
+                <select id="f-cat">
+                    <option value="">— Select category —</option>
+                    ${CATEGORIES.map(c => `<option value="${c.id}" ${d.cat === c.id ? 'selected' : ''}>${esc(c.fr || c.id)}</option>`).join('')}
+                </select>
             </div>
             <button type="submit" class="login-btn">Save Deal</button>
         </form>
     `);
+    // Live image preview
+    $('f-imageUrl').oninput = () => {
+        const url = $('f-imageUrl').value.trim();
+        $('img-preview').innerHTML = url ? `<img src="${url}" onerror="this.style.display='none'">` : '';
+    };
+    // Save handler
     $('deal-form').onsubmit = async (e) => {
         e.preventDefault();
+        const newPrice = parseFloat($('f-new').value) || 0;
+        const oldPrice = parseFloat($('f-old').value) || 0;
+        let disc = parseInt($('f-disc').value, 10);
+        if (!disc && oldPrice > newPrice && oldPrice > 0) {
+            disc = Math.round((1 - newPrice / oldPrice) * 100);
+        }
         const data = {
             title: $('f-title').value.trim(),
-            titleAr: $('f-titleAr').value.trim(),
-            new: parseFloat($('f-new').value) || 0,
+            titleEn: $('f-titleEn').value.trim(),
+            new: newPrice,
+            old: oldPrice,
+            disc: disc || 0,
+            imageUrl: $('f-imageUrl').value.trim(),
+            sourceUrl: $('f-sourceUrl').value.trim(),
             storeId: $('f-storeId').value,
+            cat: $('f-cat').value,
             updatedAt: new Date()
         };
         try {
@@ -245,10 +295,12 @@ function openDealForm(id) {
                 await db.collection('deals').add(data);
             }
             $('modal-overlay').classList.remove('show');
-            showToast(id ? "Deal updated" : "Deal added");
-        } catch(err) { alert("Save failed: " + err.message); }
+            showToast(id ? 'Deal updated' : 'Deal added');
+        } catch(err) { alert('Save failed: ' + err.message); }
     };
 }
+
+function esc(s) { return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 function showToast(msg) {
     const t = $('toast');
@@ -263,10 +315,18 @@ function openStoreForm() {
         <form id="store-form">
             <div class="field"><label>Name</label><input id="s-name" required></div>
             <div class="field"><label>Color (hex)</label><input id="s-color" value="#C1272D"></div>
-            <div class="field"><label>Logo URL (optional)</label><input id="s-logo"></div>
+            <div class="field">
+                <label>Logo URL</label>
+                <input id="s-logo" type="url" placeholder="https://...">
+                <div id="store-img-preview" class="img-preview"></div>
+            </div>
             <button type="submit" class="login-btn">Save Store</button>
         </form>
     `);
+    $('s-logo').oninput = () => {
+        const url = $('s-logo').value.trim();
+        $('store-img-preview').innerHTML = url ? `<img src="${url}" onerror="this.style.display='none'">` : '';
+    };
     $('store-form').onsubmit = async (e) => {
         e.preventDefault();
         try {
@@ -277,8 +337,8 @@ function openStoreForm() {
                 createdAt: new Date()
             });
             $('modal-overlay').classList.remove('show');
-            showToast("Store added");
-        } catch(err) { alert("Save failed: " + err.message); }
+            showToast('Store added');
+        } catch(err) { alert('Save failed: ' + err.message); }
     };
 }
 
@@ -287,23 +347,33 @@ function openCategoryForm() {
         <h3>📂 Add Category</h3>
         <form id="cat-form">
             <div class="field"><label>Name (FR)</label><input id="c-fr" required></div>
-            <div class="field"><label>Name (AR)</label><input id="c-ar"></div>
-            <div class="field"><label>Icon (emoji)</label><input id="c-icon" value="📂"></div>
+            <div class="field"><label>Name (EN)</label><input id="c-en"></div>
+            <div class="field">
+                <label>Image URL</label>
+                <input id="c-img" type="url" placeholder="https://...">
+                <div id="cat-img-preview" class="img-preview"></div>
+            </div>
+            <div class="field"><label>Keywords (comma-separated, for auto-categorize)</label><input id="c-kw" placeholder="e.g. seche-cheveux, hygiene, beaute"></div>
             <button type="submit" class="login-btn">Save Category</button>
         </form>
     `);
+    $('c-img').oninput = () => {
+        const url = $('c-img').value.trim();
+        $('cat-img-preview').innerHTML = url ? `<img src="${url}" onerror="this.style.display='none'">` : '';
+    };
     $('cat-form').onsubmit = async (e) => {
         e.preventDefault();
         try {
             await db.collection('categories').add({
                 fr: $('c-fr').value.trim(),
-                ar: $('c-ar').value.trim(),
-                icon: $('c-icon').value.trim() || '📂',
+                en: $('c-en').value.trim(),
+                imageUrl: $('c-img').value.trim(),
+                keywords: $('c-kw').value.split(',').map(k => k.trim().toLowerCase()).filter(Boolean),
                 createdAt: new Date()
             });
             $('modal-overlay').classList.remove('show');
-            showToast("Category added");
-        } catch(err) { alert("Save failed: " + err.message); }
+            showToast('Category added');
+        } catch(err) { alert('Save failed: ' + err.message); }
     };
 }
 
@@ -316,11 +386,10 @@ async function runScraper() {
     const status = $('sp-status');
     
     btn.disabled = true;
-    status.textContent = "Connecting to Cloud Browser...";
+    status.textContent = "⏳ Connecting to Cloud Browser…";
     status.className = "smart-paste-status show";
 
     try {
-        // Use the native global fetch explicitly
         const response = await window.fetch(WORKER_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -332,31 +401,99 @@ async function runScraper() {
 
         const parser = new DOMParser();
         const doc = parser.parseFromString(data.html, "text/html");
+        const html = data.html;
         const domain = new URL(targetUrl).hostname.toLowerCase();
 
-        // Aswak Assalam & Standard Parsers
-        let title = '', price = '';
+        let title = '', newPrice = '', oldPrice = '', disc = '', img = '';
+        let categoryGuess = '';
+
         if (domain.includes('aswakassalam')) {
+            // Title: WooCommerce class first, then h1
             title = doc.querySelector('.product_title')?.innerText
                  || doc.querySelector('h1.entry-title')?.innerText
                  || doc.querySelector('h1')?.innerText
-                 || doc.title;
-            const priceEl = doc.querySelector('p.price .woocommerce-Price-amount bdi')
-                         || doc.querySelector('.price ins .woocommerce-Price-amount bdi')
-                         || doc.querySelector('.woocommerce-Price-amount bdi')
-                         || doc.querySelector('.price');
-            if (priceEl) price = priceEl.innerText.replace(/[^0-9.]/g, '');
+                 || '';
+
+            // Aswak (WooCommerce FR) renders prices as:
+            //   "Le prix initial était : 299,00 Dh."   (old)
+            //   "Le prix actuel est : 199,00 Dh."      (new)
+            // Comma is the decimal separator. Match those literal markers.
+            const oldM = html.match(/prix initial était[^0-9]*([0-9][0-9 .]*[,.]?[0-9]{0,2})\s*Dh/i);
+            const newM = html.match(/prix actuel est[^0-9]*([0-9][0-9 .]*[,.]?[0-9]{0,2})\s*Dh/i);
+            if (oldM) oldPrice = oldM[1].replace(/\s/g, '').replace(',', '.');
+            if (newM) newPrice = newM[1].replace(/\s/g, '').replace(',', '.');
+
+            // Fallback for products with no discount (single price only)
+            if (!newPrice) {
+                const single = doc.querySelector('p.price .woocommerce-Price-amount bdi')
+                            || doc.querySelector('.price .woocommerce-Price-amount bdi')
+                            || doc.querySelector('.woocommerce-Price-amount bdi');
+                if (single) newPrice = single.innerText.replace(/[^0-9.,]/g, '').replace(',', '.');
+            }
+
+            // Discount badge: "-33%"
+            const dm = html.match(/-\s*([0-9]{1,2})\s*%/);
+            if (dm) disc = dm[1];
+
+            // Main image: og:image meta first, then product gallery
+            img = doc.querySelector('meta[property="og:image"]')?.getAttribute('content')
+               || doc.querySelector('.woocommerce-product-gallery__image img')?.getAttribute('src')
+               || doc.querySelector('.wp-post-image')?.getAttribute('src')
+               || '';
+
+            // Category guess from breadcrumbs / category links on page
+            const catLinks = Array.from(doc.querySelectorAll('a[href*="product-category"]'));
+            if (catLinks.length) {
+                categoryGuess = catLinks[0].innerText.trim();
+            }
         } else {
-            title = doc.querySelector('h1')?.innerText || doc.title;
-            const prices = data.html.match(/([0-9]{1,5})[.,][0-9]{2}\s*DH/i);
-            if (prices) price = prices[1];
+            // Generic fallback
+            title = doc.querySelector('h1')?.innerText
+                 || doc.querySelector('meta[property="og:title"]')?.getAttribute('content')
+                 || doc.title;
+            const newM = html.match(/([0-9]{1,5}(?:[.,][0-9]{2})?)\s*(?:DH|Dh|MAD|درهم)/);
+            if (newM) newPrice = newM[1].replace(',', '.');
+            img = doc.querySelector('meta[property="og:image"]')?.getAttribute('content') || '';
         }
 
-        if (title) $('f-title').value = title.trim();
-        if (price) $('f-new').value = price;
+        // Auto-calc discount if we have both prices and no explicit %
+        if (!disc && oldPrice && newPrice && parseFloat(oldPrice) > parseFloat(newPrice)) {
+            disc = Math.round((1 - parseFloat(newPrice) / parseFloat(oldPrice)) * 100).toString();
+        }
 
-        status.textContent = (title || price) ? "✅ Success!" : "⚠️ Page loaded but couldn't extract fields";
-        status.className = "smart-paste-status show " + ((title || price) ? "success" : "error");
+        // Auto-categorize against existing categories' keywords
+        const titleLower = title.toLowerCase();
+        const catGuessLower = categoryGuess.toLowerCase();
+        let matchedCatId = '';
+        for (const c of CATEGORIES) {
+            const kws = (c.keywords || []).map(k => k.toLowerCase());
+            if (!kws.length) continue;
+            if (kws.some(k => titleLower.includes(k) || catGuessLower.includes(k))) {
+                matchedCatId = c.id;
+                break;
+            }
+        }
+
+        // Fill the form
+        if (title) $('f-title').value = title.trim();
+        if (newPrice) $('f-new').value = newPrice;
+        if (oldPrice) $('f-old').value = oldPrice;
+        if (disc) $('f-disc').value = disc;
+        if (img) {
+            $('f-imageUrl').value = img;
+            $('img-preview').innerHTML = `<img src="${img}" onerror="this.style.display='none'">`;
+        }
+        $('f-sourceUrl').value = targetUrl;
+        if (matchedCatId) $('f-cat').value = matchedCatId;
+
+        const filled = [title && 'title', newPrice && 'price', img && 'image'].filter(Boolean);
+        if (filled.length) {
+            status.textContent = `✅ Got: ${filled.join(', ')}${matchedCatId ? ' · category auto-matched' : ''}`;
+            status.className = "smart-paste-status show success";
+        } else {
+            status.textContent = "⚠️ Page loaded but no fields extracted — fill manually";
+            status.className = "smart-paste-status show error";
+        }
     } catch (err) {
         status.textContent = "❌ " + err.message;
         status.className = "smart-paste-status show error";
