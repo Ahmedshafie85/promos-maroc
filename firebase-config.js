@@ -15,3 +15,10 @@ const ADMIN_EMAIL = "abdelshafie.ahmed@gmail.com";
 
 // --- YOUR NEW SCRAPING ENGINE URL ---
 const SMART_PASTE_WORKER_URL = "https://promos-maroc-fetcher.abdelshafie-ahmed.workers.dev";
+
+// =============================================================
+// 🌍 GLOBAL EXPORTS (Allows admin.html to see these)
+// =============================================================
+window.firebaseConfig = firebaseConfig;
+window.ADMIN_EMAIL = ADMIN_EMAIL;
+window.SMART_PASTE_WORKER_URL = SMART_PASTE_WORKER_URL;
