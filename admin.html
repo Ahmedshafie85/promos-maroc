@@ -64,6 +64,8 @@ button, input, select, textarea { font-family:inherit; }
 .smart-paste-row button { background:var(--secondary); color:white; border:none; padding:10px 18px; border-radius:8px; font-weight:800; cursor:pointer; }
 .smart-paste-status { font-size:12px; margin-top:8px; display:none; }
 .smart-paste-status.show { display:block; }
+.smart-paste-status.success { color:var(--success); }
+.smart-paste-status.error { color:var(--danger); }
 
 .toast { position:fixed; top:24px; left:50%; transform:translateX(-50%); background:var(--text); color:white; padding:12px 24px; border-radius:10px; opacity:0; transition:0.3s; z-index:999; }
 .toast.show { opacity:1; }
@@ -226,6 +228,83 @@ function openDealForm(id) {
             <button type="submit" class="login-btn">Save Deal</button>
         </form>
     `);
+    $('deal-form').onsubmit = async (e) => {
+        e.preventDefault();
+        const data = {
+            title: $('f-title').value.trim(),
+            titleAr: $('f-titleAr').value.trim(),
+            new: parseFloat($('f-new').value) || 0,
+            storeId: $('f-storeId').value,
+            updatedAt: new Date()
+        };
+        try {
+            if (id) {
+                await db.collection('deals').doc(id).update(data);
+            } else {
+                data.createdAt = new Date();
+                await db.collection('deals').add(data);
+            }
+            $('modal-overlay').classList.remove('show');
+            showToast(id ? "Deal updated" : "Deal added");
+        } catch(err) { alert("Save failed: " + err.message); }
+    };
+}
+
+function showToast(msg) {
+    const t = $('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+function openStoreForm() {
+    showModal(`
+        <h3>🏪 Add Store</h3>
+        <form id="store-form">
+            <div class="field"><label>Name</label><input id="s-name" required></div>
+            <div class="field"><label>Color (hex)</label><input id="s-color" value="#C1272D"></div>
+            <div class="field"><label>Logo URL (optional)</label><input id="s-logo"></div>
+            <button type="submit" class="login-btn">Save Store</button>
+        </form>
+    `);
+    $('store-form').onsubmit = async (e) => {
+        e.preventDefault();
+        try {
+            await db.collection('stores').add({
+                name: $('s-name').value.trim(),
+                color: $('s-color').value.trim(),
+                logoUrl: $('s-logo').value.trim(),
+                createdAt: new Date()
+            });
+            $('modal-overlay').classList.remove('show');
+            showToast("Store added");
+        } catch(err) { alert("Save failed: " + err.message); }
+    };
+}
+
+function openCategoryForm() {
+    showModal(`
+        <h3>📂 Add Category</h3>
+        <form id="cat-form">
+            <div class="field"><label>Name (FR)</label><input id="c-fr" required></div>
+            <div class="field"><label>Name (AR)</label><input id="c-ar"></div>
+            <div class="field"><label>Icon (emoji)</label><input id="c-icon" value="📂"></div>
+            <button type="submit" class="login-btn">Save Category</button>
+        </form>
+    `);
+    $('cat-form').onsubmit = async (e) => {
+        e.preventDefault();
+        try {
+            await db.collection('categories').add({
+                fr: $('c-fr').value.trim(),
+                ar: $('c-ar').value.trim(),
+                icon: $('c-icon').value.trim() || '📂',
+                createdAt: new Date()
+            });
+            $('modal-overlay').classList.remove('show');
+            showToast("Category added");
+        } catch(err) { alert("Save failed: " + err.message); }
+    };
 }
 
 // --- BULLETPROOF SCRAPER ---
@@ -238,7 +317,7 @@ async function runScraper() {
     
     btn.disabled = true;
     status.textContent = "Connecting to Cloud Browser...";
-    status.className = "smart-paste-status show success";
+    status.className = "smart-paste-status show";
 
     try {
         // Use the native global fetch explicitly
@@ -256,17 +335,28 @@ async function runScraper() {
         const domain = new URL(targetUrl).hostname.toLowerCase();
 
         // Aswak Assalam & Standard Parsers
+        let title = '', price = '';
         if (domain.includes('aswakassalam')) {
-            $('f-title').value = doc.querySelector('.product_title')?.innerText || doc.title;
-            const price = doc.querySelector('.woocommerce-Price-amount bdi')?.innerText.replace(/[^0-9.]/g, '');
-            if (price) $('f-new').value = price;
+            title = doc.querySelector('.product_title')?.innerText
+                 || doc.querySelector('h1.entry-title')?.innerText
+                 || doc.querySelector('h1')?.innerText
+                 || doc.title;
+            const priceEl = doc.querySelector('p.price .woocommerce-Price-amount bdi')
+                         || doc.querySelector('.price ins .woocommerce-Price-amount bdi')
+                         || doc.querySelector('.woocommerce-Price-amount bdi')
+                         || doc.querySelector('.price');
+            if (priceEl) price = priceEl.innerText.replace(/[^0-9.]/g, '');
         } else {
-            $('f-title').value = doc.querySelector('h1')?.innerText || doc.title;
+            title = doc.querySelector('h1')?.innerText || doc.title;
             const prices = data.html.match(/([0-9]{1,5})[.,][0-9]{2}\s*DH/i);
-            if (prices) $('f-new').value = prices[1];
+            if (prices) price = prices[1];
         }
 
-        status.textContent = "✅ Success!";
+        if (title) $('f-title').value = title.trim();
+        if (price) $('f-new').value = price;
+
+        status.textContent = (title || price) ? "✅ Success!" : "⚠️ Page loaded but couldn't extract fields";
+        status.className = "smart-paste-status show " + ((title || price) ? "success" : "error");
     } catch (err) {
         status.textContent = "❌ " + err.message;
         status.className = "smart-paste-status show error";
