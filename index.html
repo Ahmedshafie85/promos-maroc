@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="fr" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="أفضل العروض والتخفيضات في المغرب - مرجان، كارفور، بيم، جوميا وأكثر">
+<meta name="description" content="Les meilleures promos et réductions au Maroc - Marjane, Carrefour, BIM, Jumia et plus">
 <meta name="theme-color" content="#C1272D">
-<title>Promos Maroc - أفضل العروض في المغرب 🇲🇦</title>
+<title>Promos Maroc — Les meilleures promos du Maroc 🇲🇦</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23C1272D'/><text x='50' y='68' font-size='52' font-weight='900' text-anchor='middle' fill='white' font-family='system-ui'>PM</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -309,7 +309,7 @@ button { font-family:inherit; }
       <button class="sidebar-item" data-page="favorites" onclick="navigateTo('favorites')"><span class="si-icon">❤️</span><span data-i18n="navFavs">المفضلة</span></button>
       <button class="sidebar-item" data-page="promos" onclick="navigateTo('promos')"><span class="si-icon">🎟️</span><span data-i18n="navPromos">كوبونات</span></button>
     </nav>
-    <button class="sidebar-lang" onclick="toggleLanguage()"><span id="sidebar-lang-label">Français</span></button>
+    <button class="sidebar-lang" onclick="toggleLanguage()"><span id="sidebar-lang-label">English</span></button>
     <div class="sidebar-footer">© 2026 Promos Maroc 🇲🇦</div>
   </aside>
 
@@ -330,11 +330,11 @@ button { font-family:inherit; }
                 <div class="tag">🇲🇦 أفضل العروض</div>
               </div>
             </div>
-            <button class="lang-toggle" onclick="toggleLanguage()"><span id="lang-label">FR</span></button>
+            <button class="lang-toggle" onclick="toggleLanguage()"><span id="lang-label">EN</span></button>
           </div>
           <div class="greeting-section">
             <div class="greeting" data-i18n="greeting">أهلاً وسهلاً 👋</div>
-            <div class="location">📍 <span id="current-city">الدار البيضاء</span></div>
+            <div class="location">📍 <span id="current-city">Casablanca</span></div>
           </div>
           <h1 class="tagline" data-i18n="tagline">أفضل العروض في المغرب</h1>
           <div class="search-bar" onclick="navigateTo('search')">
@@ -452,8 +452,8 @@ button { font-family:inherit; }
 <script>
 // ============ I18N ============
 const I18N = {
-  ar: { brandTag:'أفضل العروض 🇲🇦', greeting:'أهلاً وسهلاً 👋', tagline:'أفضل العروض والتخفيضات في المغرب', searchPlaceholder:'ابحث عن منتج، متجر...', allStores:'جميع المتاجر', codes:'كوبونات', topDeals:'أفضل العروض', myFavs:'المفضلة', categories:'الأقسام', featured:'عروض مميزة', featuredSub:'أفضل عروض هذا الأسبوع', popularStores:'متاجر شعبية', seeAll:'عرض الكل ←', latestDeals:'أحدث العروض', activeOffers:'عرض نشط', storesTitle:'المتاجر', storesWith:'متجر مع عروض', favsTitle:'المفضلة', emptyFavTitle:'لا توجد عناصر في المفضلة', emptyFavText:'أضف العروض بالضغط على القلب ❤️', promosTitle:'كوبونات التخفيض', promosValid:'كوبون ساري', navHome:'الرئيسية', navStores:'المتاجر', navSearch:'البحث', navFavs:'المفضلة', navPromos:'كوبونات', seeOffer:'شاهد العرض ←', goToStore:'اذهب إلى المتجر ←', visitStore:'زيارة الموقع ←', save:'وفر', until:'حتى', daysLeft:'أيام متبقية', expiresToday:'ينتهي اليوم!', expiresTomorrow:'ينتهي غداً', addedFav:'❤️ تمت الإضافة للمفضلة', removedFav:'تم الحذف من المفضلة', copyBtn:'نسخ', copied:'تم النسخ ✓', noResults:'لا توجد نتائج', searchEmpty:'ابدأ بكتابة اسم منتج أو متجر', noDeals:'لا توجد عروض حالياً', noDealsText:'سيتم إضافة عروض جديدة قريباً', noStores:'لا توجد متاجر', noPromos:'لا توجد كوبونات', noDealsStore:'لا توجد عروض لهذا المتجر', dealsAt:'عرض', clearFilter:'إزالة الفلتر ✕', backHome:'العودة للرئيسية' },
-  fr: { brandTag:'Meilleures promos 🇲🇦', greeting:'Bonjour 👋', tagline:'Les meilleures promos du Maroc', searchPlaceholder:'Rechercher un produit, magasin...', allStores:'Tous magasins', codes:'Codes promo', topDeals:'Top promos', myFavs:'Favoris', categories:'Catégories', featured:'Offres en vedette', featuredSub:'Meilleures promos cette semaine', popularStores:'Magasins populaires', seeAll:'Voir tout →', latestDeals:'Dernières promos', activeOffers:'offres actives', storesTitle:'Magasins', storesWith:'enseignes avec promos', favsTitle:'Favoris', emptyFavTitle:'Aucun favori pour l\'instant', emptyFavText:'Ajoutez des offres en cliquant sur ❤️', promosTitle:'Codes promo', promosValid:'codes valides', navHome:'Accueil', navStores:'Magasins', navSearch:'Recherche', navFavs:'Favoris', navPromos:'Codes', seeOffer:'Voir l\'offre →', goToStore:'Aller au magasin →', visitStore:'Visiter le site →', save:'Économisez', until:'Jusqu\'au', daysLeft:'jours restants', expiresToday:'Expire aujourd\'hui!', expiresTomorrow:'Expire demain', addedFav:'❤️ Ajouté aux favoris', removedFav:'Retiré des favoris', copyBtn:'Copier', copied:'Copié ✓', noResults:'Aucun résultat', searchEmpty:'Tapez un produit ou un magasin', noDeals:'Aucune promo pour le moment', noDealsText:'De nouvelles promos seront ajoutées bientôt', noStores:'Aucun magasin', noPromos:'Aucun code promo', noDealsStore:'Aucune promo pour ce magasin', dealsAt:'offre(s)', clearFilter:'Effacer le filtre ✕', backHome:'Retour à l\'accueil' }
+  fr: { brandTag:'Meilleures promos 🇲🇦', greeting:'Bonjour 👋', tagline:'Les meilleures promos du Maroc', searchPlaceholder:'Rechercher un produit, magasin...', allStores:'Tous magasins', codes:'Codes promo', topDeals:'Top promos', myFavs:'Favoris', categories:'Catégories', featured:'Offres en vedette', featuredSub:'Meilleures promos cette semaine', popularStores:'Magasins populaires', seeAll:'Voir tout →', latestDeals:'Dernières promos', activeOffers:'offres actives', storesTitle:'Magasins', storesWith:'enseignes avec promos', favsTitle:'Favoris', emptyFavTitle:'Aucun favori pour l\'instant', emptyFavText:'Ajoutez des offres en cliquant sur ❤️', promosTitle:'Codes promo', promosValid:'codes valides', navHome:'Accueil', navStores:'Magasins', navSearch:'Recherche', navFavs:'Favoris', navPromos:'Codes', seeOffer:'Voir l\'offre →', goToStore:'Aller au magasin →', visitStore:'Visiter le site →', save:'Économisez', until:'Jusqu\'au', daysLeft:'jours restants', expiresToday:'Expire aujourd\'hui!', expiresTomorrow:'Expire demain', addedFav:'❤️ Ajouté aux favoris', removedFav:'Retiré des favoris', copyBtn:'Copier', copied:'Copié ✓', noResults:'Aucun résultat', searchEmpty:'Tapez un produit ou un magasin', noDeals:'Aucune promo pour le moment', noDealsText:'De nouvelles promos seront ajoutées bientôt', noStores:'Aucun magasin', noPromos:'Aucun code promo', noDealsStore:'Aucune promo pour ce magasin', dealsAt:'offre(s)', clearFilter:'Effacer le filtre ✕', backHome:'Retour à l\'accueil' },
+  en: { brandTag:'Best deals 🇲🇦', greeting:'Welcome 👋', tagline:'The best deals in Morocco', searchPlaceholder:'Search for a product, store...', allStores:'All stores', codes:'Promo codes', topDeals:'Top deals', myFavs:'Favorites', categories:'Categories', featured:'Featured offers', featuredSub:'Best deals this week', popularStores:'Popular stores', seeAll:'See all →', latestDeals:'Latest deals', activeOffers:'active offers', storesTitle:'Stores', storesWith:'stores with deals', favsTitle:'Favorites', emptyFavTitle:'No favorites yet', emptyFavText:'Add deals by tapping ❤️', promosTitle:'Promo codes', promosValid:'valid codes', navHome:'Home', navStores:'Stores', navSearch:'Search', navFavs:'Favorites', navPromos:'Codes', seeOffer:'See offer →', goToStore:'Go to store →', visitStore:'Visit site →', save:'Save', until:'Until', daysLeft:'days left', expiresToday:'Expires today!', expiresTomorrow:'Expires tomorrow', addedFav:'❤️ Added to favorites', removedFav:'Removed from favorites', copyBtn:'Copy', copied:'Copied ✓', noResults:'No results', searchEmpty:'Type a product or a store', noDeals:'No deals right now', noDealsText:'New deals coming soon', noStores:'No stores', noPromos:'No promo codes', noDealsStore:'No deals for this store', dealsAt:'deal(s)', clearFilter:'Clear filter ✕', backHome:'Back to home' }
 };
 
 // Official store websites
@@ -483,7 +483,8 @@ try {
 } catch (e) { console.error('Firebase init error:', e); }
 
 // ============ STATE ============
-let lang = localStorage.getItem('lang') || 'ar';
+let lang = localStorage.getItem('lang') || 'fr';
+if (lang === 'ar') lang = 'fr'; // migrate old AR users to FR
 let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
 let currentFilter = null;
 let currentDeal = null;
@@ -492,10 +493,10 @@ let dataLoaded = { deals:false, stores:false, categories:false, promos:false };
 
 // ============ HELPERS ============
 function t(k) { return I18N[lang][k] || k; }
-function getTitle(d) { return lang === 'ar' ? (d.titleAr || d.title) : (d.title || d.titleAr); }
+function getTitle(d) { return lang === 'en' ? (d.titleEn || d.title) : (d.title || d.titleEn); }
 function getStore(id) { return STORES.find(s => s.id === id); }
 function getStoreUrl(s) { return (s && STORE_URLS[s.id]) || (s && s.url) || null; }
-function currency() { return lang === 'ar' ? 'درهم' : 'DH'; }
+function currency() { return 'DH'; }
 function fmt(p) { return p + ' ' + currency(); }
 function daysUntil(s) { if (!s) return null; return Math.ceil((new Date(s) - new Date()) / 86400000); }
 function expiryLabel(s) {
@@ -503,7 +504,7 @@ function expiryLabel(s) {
   if (d === 0) return t('expiresToday');
   if (d === 1) return t('expiresTomorrow');
   if (d <= 7) return d + ' ' + t('daysLeft');
-  return t('until') + ' ' + new Date(s).toLocaleDateString(lang === 'ar' ? 'ar-MA' : 'fr-MA', { day:'2-digit', month:'short' });
+  return t('until') + ' ' + new Date(s).toLocaleDateString(lang === 'en' ? 'en-GB' : 'fr-MA', { day:'2-digit', month:'short' });
 }
 function showToast(m) {
   const el = document.getElementById('toast');
@@ -516,17 +517,17 @@ function esc(s) { return (s || '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':
 // ============ LANGUAGE ============
 function applyLanguage() {
   document.documentElement.lang = lang;
-  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-  document.body.dir = lang === 'ar' ? 'rtl' : 'ltr';
-  const label = lang === 'ar' ? 'FR' : 'ع';
+  document.documentElement.dir = 'ltr';
+  document.body.dir = 'ltr';
+  const label = lang === 'fr' ? 'EN' : 'FR';
   document.getElementById('lang-label').textContent = label;
-  const sl = document.getElementById('sidebar-lang-label'); if (sl) sl.textContent = lang === 'ar' ? 'Français' : 'العربية';
+  const sl = document.getElementById('sidebar-lang-label'); if (sl) sl.textContent = lang === 'fr' ? 'English' : 'Français';
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.getAttribute('data-i18n')); });
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.getAttribute('data-i18n-placeholder')); });
-  document.getElementById('current-city').textContent = lang === 'ar' ? 'الدار البيضاء' : 'Casablanca';
+  document.getElementById('current-city').textContent = 'Casablanca';
 }
 function toggleLanguage() {
-  lang = lang === 'ar' ? 'fr' : 'ar';
+  lang = lang === 'fr' ? 'en' : 'fr';
   localStorage.setItem('lang', lang);
   applyLanguage();
   renderAll();
@@ -648,7 +649,7 @@ function renderStoresGrid() {
       return '<div class="store-card" style="color:' + s.color + '" onclick="onStoreCardClick(\'' + s.id + '\')">'
         + '<div class="store-card-logo" style="background:' + s.color + '">' + (s.logoUrl ? '<img src="' + esc(s.logoUrl) + '">' : esc(s.name.charAt(0))) + '</div>'
         + '<div class="store-card-name">' + esc(s.name) + '</div>'
-        + '<div class="store-card-type">' + esc(lang === 'ar' ? (s.type || '') : (s.typeFr || '')) + '</div>'
+        + '<div class="store-card-type">' + esc(lang === 'en' ? (s.typeEn || s.typeFr || '') : (s.typeFr || s.typeEn || '')) + '</div>'
         + '<div class="store-card-count">' + dealCount + ' ' + t('dealsAt') + '</div>'
         + (url ? '<div class="store-card-link">🔗 ' + t('visitStore') + '</div>' : '')
         + '</div>';
@@ -694,9 +695,9 @@ function renderPromos() {
       return '<div class="promo-card">'
         + '<div class="promo-card-top">'
         +   '<div class="promo-logo" style="background:' + store.color + '">' + (store.logoUrl ? '<img src="' + esc(store.logoUrl) + '">' : esc((p.store || store.name).charAt(0))) + '</div>'
-        +   '<div><div class="promo-store">' + esc(p.store || store.name) + '</div><div class="promo-discount">' + esc(lang === 'ar' ? (p.discountAr || p.discount || '') : (p.discount || p.discountAr || '')) + '</div></div>'
+        +   '<div><div class="promo-store">' + esc(p.store || store.name) + '</div><div class="promo-discount">' + esc(lang === 'en' ? (p.discountEn || p.discount || '') : (p.discount || p.discountEn || '')) + '</div></div>'
         + '</div>'
-        + '<div class="promo-desc">' + esc(lang === 'ar' ? (p.descAr || p.desc || '') : (p.desc || p.descAr || '')) + '</div>'
+        + '<div class="promo-desc">' + esc(lang === 'en' ? (p.descEn || p.desc || '') : (p.desc || p.descEn || '')) + '</div>'
         + '<div class="promo-code-box"><div class="promo-code">' + esc(p.code) + '</div><button class="copy-btn" id="copy-' + i + '" onclick="copyCode(\'' + esc(p.code) + '\', ' + i + ')">' + t('copyBtn') + '</button></div>'
         + (link ? '<button class="promo-store-link" onclick="window.open(\'' + link + '\', \'_blank\')">' + t('visitStore') + '</button>' : '')
         + '</div>';
@@ -735,7 +736,7 @@ function doSearch(q) {
   q = q.trim().toLowerCase();
   const results = q.length === 0 ? [] : DEALS.filter(d =>
     (d.title && d.title.toLowerCase().includes(q)) ||
-    (d.titleAr && d.titleAr.includes(q)) ||
+    (d.titleEn && d.titleEn.toLowerCase().includes(q)) ||
     (d.desc && d.desc.toLowerCase().includes(q)) ||
     (getStore(d.storeId) && getStore(d.storeId).name.toLowerCase().includes(q))
   );
@@ -800,21 +801,21 @@ function openDealLink() {
   const store = getStore(currentDeal.storeId);
   const url = getStoreUrl(store);
   if (url) window.open(url, '_blank');
-  else showToast((lang === 'ar' ? 'ابحث عن هذا العرض في ' : 'Cherchez cette offre chez ') + (store ? store.name : '?'));
+  else showToast((lang === 'en' ? 'Look for this deal at ' : 'Cherchez cette offre chez ') + (store ? store.name : '?'));
 }
 function shareDeal() {
   if (!currentDeal) return;
-  const text = getTitle(currentDeal) + ' - ' + fmt(currentDeal.new) + ' (' + currentDeal.disc + '% ' + (lang === 'ar' ? 'خصم' : 'off') + ') · Promos Maroc';
+  const text = getTitle(currentDeal) + ' - ' + fmt(currentDeal.new) + ' (' + currentDeal.disc + '% off) · Promos Maroc';
   const url = window.location.href;
   if (navigator.share) navigator.share({ title:'Promos Maroc', text, url }).catch(()=>{});
-  else { navigator.clipboard.writeText(text + ' ' + url); showToast(lang === 'ar' ? 'تم النسخ للمشاركة' : 'Copié pour partager'); }
+  else { navigator.clipboard.writeText(text + ' ' + url); showToast(lang === 'en' ? 'Copied to share' : 'Copié pour partager'); }
 }
 function copyCode(code, idx) {
   navigator.clipboard.writeText(code);
   const btn = document.getElementById('copy-' + idx);
   btn.textContent = t('copied');
   btn.classList.add('copied');
-  showToast(code + ' ' + (lang === 'ar' ? 'تم النسخ' : 'copié'));
+  showToast(code + ' ' + (lang === 'en' ? 'copied' : 'copié'));
   setTimeout(() => { btn.textContent = t('copyBtn'); btn.classList.remove('copied'); }, 2000);
 }
 
@@ -832,7 +833,7 @@ function renderAll() {
 // ============ FIREBASE LIVE ============
 function loadFromFirebase() {
   if (!firebaseReady) {
-    document.getElementById('deals-grid').innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-emoji">⚙️</div><div class="empty-title">' + (lang === 'ar' ? 'لم يتم إعداد Firebase' : 'Firebase non configuré') + '</div></div>';
+    document.getElementById('deals-grid').innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-emoji">⚙️</div><div class="empty-title">' + (lang === 'en' ? 'Firebase not configured' : 'Firebase non configuré') + '</div></div>';
     return;
   }
   // Show skeletons immediately
