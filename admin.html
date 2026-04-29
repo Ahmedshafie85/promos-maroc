@@ -116,8 +116,9 @@ button, input, select, textarea { font-family:inherit; }
 
   <div class="tabs">
     <button class="tab active" data-tab="dashboard" onclick="showTab('dashboard')">📊 Dashboard</button>
+    <button class="tab" data-tab="events" onclick="showTab('events')">🎟️ Events</button>
     <button class="tab" data-tab="deals" onclick="showTab('deals')">🛍️ Deals</button>
-    <button class="tab" data-tab="stores" onclick="showTab('stores')">🏪 Stores</button>
+    <button class="tab" data-tab="stores" onclick="showTab('stores')">🏪 Venues</button>
     <button class="tab" data-tab="categories" onclick="showTab('categories')">📂 Categories</button>
     <button class="tab" data-tab="catalogs" onclick="showTab('catalogs')">📄 Catalogs</button>
   </div>
@@ -125,8 +126,15 @@ button, input, select, textarea { font-family:inherit; }
   <div class="content">
     <div class="section active" id="section-dashboard">
       <h2>📊 Stats</h2>
+      <p>Events: <strong id="stat-events">0</strong></p>
       <p>Deals: <strong id="stat-deals">0</strong></p>
-      <p>Stores: <strong id="stat-stores">0</strong></p>
+      <p>Venues: <strong id="stat-stores">0</strong></p>
+    </div>
+
+    <div class="section" id="section-events">
+      <div class="section-head"><h2>🎟️ Events</h2><button class="add-btn" onclick="openEventForm()">+ Add Event</button></div>
+      <p style="color:var(--text-2);font-size:13px;margin-bottom:16px">Concerts, exhibitions, workshops, parties — anything happening in Casablanca with a date and time. Past events auto-hide from the public site.</p>
+      <div id="events-list" class="cards-grid"></div>
     </div>
 
     <div class="section" id="section-deals">
@@ -135,7 +143,8 @@ button, input, select, textarea { font-family:inherit; }
     </div>
 
     <div class="section" id="section-stores">
-      <div class="section-head"><h2>🏪 Stores</h2><button class="add-btn" onclick="openStoreForm()">+ Add Store</button></div>
+      <div class="section-head"><h2>🏪 Venues</h2><button class="add-btn" onclick="openStoreForm()">+ Add Venue</button></div>
+      <p style="color:var(--text-2);font-size:13px;margin-bottom:16px">A venue can be a store, restaurant, café, spa, theater, or any place where deals or events happen.</p>
       <div id="stores-list" class="cards-grid"></div>
     </div>
 
@@ -166,7 +175,7 @@ button, input, select, textarea { font-family:inherit; }
 const WORKER_URL = "https://promos-maroc-fetcher.abdelshafie-ahmed.workers.dev";
 
 let db, auth, storage;
-let DEALS=[], STORES=[], CATEGORIES=[], CATALOGS=[];
+let DEALS=[], STORES=[], CATEGORIES=[], CATALOGS=[], EVENTS=[];
 
 try {
     firebase.initializeApp(firebaseConfig);
@@ -199,6 +208,7 @@ function startListeners() {
     db.collection('stores').onSnapshot(snap => { STORES = snap.docs.map(d => ({id:d.id, ...d.data()})); renderStores(); });
     db.collection('categories').onSnapshot(snap => { CATEGORIES = snap.docs.map(d => ({id:d.id, ...d.data()})); renderCategories(); });
     db.collection('catalogs').orderBy('createdAt', 'desc').onSnapshot(snap => { CATALOGS = snap.docs.map(d => ({id:d.id, ...d.data()})); renderCatalogs(); });
+    db.collection('events').orderBy('date', 'asc').onSnapshot(snap => { EVENTS = snap.docs.map(d => ({id:d.id, ...d.data()})); renderEvents(); });
 }
 
 function renderDeals() {
@@ -797,6 +807,270 @@ function openCatalogForm() {
             showToast('Catalog uploaded');
         } catch(err) { alert('Save failed: ' + err.message); }
     };
+}
+
+// ============================================================
+// EVENTS — render, form, scraper
+// ============================================================
+function renderEvents() {
+    $('stat-events').textContent = EVENTS.length;
+    const list = $('events-list');
+    if (!list) return;
+    if (!EVENTS.length) {
+        list.innerHTML = '<p style="color:var(--text-3);grid-column:1/-1;text-align:center;padding:40px">No events yet. Click "+ Add Event" to add one, or use Smart Paste with a Guichet.ma URL.</p>';
+        return;
+    }
+    const today = new Date().toISOString().slice(0, 10);
+    list.innerHTML = EVENTS.map(e => {
+        const isPast = e.date && e.date < today;
+        const dateStr = e.date ? new Date(e.date).toLocaleDateString('fr-FR', { day:'2-digit', month:'short', year:'numeric' }) : '';
+        return `<div class="item-card" ${isPast ? 'style="opacity:0.5"' : ''}>
+            <div class="item-thumb">${e.imageUrl ? `<img src="${esc(e.imageUrl)}" onerror="this.parentElement.innerHTML='🎟️'">` : '🎟️'}</div>
+            <div class="item-body">
+                <div class="item-title">${esc(e.title || '(untitled)')}</div>
+                <div style="font-size:12px;color:var(--text-2);margin-top:2px">
+                    ${dateStr ? `<strong>${dateStr}</strong>${e.time ? ' · ' + esc(e.time) : ''}` : '<em>No date</em>'}
+                    ${isPast ? ' <span style="background:#999;color:white;padding:1px 6px;border-radius:4px;margin-left:6px;font-size:11px">PAST</span>' : ''}
+                </div>
+                ${e.location ? `<div style="font-size:11px;color:var(--text-3);margin-top:2px">📍 ${esc(e.location)}</div>` : ''}
+                ${e.price ? `<div style="font-size:11px;color:var(--primary);margin-top:2px;font-weight:700">${esc(e.price)}</div>` : ''}
+                <div class="item-actions">
+                    <button class="btn-mini" onclick="openEventForm('${e.id}')">Edit</button>
+                    <button class="btn-mini" onclick="deleteItem('events','${e.id}')">Delete</button>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function openEventForm(id) {
+    const e = id ? EVENTS.find(x => x.id === id) : { title:'', titleEn:'', date:'', time:'', endDate:'', location:'', city:'Casablanca', price:'', cat:'', imageUrl:'', sourceUrl:'', desc:'' };
+    showModal(`
+        <h3>🎟️ Event Details</h3>
+        <div class="smart-paste">
+            <strong>🪄 Smart Paste — Events</strong>
+            <div class="smart-paste-row">
+                <input type="url" id="ev-sp-url" placeholder="Paste event URL (Guichet.ma, etc.)...">
+                <button type="button" onclick="runEventScraper()" id="ev-sp-btn">Fetch</button>
+            </div>
+            <div id="ev-sp-status" class="smart-paste-status"></div>
+        </div>
+        <form id="event-form">
+            <div class="field"><label>Title (FR)</label><input id="ev-title" value="${esc(e.title)}" required></div>
+            <div class="field"><label>Title (EN) <span style="color:#999;font-weight:400">— optional</span></label><input id="ev-titleEn" value="${esc(e.titleEn || '')}"></div>
+            <div class="row-2">
+                <div class="field"><label>Date</label><input type="date" id="ev-date" value="${esc(e.date)}" required></div>
+                <div class="field"><label>Time</label><input type="time" id="ev-time" value="${esc(e.time)}"></div>
+            </div>
+            <div class="field"><label>End date <span style="color:#999;font-weight:400">— for multi-day events</span></label><input type="date" id="ev-endDate" value="${esc(e.endDate || '')}"></div>
+            <div class="field"><label>Location / Venue</label><input id="ev-location" value="${esc(e.location)}" placeholder="L'Uzine, Villa des Arts, etc." required></div>
+            <div class="row-2">
+                <div class="field"><label>City</label>
+                    <select id="ev-city">
+                        <option value="Casablanca" ${e.city === 'Casablanca' ? 'selected' : ''}>Casablanca</option>
+                        <option value="Rabat" ${e.city === 'Rabat' ? 'selected' : ''}>Rabat</option>
+                        <option value="Marrakech" ${e.city === 'Marrakech' ? 'selected' : ''}>Marrakech</option>
+                        <option value="Tanger" ${e.city === 'Tanger' ? 'selected' : ''}>Tanger</option>
+                    </select>
+                </div>
+                <div class="field"><label>Price</label><input id="ev-price" value="${esc(e.price)}" placeholder="50 DH or Free"></div>
+            </div>
+            <div class="field"><label>Category</label>
+                <select id="ev-cat">
+                    <option value="">— Select category —</option>
+                    <option value="music" ${e.cat === 'music' ? 'selected' : ''}>🎵 Music / Concert</option>
+                    <option value="art" ${e.cat === 'art' ? 'selected' : ''}>🎨 Art / Exhibition</option>
+                    <option value="theater" ${e.cat === 'theater' ? 'selected' : ''}>🎭 Theater / Comedy</option>
+                    <option value="film" ${e.cat === 'film' ? 'selected' : ''}>🎬 Film / Cinema</option>
+                    <option value="workshop" ${e.cat === 'workshop' ? 'selected' : ''}>🛠️ Workshop / Class</option>
+                    <option value="food" ${e.cat === 'food' ? 'selected' : ''}>🍽️ Food / Tasting</option>
+                    <option value="party" ${e.cat === 'party' ? 'selected' : ''}>🎉 Party / Nightlife</option>
+                    <option value="sport" ${e.cat === 'sport' ? 'selected' : ''}>⚽ Sport / Fitness</option>
+                    <option value="kids" ${e.cat === 'kids' ? 'selected' : ''}>👶 Kids / Family</option>
+                    <option value="other" ${e.cat === 'other' ? 'selected' : ''}>📌 Other</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Event image / flyer</label>
+                <div class="upload-row">
+                    <input type="url" id="ev-imageUrl" value="${esc(e.imageUrl || '')}" placeholder="Paste URL or upload below">
+                    <button type="button" class="upload-btn" id="ev-img-upload-btn">📤 Upload</button>
+                </div>
+                <input type="file" id="ev-img-file-input" style="display:none">
+                <div id="ev-img-upload-progress" class="upload-progress"></div>
+                <div id="ev-img-preview" class="img-preview">${e.imageUrl ? `<img src="${esc(e.imageUrl)}">` : ''}</div>
+            </div>
+            <div class="field"><label>Source URL <span style="color:#999;font-weight:400">— optional, for "View original" link</span></label><input type="url" id="ev-sourceUrl" value="${esc(e.sourceUrl || '')}"></div>
+            <div class="field"><label>Description <span style="color:#999;font-weight:400">— optional, short</span></label><textarea id="ev-desc" rows="3" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:14px;resize:vertical">${esc(e.desc || '')}</textarea></div>
+            <button type="submit" class="login-btn">Save Event</button>
+        </form>
+    `);
+    $('ev-imageUrl').oninput = () => {
+        const url = $('ev-imageUrl').value.trim();
+        $('ev-img-preview').innerHTML = url ? `<img src="${url}" onerror="this.style.display='none'">` : '';
+    };
+    wireUpload('ev-img-upload-btn', 'ev-img-file-input', 'ev-img-upload-progress', 'ev-imageUrl', 'ev-img-preview', 'events', 'image/*');
+    $('event-form').onsubmit = async (ev) => {
+        ev.preventDefault();
+        const data = {
+            title: $('ev-title').value.trim(),
+            titleEn: $('ev-titleEn').value.trim(),
+            date: $('ev-date').value,
+            time: $('ev-time').value,
+            endDate: $('ev-endDate').value || null,
+            location: $('ev-location').value.trim(),
+            city: $('ev-city').value,
+            price: $('ev-price').value.trim(),
+            cat: $('ev-cat').value,
+            imageUrl: $('ev-imageUrl').value.trim(),
+            sourceUrl: $('ev-sourceUrl').value.trim(),
+            desc: $('ev-desc').value.trim(),
+            updatedAt: new Date()
+        };
+        try {
+            if (id) {
+                await db.collection('events').doc(id).update(data);
+            } else {
+                data.createdAt = new Date();
+                await db.collection('events').add(data);
+            }
+            $('modal-overlay').classList.remove('show');
+            showToast(id ? 'Event updated' : 'Event added');
+        } catch(err) { alert('Save failed: ' + err.message); }
+    };
+}
+
+// ============================================================
+// EVENT SCRAPER — handles Guichet.ma + generic JSON-LD events
+// ============================================================
+async function runEventScraper() {
+    const targetUrl = $('ev-sp-url').value.trim();
+    if (!targetUrl) return;
+    const btn = $('ev-sp-btn');
+    const status = $('ev-sp-status');
+    btn.disabled = true;
+    status.textContent = "⏳ Loading event page…";
+    status.className = "smart-paste-status show";
+
+    try {
+        const res = await window.fetch(WORKER_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url: targetUrl })
+        });
+        const data = await res.json();
+        if (!data.success) throw new Error(data.error || "Scraper error");
+
+        const html = data.html;
+        if (/sorry, you have been blocked|attention required|access denied/i.test(html)) {
+            throw new Error("Page blocked by anti-bot protection");
+        }
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        const domain = new URL(targetUrl).hostname.toLowerCase();
+        const grabMeta = (sel) => doc.querySelector(sel)?.getAttribute('content') || '';
+        const ogImage = grabMeta('meta[property="og:image"]') || grabMeta('meta[name="twitter:image"]');
+        const ogTitle = grabMeta('meta[property="og:title"]');
+        const ogDesc = grabMeta('meta[property="og:description"]') || grabMeta('meta[name="description"]');
+
+        let title = '', date = '', time = '', location = '', price = '', img = '', desc = '';
+
+        // -------- Strategy 1: JSON-LD structured event data (most reliable) --------
+        const jsonScripts = Array.from(doc.querySelectorAll('script[type="application/ld+json"]'));
+        for (const s of jsonScripts) {
+            try {
+                let parsed = JSON.parse(s.textContent);
+                if (Array.isArray(parsed)) parsed = parsed.find(x => x['@type'] === 'Event' || (x['@graph'] && x['@graph'].some(g => g['@type'] === 'Event'))) || parsed[0];
+                if (parsed['@graph']) parsed = parsed['@graph'].find(x => x['@type'] === 'Event') || parsed;
+                if (parsed['@type'] === 'Event' || (Array.isArray(parsed['@type']) && parsed['@type'].includes('Event'))) {
+                    title = parsed.name || title;
+                    if (parsed.startDate) {
+                        const d = new Date(parsed.startDate);
+                        if (!isNaN(d)) {
+                            date = d.toISOString().slice(0, 10);
+                            if (parsed.startDate.length > 10) time = d.toTimeString().slice(0, 5);
+                        }
+                    }
+                    if (parsed.location) {
+                        const loc = Array.isArray(parsed.location) ? parsed.location[0] : parsed.location;
+                        location = loc.name || (loc.address && (loc.address.streetAddress || loc.address.addressLocality)) || '';
+                    }
+                    if (parsed.offers) {
+                        const offer = Array.isArray(parsed.offers) ? parsed.offers[0] : parsed.offers;
+                        if (offer.price) price = offer.price + ' ' + (offer.priceCurrency || 'DH');
+                        else if (offer.price === 0 || offer.price === '0') price = 'Free';
+                    }
+                    if (parsed.image) img = Array.isArray(parsed.image) ? parsed.image[0] : parsed.image;
+                    if (parsed.description) desc = parsed.description;
+                    break;
+                }
+            } catch(e) { /* ignore parse errors */ }
+        }
+
+        // -------- Strategy 2: Site-specific selectors --------
+        if (domain.includes('guichet.ma')) {
+            title = title || doc.querySelector('h1.title-show, h1')?.innerText || ogTitle;
+            // Guichet typically shows date as "Du DD/MM/YYYY au DD/MM/YYYY" or single date
+            const dateText = doc.body.innerText;
+            const dateM = dateText.match(/(\d{1,2})\s*([a-zéû]+)\s*(\d{4})/i)
+                       || dateText.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+            if (!date && dateM) {
+                const months = { janvier:1, février:2, fevrier:2, mars:3, avril:4, mai:5, juin:6, juillet:7, août:8, aout:8, septembre:9, octobre:10, novembre:11, décembre:12, decembre:12 };
+                if (dateM[2] && months[dateM[2].toLowerCase()]) {
+                    date = `${dateM[3]}-${String(months[dateM[2].toLowerCase()]).padStart(2,'0')}-${String(dateM[1]).padStart(2,'0')}`;
+                } else if (dateM.length === 4) {
+                    date = `${dateM[3]}-${String(dateM[2]).padStart(2,'0')}-${String(dateM[1]).padStart(2,'0')}`;
+                }
+            }
+            const timeM = dateText.match(/(\d{1,2})[:h](\d{2})/);
+            if (!time && timeM) time = `${String(timeM[1]).padStart(2,'0')}:${timeM[2]}`;
+            const venueEl = doc.querySelector('.venue, .lieu, .location-name, [class*="venue"]');
+            if (!location && venueEl) location = venueEl.innerText.trim();
+            const priceEl = doc.querySelector('.price, .prix, [class*="price"]');
+            if (!price && priceEl) price = priceEl.innerText.trim().split('\n')[0];
+        }
+
+        // -------- Strategy 3: Generic fallbacks --------
+        if (!title) title = doc.querySelector('h1')?.innerText || ogTitle || doc.title;
+        if (!img) {
+            img = ogImage
+               || doc.querySelector('.event-image img, .flyer img, .poster img, .featured-image img')?.getAttribute('src')
+               || doc.querySelector('img[class*="event"], img[class*="hero"]')?.getAttribute('src')
+               || '';
+            if (img && !img.startsWith('http')) {
+                try { img = new URL(img, targetUrl).href; } catch {}
+            }
+        }
+        if (!desc && ogDesc) desc = ogDesc;
+
+        // Fill the form
+        if (title) $('ev-title').value = title.trim().slice(0, 200);
+        if (date) $('ev-date').value = date;
+        if (time) $('ev-time').value = time;
+        if (location) $('ev-location').value = location.trim().slice(0, 200);
+        if (price) $('ev-price').value = price.trim();
+        if (img) {
+            $('ev-imageUrl').value = img;
+            $('ev-img-preview').innerHTML = `<img src="${img}" onerror="this.style.display='none'">`;
+        }
+        if (desc) $('ev-desc').value = desc.trim().slice(0, 500);
+        $('ev-sourceUrl').value = targetUrl;
+
+        const filled = [title && 'title', date && 'date', location && 'venue', img && 'image'].filter(Boolean);
+        if (filled.length >= 2) {
+            status.textContent = `✅ Got: ${filled.join(', ')}. Review and save.`;
+            status.className = "smart-paste-status show success";
+        } else {
+            status.textContent = "⚠️ Page loaded but limited data extracted. Fill missing fields manually.";
+            status.className = "smart-paste-status show error";
+        }
+    } catch (err) {
+        status.textContent = "❌ " + err.message;
+        status.className = "smart-paste-status show error";
+    } finally {
+        btn.disabled = false;
+    }
 }
 </script>
 </body>
